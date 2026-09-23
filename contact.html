@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="nav.css">
+    <link rel="icon" href="xlm.jpg" type="image/png">
+</head>
+<body class="contact-page">
+
+    <!-- 导航由 parts.js 把 nav.html 的内容填进这里，所以这里是空的 -->
+    <header id="site-header"></header>
+
+    <main class="contact-wrap">
+
+        <header class="contact-head">
+            <p class="contact-eyebrow">Contact</p>
+            <h1>Say hello</h1>
+            <p class="contact-sub">有想法、有问题，或者只是想打个招呼，都可以写信给我。</p>
+        </header>
+
+        <ul class="contact-list">
+            <li>
+                <span class="contact-key">Email</span>
+                <a class="contact-value" href="mailto:hello@example.com">hello@example.com</a>
+            </li>
+            <li>
+                <span class="contact-key">GitHub</span>
+                <a class="contact-value" href="https://github.com/" target="_blank" rel="noopener">github.com/yourname</a>
+            </li>
+            <li>
+                <span class="contact-key">Location</span>
+                <span class="contact-value">Beijing, China</span>
+            </li>
+        </ul>
+
+        <footer class="contact-foot">
+            <a class="back-link" href="index.html">← Back home</a>
+        </footer>
+
+    </main>
+
+    <!-- 页脚由 parts.js 把 footer.html 的内容填进这里，所以这里是空的 -->
+    <footer id="site-footer"></footer>
+
+    <!-- 放在 </body> 前：此时两个空元素都已存在，脚本才找得到它们 -->
+    <script src="parts.js"></script>
+</body>
+</html>

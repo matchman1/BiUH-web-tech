@@ -1,0 +1,814 @@
+/* ==========================================================================
+   styles.css
+   --------------------------------------------------------------------------
+   这个文件同时服务四个页面，用大标题分成几部分，互不干扰：
+
+     【第一部分】 index.html    首页      —— 类名前缀 .index-*
+     【第二部分】 quotes.html   语录页    —— 类名前缀 .quotes-* 与 .q
+     【第三部分】 project.html  项目页    —— 类名前缀 .project-*
+     【第四部分】 contact.html  联系页    —— 类名前缀 .contact-*
+     【第五部分】 深色模式（四页共用，只改颜色不动布局）
+
+   四个页面的类名不交叉：
+     index.html   的 <body class="index">
+     quotes.html  的 <body class="quotes-page">
+     project.html 的 <body class="project-page">
+     contact.html 的 <body class="contact-page">
+
+   导航栏的样式不在这里，在 nav.css（四页共用一个导航）。
+   改哪个页面，只看对应的那一部分。
+   ========================================================================== */
+
+
+/* ==========================================================================
+   第一部分：index.html（首页）
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1-1  页面骨架
+   -------------------------------------------------------------------------- */
+
+.index {
+    margin: 0;
+    padding: 0;
+    background: #fdfdfc;
+    color: #1a1a1a;
+    font-family: "Inter", "Helvetica Neue", -apple-system, "Segoe UI",
+                 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --------------------------------------------------------------------------
+   1-2  居中容器
+   定宽 + margin auto = 整页内容水平居中
+   -------------------------------------------------------------------------- */
+
+.index-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 96px 24px 88px;
+    text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   1-3  标题
+   -------------------------------------------------------------------------- */
+
+.index-title {
+    margin: 0 0 8px;
+    font-size: 34px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.index-label {
+    margin: 0 0 28px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #a8a8a8;
+}
+
+/* --------------------------------------------------------------------------
+   1-4  图片
+   改尺寸就改这里的 width 值。
+   重要：不要在 HTML 的 <img> 上写 width="200" 这类属性，
+   HTML 属性优先级高于外部 CSS，会把这里的值盖掉，改了也没反应。
+   -------------------------------------------------------------------------- */
+
+.index-hero {
+    display: block;            /* 图片默认是 inline，不转 block 则 margin auto 不居中 */
+    width: 200px;
+    max-width: 100%;
+    height: auto;
+    margin: 32px auto;
+    border-radius: 2px;
+}
+
+.index-inline {
+    display: inline-block;
+    vertical-align: middle;
+    width: 90px;
+    max-width: 100%;
+    height: auto;
+    margin-left: 8px;
+    border-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   1-5  文字与链接
+   -------------------------------------------------------------------------- */
+
+.index-text {
+    margin: 24px 0 0;
+    font-size: 15px;
+    color: #6b6b6b;
+}
+
+.index-link {
+    color: #1a1a1a;
+    text-decoration: none;
+    border-bottom: 1px solid #a8a8a8;
+    padding-bottom: 2px;
+    transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+.index-link:hover {
+    border-bottom-color: #1a1a1a;
+}
+
+/* 包图片的链接：不要下划线，否则会把整行撑出一条线 */
+
+.img-link {
+    display: inline-block;
+    text-decoration: none;
+    border-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   1-6  语录卡片（首页备用，现在 index.html 里没用到）
+   用法：给 <article> 加上 class="index-quote"
+   -------------------------------------------------------------------------- */
+
+.index-quote {
+    margin: 40px 0 0;
+    padding: 24px 26px;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 2px;
+    color: #1a1a1a;
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.55;
+    text-align: left;
+}
+
+.index-quote blockquote {
+    margin: 0;
+}
+
+.index-quote p {
+    margin: 0;
+    font-size: inherit;
+    color: inherit;
+}
+
+.index-quote footer {
+    margin-top: 16px;
+}
+
+.index-quote cite {
+    font-style: normal;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #a8a8a8;
+}
+
+/* --------------------------------------------------------------------------
+   1-7  你原来写的通用工具类（保留）
+   -------------------------------------------------------------------------- */
+
+/* 高亮文字 */
+.highlight {
+    background-color: #ff0;
+    color: #000;
+}
+
+/* 右对齐的页脚文字 */
+.footer {
+    width: 100%;
+    text-align: right;
+}
+
+/* 四列网格 */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+/* 黑底大字语录卡片（你最初写的版本，保留作参考；
+   首页现在用的是上面的 .index-quote） */
+.quote {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #000;
+    color: white;
+    font-size: 30px;
+}
+
+/* --------------------------------------------------------------------------
+   1-8  首页移动端
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+    .index-wrap {
+        padding: 56px 20px 64px;
+    }
+
+    .index-title {
+        font-size: 27px;
+    }
+}
+
+
+/* ==========================================================================
+   第二部分：quotes.html（语录页）
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   2-1  页面骨架
+   -------------------------------------------------------------------------- */
+
+.quotes-page {
+    margin: 0;
+    padding: 0;
+    background: #fdfdfc;
+    color: #1a1a1a;
+    font-family: "Inter", "Helvetica Neue", -apple-system, "Segoe UI",
+                 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --------------------------------------------------------------------------
+   2-2  居中容器
+   -------------------------------------------------------------------------- */
+
+.quotes-wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 120px 40px 96px;
+}
+
+/* --------------------------------------------------------------------------
+   2-3  页眉
+   -------------------------------------------------------------------------- */
+
+.quotes-head {
+    margin-bottom: 72px;
+    text-align: center;
+}
+
+.quotes-eyebrow {
+    margin: 0 0 20px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #a8a8a8;
+}
+
+.quotes-head h1 {
+    margin: 0;
+    font-size: 46px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.quotes-sub {
+    margin: 20px auto 0;
+    max-width: 34ch;
+    font-size: 15px;
+    color: #6b6b6b;
+}
+
+/* --------------------------------------------------------------------------
+   2-4  语录网格
+   用 1px 发丝线代替卡片边框
+   -------------------------------------------------------------------------- */
+
+.quotes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: #e6e6e6;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+/* --------------------------------------------------------------------------
+   2-5  单条语录
+   注意：这里用的是 .q，和第一部分的 .quote / .index-quote 是两套东西
+   -------------------------------------------------------------------------- */
+
+.q {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 40px;
+    margin: 0;
+    background: #fdfdfc;
+    transition: background-color 0.35s ease;
+}
+
+.q:hover {
+    background: #f6f6f4;
+}
+
+.q blockquote {
+    margin: 0;
+}
+
+.q blockquote p {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 300;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+}
+
+.q footer {
+    margin: 0;
+}
+
+.q cite {
+    display: inline-block;
+    font-style: normal;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #a8a8a8;
+    transition: color 0.35s ease;
+}
+
+.q:hover cite {
+    color: #6b6b6b;
+}
+
+/* --------------------------------------------------------------------------
+   2-6  返回首页
+   -------------------------------------------------------------------------- */
+
+.quotes-foot {
+    margin-top: 80px;
+    text-align: center;
+}
+
+.back-link {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: #6b6b6b;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.back-link:hover {
+    color: #1a1a1a;
+    border-bottom-color: #1a1a1a;
+}
+
+/* --------------------------------------------------------------------------
+   2-7  语录页移动端
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+    .quotes-wrap {
+        padding: 72px 20px 72px;
+    }
+
+    .quotes-head {
+        margin-bottom: 48px;
+    }
+
+    .quotes-head h1 {
+        font-size: 32px;
+    }
+
+    .q {
+        padding: 28px 22px;
+        gap: 22px;
+    }
+}
+
+
+/* ==========================================================================
+   第三部分：project.html（项目想法页）
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   3-1  页面骨架
+   -------------------------------------------------------------------------- */
+
+.project-page {
+    margin: 0;
+    padding: 0;
+    background: #fdfdfc;
+    color: #1a1a1a;
+    font-family: "Inter", "Helvetica Neue", -apple-system, "Segoe UI",
+                 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --------------------------------------------------------------------------
+   3-2  居中容器（比首页宽一点，列表读起来更舒服）
+   -------------------------------------------------------------------------- */
+
+.project-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 96px 24px 88px;
+}
+
+/* --------------------------------------------------------------------------
+   3-3  页眉
+   -------------------------------------------------------------------------- */
+
+.project-head {
+    margin-bottom: 72px;
+}
+
+.project-head .back-link {
+    display: inline-block;
+    margin-bottom: 40px;
+}
+
+.project-eyebrow {
+    margin: 0 0 20px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #a8a8a8;
+}
+
+.project-head h1 {
+    margin: 0;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+}
+
+.project-sub {
+    margin: 20px 0 0;
+    font-size: 15px;
+    color: #6b6b6b;
+}
+
+/* --------------------------------------------------------------------------
+   3-4  区块与小区块标题
+   -------------------------------------------------------------------------- */
+
+.project-section {
+    margin-bottom: 64px;
+}
+
+.project-label {
+    margin: 0 0 24px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #a8a8a8;
+}
+
+/* --------------------------------------------------------------------------
+   3-5  项目列表
+   用 1px 发丝线分隔，和语录页的网格是同一套做法
+   -------------------------------------------------------------------------- */
+
+.project-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid #e6e6e6;
+}
+
+.project-list li {
+    padding: 18px 4px;
+    border-bottom: 1px solid #e6e6e6;
+    font-size: 17px;
+    font-weight: 300;
+    transition: padding-left 0.25s ease, color 0.25s ease;
+}
+
+.project-list li:hover {
+    padding-left: 12px;
+    color: #6b6b6b;
+}
+
+/* --------------------------------------------------------------------------
+   3-6  名词解释 dl / dt / dd
+   左边一条竖线把解释归到词条下面
+   -------------------------------------------------------------------------- */
+
+.project-dl {
+    margin: 0;
+    border-left: 1px solid #e6e6e6;
+    padding-left: 24px;
+}
+
+.project-dl dt {
+    font-size: 17px;
+    font-weight: 400;
+    color: #1a1a1a;
+}
+
+.project-dl dd {
+    margin: 6px 0 24px;
+    font-size: 15px;
+    color: #6b6b6b;
+}
+
+.project-dl dd:last-child {
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   3-7  项目页移动端
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+    .project-wrap {
+        padding: 56px 20px 64px;
+    }
+
+    .project-head {
+        margin-bottom: 48px;
+    }
+
+    .project-head h1 {
+        font-size: 29px;
+    }
+
+    .project-dl {
+        padding-left: 18px;
+    }
+}
+
+
+
+/*==================
+nav
+================*/
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2rem;
+}
+
+nav .links{
+    display: flex;
+    gap: 1.5rem;
+    margin: 0 auto;
+    list-style: none;
+    padding: 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: #000;
+}
+
+nav .logo {
+    font-weight: 800;
+    color: gold;
+}
+
+nav .action {
+    border: 1.5px solid lightblue;
+    border-radius: 99px;
+    padding: .3em 1em;
+    color: blue;
+}
+
+nav a:hover{color: red;}
+
+
+/* ==========================================================================
+   第四部分：contact.html（联系页）
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   4-1  页面骨架
+   -------------------------------------------------------------------------- */
+
+.contact-page {
+    margin: 0;
+    padding: 0;
+    background: #fdfdfc;
+    color: #1a1a1a;
+    font-family: "Inter", "Helvetica Neue", -apple-system, "Segoe UI",
+                 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --------------------------------------------------------------------------
+   4-2  居中容器
+   -------------------------------------------------------------------------- */
+
+.contact-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 96px 24px 88px;
+}
+
+/* --------------------------------------------------------------------------
+   4-3  页眉
+   -------------------------------------------------------------------------- */
+
+.contact-head {
+    margin-bottom: 56px;
+}
+
+.contact-eyebrow {
+    margin: 0 0 20px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #a8a8a8;
+}
+
+.contact-head h1 {
+    margin: 0;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+}
+
+.contact-sub {
+    margin: 20px 0 0;
+    font-size: 15px;
+    color: #6b6b6b;
+}
+
+/* --------------------------------------------------------------------------
+   4-4  联系方式列表
+   左边是标签、右边是值，中间用发丝线分隔
+   -------------------------------------------------------------------------- */
+
+.contact-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid #e6e6e6;
+}
+
+.contact-list li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+
+    padding: 18px 4px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.contact-key {
+    flex: none;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #a8a8a8;
+}
+
+.contact-value {
+    font-size: 15px;
+    color: #1a1a1a;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+a.contact-value:hover {
+    border-bottom-color: #1a1a1a;
+}
+
+/* --------------------------------------------------------------------------
+   4-5  页脚
+   -------------------------------------------------------------------------- */
+
+.contact-foot {
+    margin-top: 72px;
+}
+
+/* --------------------------------------------------------------------------
+   4-6  联系页移动端
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+    .contact-wrap {
+        padding: 56px 20px 64px;
+    }
+
+    .contact-head h1 {
+        font-size: 29px;
+    }
+
+    /* 窄屏改成上下两行，避免长邮箱挤在一起 */
+    .contact-list li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+}
+
+
+/* ==========================================================================
+   第五部分：深色模式（四页共用，只改颜色不动布局）
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+
+    /* 首页 */
+    .index {
+        background: #0e0e0e;
+        color: #ededed;
+    }
+
+    .index-link {
+        color: #ededed;
+    }
+
+    .index-quote {
+        background: #161616;
+        border-color: #262626;
+        color: #ededed;
+    }
+
+    /* 语录页 */
+    .quotes-page {
+        background: #0e0e0e;
+        color: #ededed;
+    }
+
+    .quotes-grid {
+        background: #262626;
+        border-color: #262626;
+    }
+
+    .q {
+        background: #0e0e0e;
+    }
+
+    .q:hover {
+        background: #161616;
+    }
+
+    .back-link:hover {
+        color: #ededed;
+    }
+
+    /* 项目页 */
+    .project-page {
+        background: #0e0e0e;
+        color: #ededed;
+    }
+
+    .project-list,
+    .project-list li,
+    .project-dl {
+        border-color: #262626;
+    }
+
+    .project-dl dt {
+        color: #ededed;
+    }
+
+    .project-list li:hover {
+        color: #9a9a9a;
+    }
+
+    /* 联系页 */
+    .contact-page {
+        background: #0e0e0e;
+        color: #ededed;
+    }
+
+    .contact-list,
+    .contact-list li {
+        border-color: #262626;
+    }
+
+    .contact-value {
+        color: #ededed;
+    }
+
+    a.contact-value:hover {
+        border-bottom-color: #ededed;
+    }
+}

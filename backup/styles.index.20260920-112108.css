@@ -1,0 +1,170 @@
+/* ============================================================
+   index.html 专用样式
+   （文件名带 index，因为这里只放首页的样式）
+   注意：文件的 <link> 顺序要和 index.html 里一致，见文件末尾说明
+   ============================================================ */
+
+/* ---------- 页面骨架 ---------- */
+
+.index {
+    margin: 0;
+    padding: 0;
+    background: #fdfdfc;
+    color: #1a1a1a;
+    font-family: "Inter", "Helvetica Neue", -apple-system, "Segoe UI",
+                 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- 居中容器 ---------- */
+/* 定宽 + margin auto = 整页内容水平居中 */
+
+.index-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 96px 24px 88px;
+    text-align: center;
+}
+
+/* ---------- 标题 ---------- */
+
+.index-title {
+    margin: 0 0 8px;
+    font-size: 34px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.index-label {
+    margin: 0 0 28px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #a8a8a8;
+}
+
+/* ---------- 图片 ---------- */
+/* 改尺寸就改这里的 width 值。
+   重要：不要在 HTML 的 <img> 上写 width="200" 这类属性，
+   HTML 属性优先级高于外部 CSS，会把这里的值盖掉，改了也没反应。 */
+
+.index-hero {
+    display: block;            /* 图片默认是 inline，不转 block 则 margin auto 不居中 */
+    width: 150px;
+    max-width: 100%;
+    height: auto;
+    margin: 32px auto;
+    border-radius: 2px;
+}
+
+.index-inline {
+    display: inline-block;
+    vertical-align: middle;
+    width: 90px;
+    max-width: 100%;
+    height: auto;
+    margin-left: 8px;
+    border-radius: 2px;
+}
+
+/* ---------- 文字与链接 ---------- */
+
+.index-text {
+    margin: 24px 0 0;
+    font-size: 15px;
+    color: #6b6b6b;
+}
+
+.index-link {
+    color: #1a1a1a;
+    text-decoration: none;
+    border-bottom: 1px solid #a8a8a8;
+    padding-bottom: 2px;
+    transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+.index-link:hover {
+    border-bottom-color: #1a1a1a;
+}
+
+/* 包图片的链接：不要下划线，否则会把整行撑出一条线 */
+
+.img-link {
+    display: inline-block;
+    text-decoration: none;
+    border-bottom: 0;
+}
+
+/* ---------- 语录卡片（首页备用，现在 HTML 里没用到）---------- */
+/* 用法：给 <article> 加上 class="index-quote" */
+
+.index-quote {
+    margin: 40px 0 0;
+    padding: 24px 26px;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 2px;
+    color: #1a1a1a;
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.55;
+    text-align: left;
+}
+
+.index-quote blockquote {
+    margin: 0;
+}
+
+.index-quote p {
+    margin: 0;
+    font-size: inherit;
+    color: inherit;
+}
+
+.index-quote footer {
+    margin-top: 16px;
+}
+
+.index-quote cite {
+    font-style: normal;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #a8a8a8;
+}
+
+/* ---------- 移动端 ---------- */
+
+@media (max-width: 480px) {
+    .index-wrap {
+        padding: 56px 20px 64px;
+    }
+
+    .index-title {
+        font-size: 27px;
+    }
+}
+
+/* ---------- 深色模式 ---------- */
+
+@media (prefers-color-scheme: dark) {
+    .index {
+        background: #0e0e0e;
+        color: #ededed;
+    }
+
+    .index-link {
+        color: #ededed;
+    }
+
+    .index-quote {
+        background: #161616;
+        border-color: #262626;
+        color: #ededed;
+    }
+}

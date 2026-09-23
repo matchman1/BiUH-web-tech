@@ -1,0 +1,27 @@
+<!--
+  nav.html — 导航片段
+  这个文件故意只有 <nav>，没有 DOCTYPE / html / head / body。
+  它是一段「零件」，由 parts.js 取过来塞进每个页面的 #site-header 里。
+  不要单独在浏览器里打开它 —— 它单看没有意义。
+-->
+<nav>
+    <a class="logo" href="index.html">
+        <!-- SVG 必须带 xmlns，否则在 HTML 里可能不渲染 -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="1.5"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 3v18M3 12h18"></path>
+        </svg>
+        <span>My First Website</span>
+    </a>
+
+    <ul class="links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="quotes.html">Quotes</a></li>
+        <li><a href="project.html">Project</a></li>
+    </ul>
+
+    <!-- 药丸按钮：最右边。target="_blank" 让它在新标签页打开 -->
+    <a class="pill" href="contact.html" target="_blank" rel="noopener">Contact</a>
+</nav>
