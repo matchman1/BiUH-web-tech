@@ -9,7 +9,7 @@
 import { readFile } from 'node:fs/promises';
 
 const DIR = 'C:/Users/itx/Desktop/BiUH-web/';
-const PAGES = ['index.html', 'slogans.html', 'project.html', 'contact.html'];
+const PAGES = ['index.html', 'slogans.html', 'cpus.html', 'contact.html'];
 
 // ---------------------------------------------------------------------------
 // 极简 DOM 模拟
@@ -57,7 +57,7 @@ function checkFragment(html, kind) {
     if (!/class="logo"/.test(html)) problems.push('缺少 .logo');
     if (!/class="links"/.test(html)) problems.push('缺少 .links');
     if (!/class="pill"/.test(html)) problems.push('缺少 .pill');
-    for (const f of ['index.html', 'slogans.html', 'project.html'])
+    for (const f of ['index.html', 'slogans.html', 'cpus.html'])
       if (!html.includes(`href="${f}"`)) problems.push(`缺少指向 ${f} 的链接`);
     if (!/<li>\s*<a href="[^"]+">[^<]*<\/a>\s*<\/li>/.test(html))
       problems.push('<li> 没有正确包住 <a>');
@@ -147,8 +147,16 @@ function checkFragment(html, kind) {
       text: async () => (file === 'nav.html' ? navHtml : footerHtml),
     });
 
-    const fn = new Function('fetch', 'document', 'location', `"use strict";\n${partsJs}`);
-    await fn(fetchShim, document, location);
+    // parts.js calls window.updateThemeButton() after the nav is injected, so the
+    // shim needs a window to look at. The real one is defined by theme.js.
+    const windowShim = {
+      updateThemeButton: () => { themeSynced = true; },
+    };
+    let themeSynced = false;
+
+    const fn = new Function('fetch', 'document', 'location', 'window',
+      `"use strict";\n${partsJs}`);
+    await fn(fetchShim, document, location, windowShim);
     // 等 promise 链跑完
     await new Promise((r) => setTimeout(r, 20));
 

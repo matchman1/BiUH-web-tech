@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Explorer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="nav.css">
+    <link rel="stylesheet" href="theme.css">
+    <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+
+    <!-- Theme is applied before the first paint so a page never flashes light
+         before switching to dark. Details live in theme.js. -->
+    <script>
+        try {
+            var savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || savedTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+        } catch (e) {}
+    </script>
+</head>
+<body class="cpu-page">
+
+    <!-- Nav is injected here by parts.js, so this stays empty -->
+    <header id="site-header"></header>
+
+    <main class="cpu-wrap">
+
+        <header class="cpu-head">
+            <p class="cpu-eyebrow">Database</p>
+            <h1>CPU Explorer</h1>
+            <p class="cpu-sub">
+                Search 3,500+ processors by name, then put up to three side by side and
+                see how the specs actually differ.
+            </p>
+        </header>
+
+        <div class="cpu-toolbar">
+            <div class="cpu-search-wrap">
+                <label class="cpu-search-label" for="cpu-search">Search</label>
+                <input id="cpu-search" class="cpu-search" type="search" autocomplete="off"
+                       placeholder="5800X3D, i9-12900K, Threadripper, Xeon…"
+                       aria-describedby="cpu-count">
+            </div>
+
+            <div class="cpu-brands" role="group" aria-label="Filter by brand">
+                <button type="button" class="cpu-brand is-active" data-brand="all">All</button>
+                <button type="button" class="cpu-brand" data-brand="Intel">Intel</button>
+                <button type="button" class="cpu-brand" data-brand="AMD">AMD</button>
+            </div>
+        </div>
+
+        <div class="cpu-board">
+
+            <section class="cpu-results" aria-labelledby="cpu-results-title">
+                <div class="cpu-panel-head">
+                    <h2 id="cpu-results-title" class="cpu-panel-title">Results</h2>
+                    <p class="cpu-count" id="cpu-count">Loading…</p>
+                </div>
+
+                <ul class="cpu-list" id="cpu-list"></ul>
+
+                <button type="button" class="cpu-more" id="cpu-more" hidden>Show more</button>
+            </section>
+
+            <section class="cpu-compare" aria-labelledby="cpu-compare-title">
+                <div class="cpu-panel-head">
+                    <h2 id="cpu-compare-title" class="cpu-panel-title">Compare</h2>
+                    <button type="button" class="cpu-clear" id="cpu-clear" hidden>Clear all</button>
+                </div>
+
+                <div id="cpu-compare-body" class="cpu-compare-body" aria-live="polite"></div>
+            </section>
+
+        </div>
+
+        <p class="cpu-footnote">
+            Specs are drawn from a local database of 3,551 processors. Values a factory sheet
+            left blank are shown as a dash rather than guessed at. Boost clocks and TDP vary by
+            motherboard and cooling, so treat the numbers as a starting point, not a promise.
+        </p>
+
+    </main>
+
+    <!-- Footer is injected here by parts.js, so this stays empty -->
+    <footer id="site-footer"></footer>
+
+    <!-- data/cpus.js defines window.CPUS; cpu.js turns it into the UI.
+         Both sit at the end of the body so the page renders before parsing 500 KB of JSON. -->
+    <script src="data/cpus.js"></script>
+    <script src="cpu.js"></script>
+    <script src="theme.js"></script>
+    <script src="parts.js"></script>
+</body>
+</html>

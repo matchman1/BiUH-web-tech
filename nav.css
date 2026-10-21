@@ -219,45 +219,87 @@ nav .links a.active::after {
         padding: 5px 12px;
         font-size: 12px;
     }
+
+    /* narrow screens: the switch drops its label and keeps just the icon */
+    nav .theme-toggle {
+        margin-left: 8px;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+
+    nav .theme-toggle-label {
+        display: none;
+    }
 }
 
 /* --------------------------------------------------------------------------
-   6  深色模式
+   6  light / dark switch
+   Sits to the right of the Contact pill. Same pill language as Contact, but
+   round-friendly and quieter, since it is a utility rather than a destination.
+   The icon is picked by aria-pressed, which theme.js keeps truthful, so a
+   visitor following the operating system still sees the correct glyph.
    -------------------------------------------------------------------------- */
 
-@media (prefers-color-scheme: dark) {
-    nav {
-        background: rgba(14, 14, 14, 0.82);
-        border-bottom-color: #262626;
-    }
+nav .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
 
-    nav .logo,
-    nav .links a:hover,
-    nav .links a.active {
-        color: #ededed;
-    }
+    margin-left: 10px;
+    padding: 6px 14px 6px 12px;
 
-    nav .links a {
-        color: #9a9a9a;
-    }
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+    white-space: nowrap;
 
-    nav .pill {
-        color: #ededed;
-        border-color: #3a3a3a;
-    }
+    color: #6b6b68;
+    background: transparent;
+    border: 1px solid #d8d8d8;
+    border-radius: 999px;
+    cursor: pointer;
 
-    nav .pill:hover {
-        color: #0e0e0e;
-        background: #ededed;
-        border-color: #ededed;
-    }
-
-    nav .pill.active {
-        color: #0e0e0e;
-        background: #ededed;
-        border-color: #ededed;
-    }
+    transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
 }
+
+nav .theme-toggle:hover {
+    color: #1a1a1a;
+    border-color: #b4b4b0;
+}
+
+nav .theme-toggle:focus-visible {
+    outline: 2px solid #1a1a1a;
+    outline-offset: 2px;
+}
+
+nav .theme-toggle-icon {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* only one glyph is visible at a time */
+nav .theme-toggle .icon-sun {
+    display: none;
+}
+
+nav .theme-toggle[aria-pressed="true"] .icon-moon {
+    display: none;
+}
+
+nav .theme-toggle[aria-pressed="true"] .icon-sun {
+    display: block;
+}
+
+/* --------------------------------------------------------------------------
+   7  深色模式
+   The dark colours for the nav used to live here. They now sit in theme.css,
+   so that the switch can override the operating system. Add a colour there.
+   -------------------------------------------------------------------------- */
 
 /* ==========================================================================
    站内页脚 #site-footer
@@ -308,18 +350,3 @@ nav .links a.active::after {
    7  页脚深色模式
    -------------------------------------------------------------------------- */
 
-@media (prefers-color-scheme: dark) {
-    #site-footer {
-        border-top-color: #262626;
-        color: #6f6f6f;
-    }
-
-    #site-footer a {
-        color: #9a9a9a;
-    }
-
-    #site-footer a:hover {
-        color: #ededed;
-        border-bottom-color: #ededed;
-    }
-}

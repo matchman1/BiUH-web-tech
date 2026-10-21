@@ -1,39 +1,84 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First HTML Page</title>
+    <title>The Hardware Behind the Machine</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="nav.css">
-    <link rel="icon" href="xlm.jpg" type="image/png">
+    <link rel="stylesheet" href="theme.css">
+    <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <!-- Theme is applied before the first paint so a page never flashes light
+         before switching to dark. Details live in theme.js. -->
+    <script>
+        try {
+            var savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || savedTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+        } catch (e) {}
+    </script>
 </head>
 <body class="index">
 
-    <!-- 导航由 parts.js 把 nav.html 的内容填进这里，所以这里是空的 -->
+    <!-- Nav is injected here by parts.js, so this stays empty -->
     <header id="site-header"></header>
 
-    <main class="index-wrap">
-        <h1 class="index-title">Welcome to My First HTML Page</h1>
+    <main class="index-main">
 
-        <h2 class="index-label">Slogans</h2>
+        <!-- Hero: the motherboard photo, with its lower edge fading into the page -->
+        <figure class="index-hero">
+            <img class="index-hero-img" src="images/zhuban-web.jpg"
+                 alt="A motherboard photographed from above, showing its socket, memory slots and expansion card slots">
+        </figure>
 
-        <!-- 注意：这里不要写 width 属性，尺寸由 styles.css 第一部分 1-4 的 .index-hero 控制 -->
-        <a class="img-link" href="https://bilibili.com" target="_blank" rel="noopener">
-            <img class="index-hero" src="bilibili.jpg" alt="fun image">
-        </a>
+        <!-- Main heading, left aligned. It sits in the faded-out part of the photo. -->
+        <header class="index-intro">
+            <p class="index-eyebrow">ITX &middot; DIY</p>
+            <h1 class="index-title">The hardware behind the machine</h1>
+            <p class="index-lede">
+                Two collections: the slogans PC brands sell by, and the chip generations
+                behind the parts.
+            </p>
+        </header>
 
-        <p> <img class="index-inline" src="xlm.jpg" alt="fun image"></p>
-        <p class="index-text">Here are some <a class="index-link" href="slogans.html">slogans</a></p>
+        <!-- Two long buttons: text on the left, photo bleeding off the right edge.
+             Deliberately a div, not a nav: nav.css styles every <nav> as the
+             sticky site header, which would collide with these cards. -->
+        <div class="index-cards">
 
-        <p> <img class="index-inline" src="xlm.jpg" alt="fun image"></p>
-        <p class="index-text">Here are some <a class="index-link" href="project.html">project</a></p>
+            <a class="index-card" href="slogans.html">
+                <span class="index-card-text">
+                    <span class="index-card-label">Collection</span>
+                    <span class="index-card-name">Hardware Slogans</span>
+                    <span class="index-card-desc">Sixteen brand lines, each traced back to an official source</span>
+                </span>
+                <span class="index-card-media">
+                    <img src="images/rtx2080-web.jpg" alt="">
+                </span>
+            </a>
+
+            <a class="index-card" href="cpus.html">
+                <span class="index-card-text">
+                    <span class="index-card-label">Database</span>
+                    <span class="index-card-name">CPU Explorer</span>
+                    <span class="index-card-desc">Search 3,500+ processors and put three of them side by side</span>
+                </span>
+                <span class="index-card-media">
+                    <img src="images/gtx780-web.jpg" alt="">
+                </span>
+            </a>
+
+        </div>
+
     </main>
 
-    <!-- 页脚由 parts.js 把 footer.html 的内容填进这里，所以这里是空的 -->
+    <!-- Footer is injected here by parts.js, so this stays empty -->
     <footer id="site-footer"></footer>
 
-    <!-- 放在 </body> 前：此时 #site-header / #site-footer 都已经存在，脚本才找得到它们 -->
+    <!-- Kept before </body> so both empty elements already exist when the script runs -->
+    <script src="theme.js"></script>
     <script src="parts.js"></script>
 </body>
 </html>

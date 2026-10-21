@@ -1,0 +1,74 @@
+﻿UPE | 
+2026/09/01 15:53:59
+,英特尔® 至强® 处理器 E3-1241 v3（8M 高速缓存，3.50 GHz）
+
+基本要素
+产品集,英特尔® 至强® 处理器 E3 v3 家族
+代号名称,先前产品为  Haswell
+垂直市场,Server
+处理器编号,E3-1241V3
+光刻,22 nm
+
+CPU 规格
+内核数,4
+总线程数,8
+最大睿频频率,3.90 GHz
+英特尔® 睿频加速技术 2.0 频率‡,3.90 GHz
+处理器基本频率,3.50 GHz
+缓存,8 MB Intel® Smart Cache
+总线速度,5 GT/s
+QPI 链接数,0
+TDP,80 W
+
+补充信息
+状态,Discontinued
+发行日期,Q2'14
+服务状态,End of Servicing Lifetime
+服务更新终止日期,Wednesday |  June 30 |  2021
+可用的嵌入式选项,否
+
+内存规格
+最大内存大小（取决于内存类型）,32 GB
+内存类型,DDR3 and DDR3L 1333/1600 at 1.5V
+最大内存通道数,2
+最大内存带宽,25.6 GB/s
+支持的 ECC 内存 ‡,是
+
+扩展选项
+可扩展性,1S Only
+PCI Express 修订版,3.0
+PCI Express 配置 ‡,1x16 |  2x8 |  1x8/2x4
+PCI Express 通道数的最大值,16
+
+封装规格
+支持的插槽,FCLGA1150
+最大 CPU 配置,1
+散热解决方案规范,PCG 2013D
+封装大小,37.5mm x 37.5mm
+
+先进技术
+英特尔® 睿频加速技术 ‡,2.0
+英特尔® 超线程技术 ‡,是
+英特尔® Transactional Synchronization Extensions – New Instructions (英特尔® TSX-NI),是
+英特尔® 64 ‡,是
+指令集,64-bit
+指令集扩展,Intel® SSE4.1 |  Intel® SSE4.2 |  Intel® AVX2
+空闲状态,是
+Enhanced Intel SpeedStep® Technology,是
+温度监视技术,是
+英特尔® 快速内存访问,是
+英特尔® Flex Memory Access,是
+英特尔® 身份保护技术 ‡,是
+
+安全性与可靠性
+英特尔® vPro® 资格‡,Intel vPro® Platform
+英特尔® 睿码技术,是
+英特尔® AES 新指令,是
+英特尔® 操作系统守护,是
+英特尔® Trusted Execution Technology ‡,是
+执行禁用位 ‡,是
+防盗技术,是
+英特尔® 稳定映像平台计划,是
+英特尔® 虚拟化技术 (VT-x) ‡,是
+英特尔® Virtualization Technology for Directed I/O (VT-d) ‡,是
+英特尔® VT-x with Extended Page Tables (EPT) ‡,是

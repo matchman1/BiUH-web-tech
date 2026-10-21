@@ -59,4 +59,11 @@ navReady.then(function () {
   if (pill && pill.getAttribute('href') === current) {
     pill.classList.add('active');
   }
+
+  // 3) 深色模式按钮也在 nav.html 里，同样要等注入完成才存在。
+  //    theme.js 定义了 window.updateThemeButton，这里调用它把图标和标签
+  //    同步成当前真正的主题（跟随系统 或 用户上次的选择）。
+  if (window.updateThemeButton) {
+    window.updateThemeButton();
+  }
 });

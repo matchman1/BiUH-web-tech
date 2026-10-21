@@ -5,20 +5,19 @@
 
      [1] index.html     home      - classes prefixed .index-*
      [2] slogans.html   slogans   - classes prefixed .slogans-* / .slogan-*
-     [3] project.html   projects  - classes prefixed .project-*
+     [3] cpus.html      CPUs      - classes prefixed .cpu-*
      [4] contact.html   contact   - classes prefixed .contact-*
      [5] dark mode (shared by all four pages; colours only, no layout)
 
    The four pages never share class names:
      index.html    <body class="index">
      slogans.html  <body class="slogans-page">
-     project.html  <body class="project-page">
+     cpus.html     <body class="cpu-page">
      contact.html  <body class="contact-page">
 
    The nav and footer live in nav.css, since all four pages share them.
    To change a page, look only at its section.
    ========================================================================== */
-
 
 /* ==========================================================================
    [1] index.html - home
@@ -41,92 +40,171 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-2  centred container
-   Fixed width + margin auto centres everything
+   1-2  container
+   Left aligned, not centred: the photo, the heading and the cards all line up
+   on the same left edge.
    -------------------------------------------------------------------------- */
 
-.index-wrap {
-    max-width: 640px;
+.index-main {
+    max-width: 960px;
     margin: 0 auto;
-    padding: 96px 24px 88px;
-    text-align: center;
+    padding: 0 32px 96px;
 }
 
 /* --------------------------------------------------------------------------
-   1-3  headings
+   1-3  hero photo
+   The bottom of the picture fades to nothing, so the heading below it sits on
+   the page rather than under a hard edge. mask-image fades the image itself,
+   which works on any background colour (no need to match the page colour).
    -------------------------------------------------------------------------- */
 
-.index-title {
+.index-hero {
     margin: 0 0 8px;
-    font-size: 34px;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
 }
 
-.index-label {
-    margin: 0 0 28px;
+.index-hero-img {
+    display: block;
+    width: 100%;
+    height: auto;
+
+    /* The fade is finished well before the bottom edge (84%), so the heading
+       that overlaps the last few pixels always sits on fully transparent
+       image — never on top of the photo itself. */
+    -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent 84%);
+    mask-image: linear-gradient(to bottom, #000 40%, transparent 84%);
+}
+
+/* --------------------------------------------------------------------------
+   1-4  heading block
+   A small negative margin tucks the type into the faded tail of the photo.
+   Keep this overlap small: the mask above guarantees that area is empty.
+   -------------------------------------------------------------------------- */
+
+.index-intro {
+    margin: -28px 0 0;
+    position: relative;   /* keeps the heading above the faded image */
+}
+
+.index-eyebrow {
+    margin: 0 0 16px;
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #a8a8a8;
+    color: #a8a8a4;
+}
+
+.index-title {
+    margin: 0 0 20px;
+    max-width: 17ch;
+
+    font-size: clamp(34px, 5.2vw, 56px);
+    font-weight: 400;
+    line-height: 1.06;
+    letter-spacing: -0.028em;
+    text-wrap: balance;
+}
+
+.index-lede {
+    margin: 0;
+    max-width: 46ch;
+    font-size: 17px;
+    line-height: 1.6;
+    color: #6b6b68;
 }
 
 /* --------------------------------------------------------------------------
-   1-4  images
-   Change the width here to resize the image.
-   Do NOT put width="200" on the <img> in HTML:
-   the HTML attribute outranks external CSS and silently overrides this.
+   1-5  the two long buttons
+   Text on the left, photo running off the right edge and fading into the card.
    -------------------------------------------------------------------------- */
 
-.index-hero {
-    display: block;            /* images are inline by default; without block, margin auto cannot centre them */
-    width: 200px;
-    max-width: 100%;
-    height: auto;
-    margin: 32px auto;
-    border-radius: 2px;
+.index-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 56px;
 }
 
-.index-inline {
-    display: inline-block;
-    vertical-align: middle;
-    width: 90px;
-    max-width: 100%;
-    height: auto;
-    margin-left: 8px;
-    border-radius: 2px;
-}
+.index-card {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    align-items: stretch;
 
-/* --------------------------------------------------------------------------
-   1-5  text and links
-   -------------------------------------------------------------------------- */
+    min-height: 148px;
+    overflow: hidden;              /* keeps the photo inside the rounded corner */
 
-.index-text {
-    margin: 24px 0 0;
-    font-size: 15px;
-    color: #6b6b6b;
-}
-
-.index-link {
-    color: #1a1a1a;
+    padding: 28px 0 28px 30px;     /* no right padding: the photo bleeds to the edge */
     text-decoration: none;
-    border-bottom: 1px solid #a8a8a8;
-    padding-bottom: 2px;
-    transition: border-color 0.25s ease, color 0.25s ease;
+    color: inherit;
+
+    background: #ffffff;
+    border: 1px solid #e6e6e3;
+    border-radius: 4px;
+
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.index-link:hover {
-    border-bottom-color: #1a1a1a;
+.index-card:hover {
+    border-color: #c9c9c5;
+    box-shadow: 0 2px 18px rgba(26, 26, 26, 0.06);
 }
 
-/* link wrapping an image: no underline, or it draws a line across the row */
+/* text column */
+.index-card-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding-right: 28px;
+}
 
-.img-link {
-    display: inline-block;
-    text-decoration: none;
-    border-bottom: 0;
+.index-card-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #a8a8a4;
+}
+
+.index-card-name {
+    font-size: 25px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.022em;
+}
+
+.index-card-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #6b6b68;
+}
+
+/* photo column: fills the height and fades away towards the centre of the card */
+.index-card-media {
+    position: relative;
+    display: block;
+    min-height: 92px;
+}
+
+.index-card-media img {
+    position: absolute;
+    inset: 0;
+
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    /* left edge transparent -> fully visible at 46%: the photo dissolves
+       into the card instead of starting on a hard vertical line */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 46%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 46%);
+
+    transition: transform 0.6s ease;
+}
+
+.index-card:hover .index-card-media img {
+    transform: scale(1.04);
 }
 
 /* --------------------------------------------------------------------------
@@ -205,19 +283,65 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-8  home, mobile
+   1-8  home, tablet and mobile
    -------------------------------------------------------------------------- */
 
-@media (max-width: 480px) {
-    .index-wrap {
-        padding: 56px 20px 64px;
+@media (max-width: 860px) {
+    .index-main {
+        padding: 0 24px 80px;
     }
 
-    .index-title {
-        font-size: 27px;
+    /* the photo column shrinks first, so the text keeps its room */
+    .index-card {
+        grid-template-columns: 1fr 220px;
+        min-height: 132px;
+        padding: 24px 0 24px 24px;
+    }
+
+    .index-card-name {
+        font-size: 22px;
+    }
+
+    .index-intro {
+        margin-top: -18px;
     }
 }
 
+@media (max-width: 560px) {
+    .index-main {
+        padding: 0 18px 64px;
+    }
+
+    .index-card {
+        grid-template-columns: 1fr 120px;
+        min-height: 112px;
+        padding: 20px 0 20px 20px;
+    }
+
+    .index-card-name {
+        font-size: 19px;
+    }
+
+    .index-card-desc {
+        font-size: 13px;
+    }
+
+    .index-card-text {
+        padding-right: 16px;
+    }
+
+    .index-lede {
+        font-size: 15px;
+    }
+
+    .index-intro {
+        margin-top: -12px;
+    }
+
+    .index-cards {
+        margin-top: 40px;
+    }
+}
 
 /* ==========================================================================
    [2] slogans.html - hardware brand slogans
@@ -505,16 +629,15 @@
     }
 }
 
-
 /* ==========================================================================
-   [3] project.html - CPU and GPU generations
+   [3] cpus.html - CPU Explorer
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
    3-1  page shell
    -------------------------------------------------------------------------- */
 
-.project-page {
+.cpu-page {
     margin: 0;
     padding: 0;
     background: #fdfdfc;
@@ -527,33 +650,33 @@
 }
 
 /* --------------------------------------------------------------------------
-   3-2  centred container
+   3-2  container
    -------------------------------------------------------------------------- */
 
-.project-wrap {
-    max-width: 880px;
+.cpu-wrap {
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 104px 32px 88px;
+    padding: 96px 32px 88px;
 }
 
 /* --------------------------------------------------------------------------
    3-3  page header
    -------------------------------------------------------------------------- */
 
-.project-head {
-    margin-bottom: 72px;
+.cpu-head {
+    margin-bottom: 40px;
 }
 
-.project-eyebrow {
-    margin: 0 0 20px;
+.cpu-eyebrow {
+    margin: 0 0 18px;
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #a8a8a8;
+    color: #a8a8a4;
 }
 
-.project-head h1 {
+.cpu-head h1 {
     margin: 0;
     font-size: clamp(32px, 4.6vw, 46px);
     font-weight: 400;
@@ -561,149 +684,454 @@
     letter-spacing: -0.025em;
 }
 
-.project-sub {
-    margin: 20px 0 0;
-    max-width: 54ch;
+.cpu-sub {
+    margin: 18px 0 0;
+    max-width: 56ch;
     font-size: 15px;
-    color: #6b6b6b;
+    color: #6b6b68;
 }
 
 /* --------------------------------------------------------------------------
-   3-4  one group per vendor
+   3-4  toolbar: the search field and the brand chips
    -------------------------------------------------------------------------- */
 
-.arch-group {
-    margin-bottom: 64px;
+.cpu-toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    margin-bottom: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid #e6e6e3;
 }
 
-.arch-brand {
-    margin: 0 0 20px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid #1a1a1a;
+.cpu-search-wrap {
+    flex: 1 1 320px;
+    min-width: 240px;
+}
 
-    font-size: 20px;
+.cpu-search-label {
+    display: block;
+    margin-bottom: 8px;
+
+    font-size: 11px;
     font-weight: 500;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #a8a8a4;
 }
 
-/* the product family, quieter than the vendor name */
-.arch-brand-note {
-    margin-left: 6px;
+.cpu-search {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 14px;
+
+    font-family: inherit;
+    font-size: 15px;
+    color: #1a1a1a;
+
+    background: #ffffff;
+    border: 1px solid #dcdcd8;
+    border-radius: 4px;
+
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cpu-search::placeholder {
+    color: #b4b4b0;
+}
+
+.cpu-search:focus {
+    outline: none;
+    border-color: #1a1a1a;
+    box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08);
+}
+
+/* brand filter chips */
+.cpu-brands {
+    display: flex;
+    gap: 8px;
+}
+
+.cpu-brand {
+    padding: 9px 16px;
+
+    font-family: inherit;
     font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    color: #a8a8a8;
+    font-weight: 500;
+    color: #6b6b68;
+
+    background: transparent;
+    border: 1px solid #dcdcd8;
+    border-radius: 999px;
+    cursor: pointer;
+
+    transition: color 0.2s ease, border-color 0.2s ease,
+                background-color 0.2s ease;
+}
+
+.cpu-brand:hover {
+    color: #1a1a1a;
+    border-color: #b4b4b0;
+}
+
+.cpu-brand.is-active {
+    color: #fdfdfc;
+    background: #1a1a1a;
+    border-color: #1a1a1a;
+}
+
+.cpu-brand:focus-visible {
+    outline: 2px solid #1a1a1a;
+    outline-offset: 2px;
 }
 
 /* --------------------------------------------------------------------------
-   3-5  the rows
-   A grid rather than a table: same alignment, but it reflows on narrow
-   screens instead of scrolling sideways.
+   3-5  two panels side by side: results on the left, comparison on the right
    -------------------------------------------------------------------------- */
 
-.arch-list {
+.cpu-board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+}
+
+/* min-width:0 is what lets the result list and the comparison table scroll
+   inside their own panel instead of stretching the grid column */
+.cpu-results,
+.cpu-compare {
+    min-width: 0;
+}
+
+.cpu-compare-body {
+    min-height: 72px;
+}
+
+.cpu-panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e6e6e3;
+}
+
+.cpu-panel-title {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a8a86;
+}
+
+.cpu-count {
+    margin: 0;
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    color: #a8a8a4;
+}
+
+.cpu-clear {
+    padding: 0;
+    font-family: inherit;
+    font-size: 12px;
+    color: #8a8a86;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid #d4d4d0;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.cpu-clear:hover {
+    color: #1a1a1a;
+    border-bottom-color: #1a1a1a;
+}
+
+/* --------------------------------------------------------------------------
+   3-6  the result rows
+   Fixed height and their own scroll area, so a long result list never pushes
+   the comparison table off the screen.
+   -------------------------------------------------------------------------- */
+
+.cpu-list {
     margin: 0;
     padding: 0;
     list-style: none;
+
+    max-height: 60vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
-.chip {
-    display: grid;
-    grid-template-columns: 1.15fr 1.5fr 76px 1.25fr;
-    align-items: baseline;
+.cpu-pick {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 16px;
 
-    padding: 14px 6px;
-    border-bottom: 1px solid #e6e6e6;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 12px;
 
-    transition: background-color 0.25s ease, padding-left 0.25s ease;
+    font-family: inherit;
+    text-align: left;
+    color: inherit;
+
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #eeeee9;
+    cursor: pointer;
+
+    transition: background-color 0.15s ease;
 }
 
-.chip:hover {
+.cpu-pick:hover {
     background: #f4f4f2;
-    padding-left: 14px;
 }
 
-/* generation label, e.g. "12th gen" or "Zen 5" */
-.chip-gen {
-    font-size: 15px;
+.cpu-pick:focus-visible {
+    outline: 2px solid #1a1a1a;
+    outline-offset: -2px;
+}
+
+/* a picked CPU keeps a marker, so the list shows what is already compared */
+.cpu-pick.is-picked {
+    background: #f0f0ec;
+    box-shadow: inset 3px 0 0 #1a1a1a;
+}
+
+.cpu-row-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.cpu-row-model {
+    font-size: 14.5px;
     font-weight: 500;
     letter-spacing: -0.005em;
-}
 
-/* architecture codename, e.g. "Alder Lake" */
-.chip-code {
-    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, "Songti SC", serif;
-    font-size: 17px;
-    font-style: italic;
-    color: #3a3a38;
-}
-
-/* launch date, monospaced so the digits line up down the column */
-.chip-date {
-    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
-    font-size: 12px;
-    color: #a8a8a4;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-/* the example part number */
-.chip-model {
+.cpu-row-meta {
+    font-size: 11.5px;
+    color: #a8a8a4;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cpu-row-specs {
+    flex: none;
     font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    color: #8a8a86;
+    white-space: nowrap;
+}
+
+.cpu-empty {
+    padding: 24px 4px;
+    font-size: 14px;
+    color: #8a8a86;
+}
+
+.cpu-more {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    padding: 11px;
+
+    font-family: inherit;
     font-size: 13px;
-    color: #6b6b68;
-    text-align: right;
+    font-weight: 500;
+    color: #1a1a1a;
+
+    background: transparent;
+    border: 1px solid #dcdcd8;
+    border-radius: 4px;
+    cursor: pointer;
+
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.cpu-more:hover {
+    background: #f4f4f2;
+    border-color: #b4b4b0;
 }
 
 /* --------------------------------------------------------------------------
-   3-6  footnote
+   3-7  the comparison table
    -------------------------------------------------------------------------- */
 
-.project-footnote {
+.cpu-compare-empty {
     margin: 0;
-    max-width: 66ch;
+    padding: 28px 22px;
+
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #a8a8a4;
+
+    border: 1px dashed #dcdcd8;
+    border-radius: 4px;
+}
+
+/* three columns of long model names will not fit a phone: scroll sideways
+   inside this box instead of stretching the page */
+.cpu-table-scroll {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+}
+
+.cpu-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.cpu-table th,
+.cpu-table td {
+    padding: 9px 10px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #eeeee9;
+}
+
+.cpu-table thead th {
+    position: relative;
+    padding-right: 26px;
+    border-bottom: 1px solid #d4d4d0;
+    vertical-align: bottom;
+}
+
+.cpu-table-corner {
+    width: 112px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #a8a8a4;
+}
+
+.cpu-table-model {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: #1a1a1a;
+}
+
+.cpu-table-remove {
+    position: absolute;
+    top: 4px;
+    right: 0;
+
+    width: 20px;
+    height: 20px;
+    padding: 0;
+
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1;
+    color: #b4b4b0;
+
+    background: none;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.cpu-table-remove:hover {
+    color: #1a1a1a;
+    background: #ececeA;
+}
+
+.cpu-table tbody th {
+    font-weight: 400;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #8a8a86;
+    white-space: nowrap;
+}
+
+.cpu-table tbody td {
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    color: #3a3a38;
+}
+
+/* the winning value in a numeric row */
+.cpu-table tbody td.is-best {
+    font-weight: 700;
+    color: #1a1a1a;
+    background: #f0f0ec;
+}
+
+/* --------------------------------------------------------------------------
+   3-8  footnote
+   -------------------------------------------------------------------------- */
+
+.cpu-footnote {
+    margin: 44px 0 0;
+    max-width: 74ch;
     font-size: 12.5px;
     line-height: 1.7;
     color: #a8a8a4;
 }
 
 /* --------------------------------------------------------------------------
-   3-7  projects, mobile
-   Two lines per chip instead of four columns.
+   3-9  one column on narrower screens
    -------------------------------------------------------------------------- */
 
-@media (max-width: 720px) {
-    .project-wrap {
-        padding: 64px 20px 64px;
+@media (max-width: 900px) {
+    .cpu-wrap {
+        padding: 72px 24px 72px;
     }
 
-    .project-head {
-        margin-bottom: 48px;
+    .cpu-board {
+        grid-template-columns: 1fr;
+        gap: 36px;
     }
 
-    .chip {
-        grid-template-columns: 1fr auto;
-        gap: 4px 12px;
-        padding: 14px 4px;
+    /* the list gets a natural height once it is full width */
+    .cpu-list {
+        max-height: 46vh;
+    }
+}
+
+@media (max-width: 560px) {
+    .cpu-wrap {
+        padding: 56px 18px 64px;
     }
 
-    /* generation on the left, date on the right */
-    .chip-gen { grid-column: 1; }
-    .chip-date { grid-column: 2; text-align: right; }
-
-    /* codename and model stack underneath */
-    .chip-code {
-        grid-column: 1 / -1;
-        font-size: 15px;
+    .cpu-head {
+        margin-bottom: 28px;
     }
 
-    .chip-model {
-        grid-column: 1 / -1;
-        text-align: left;
+    .cpu-toolbar {
+        gap: 14px;
     }
 
-    .chip:hover {
-        padding-left: 4px;
+    .cpu-row-specs {
+        display: none;      /* the model and brand are the useful part here */
+    }
+
+    .cpu-table-corner {
+        width: 84px;
     }
 }
 
@@ -842,144 +1270,7 @@ a.contact-value:hover {
     }
 }
 
-
 /* ==========================================================================
    [5] dark mode - shared by all four pages, colours only
    ========================================================================== */
 
-@media (prefers-color-scheme: dark) {
-
-    /* home */
-    .index {
-        background: #0e0e0e;
-        color: #ededed;
-    }
-
-    .index-link {
-        color: #ededed;
-    }
-
-    .index-quote {
-        background: #161616;
-        border-color: #262626;
-        color: #ededed;
-    }
-
-    /* slogans */
-    .slogans-page {
-        background: #0e0e0e;
-        color: #ededed;
-    }
-
-    .slogans-grid {
-        background: #262626;
-        border-color: #262626;
-    }
-
-    .slogan {
-        background: #0e0e0e;
-    }
-
-    .slogan:hover {
-        background: #161616;
-    }
-
-    /* lift the card secondary text, or it vanishes on dark */
-    .slogan-brand {
-        color: #9a9a96;
-    }
-
-    .slogan::after {
-        color: #4a4a48;
-    }
-
-    .slogan-note {
-        color: #9a9a96;
-    }
-
-    .slogan-src,
-    .slogans-footnote,
-    .slogans-eyebrow {
-        color: #6f6f6c;
-    }
-
-    .slogans-footnote code {
-        color: #9a9a96;
-    }
-
-    /* "no short slogan" section */
-    .blanks-title,
-    .blanks-list dt {
-        color: #9a9a96;
-    }
-
-    .blanks-note {
-        color: #8a8a86;
-    }
-
-    .blanks-list,
-    .blanks-list > div {
-        border-color: #262626;
-    }
-
-    .blanks-list dd {
-        color: #ededed;
-    }
-
-    .back-link:hover {
-        color: #ededed;
-    }
-
-    /* projects */
-    .project-page {
-        background: #0e0e0e;
-        color: #ededed;
-    }
-
-    .arch-brand {
-        border-bottom-color: #ededed;
-    }
-
-    .chip {
-        border-bottom-color: #262626;
-    }
-
-    .chip:hover {
-        background: #161616;
-    }
-
-    .chip-code {
-        color: #b8b8b4;
-    }
-
-    .chip-date {
-        color: #6f6f6c;
-    }
-
-    .chip-model {
-        color: #9a9a96;
-    }
-
-    .project-footnote {
-        color: #6f6f6c;
-    }
-
-    /* contact */
-    .contact-page {
-        background: #0e0e0e;
-        color: #ededed;
-    }
-
-    .contact-list,
-    .contact-list li {
-        border-color: #262626;
-    }
-
-    .contact-value {
-        color: #ededed;
-    }
-
-    a.contact-value:hover {
-        border-bottom-color: #ededed;
-    }
-}

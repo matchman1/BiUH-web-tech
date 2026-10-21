@@ -40,7 +40,7 @@ http://127.0.0.1:8000/index.html
 BiUH-web/
 ├── index.html         首页
 ├── slogans.html       标语页（16 条硬件厂商标语）
-├── project.html       CPU / GPU 历代架构
+├── cpus.html          CPU Explorer（可搜索、可对比）
 ├── contact.html       联系页
 │
 ├── nav.html           导航片段   ← 不含 DOCTYPE/html/head/body
@@ -49,6 +49,10 @@ BiUH-web/
 │
 ├── styles.css         四个页面的样式（按页面分成五部分，见下）
 ├── nav.css            导航 + 页脚样式（四页共用的组件）
+├── theme.css          深色模式的颜色（可被导航里的开关覆盖）
+├── theme.js           浅色 / 深色开关的逻辑
+├── cpu.js             CPU Explorer 的搜索与对比
+├── data/cpus.js       从 cpu/cpus.db 导出的 3551 条 CPU 数据
 │
 ├── serve.bat          启动本地服务器（有窗口）
 ├── serve-hidden.vbs   启动本地服务器（无窗口）
@@ -87,7 +91,7 @@ BiUH-web/
     <ul class="links">
         <li><a href="index.html">Home</a></li>
         <li><a href="slogans.html">Slogans</a></li>
-        <li><a href="project.html">Project</a></li>
+        <li><a href="cpus.html">CPUs</a></li>
     </ul>
     <a class="pill" href="contact.html" target="_blank" rel="noopener">Contact</a>
 </nav>
@@ -148,7 +152,7 @@ load('footer.html', 'site-footer');
 |---|---|---|
 | 第一部分 | index.html 首页 | `.index-*` |
 | 第二部分 | slogans.html 标语页 | `.slogans-*` / `.slogan-*` |
-| 第三部分 | project.html 架构页 | `.project-*` / `.arch-*` / `.chip*` |
+| 第三部分 | cpus.html CPU 浏览器 | `.cpu-*` |
 | 第四部分 | contact.html 联系页 | `.contact-*` |
 | 第五部分 | 深色模式 | 四页共用 |
 
@@ -235,7 +239,7 @@ node verify-parts.mjs
 |---|---|
 | **index.html** | 标题、`bilibili.jpg` 配图（链接到 bilibili）、两个入口链接分别指向 slogans 和 project |
 | **slogans.html** | 16 条硬件厂商标语（ASUS、AMD、Intel、ROG、Corsair 等），每条注明出处；另有「无短标语」板块 5 条 |
-| **project.html** | Intel / AMD / NVIDIA 的历代架构列表，每代含代号、发布时间、桌面旗舰型号 |
+| **cpus.html** | CPU Explorer：3551 条处理器，可按名称搜索、按品牌筛选，并选最多 3 颗并排对比规格 |
 | **contact.html** | 联系方式列表（Email / GitHub / Location），从导航的药丸按钮以新标签页打开 |
 
 ---
@@ -245,11 +249,9 @@ node verify-parts.mjs
 - **导航栏布局与教程说明不一致。** `1.pdf` 第 44 页的复习要点写的是 `logo left, nav centred, action right`（logo 左、**导航居中**、按钮右），但当前实现是 logo 左、**导航右**。若要改成居中，需要调整 `nav.css` 里 `.links` 的 `margin-left: auto`。
 - **`w3.png` 未被引用。** 首页配图已经从它换成了 `bilibili.jpg`。
 - **`slogans.md` 记录了标语调研与校对结果**，其中有 10 条网上流传的标语被查实为编造，未采用。
-- **`styles.css` 末尾有一条 `nav a:hover { color: red; }`。** 它是全局的，会盖掉 `nav.css` 里导航链接的悬停变色。如果是试验代码，建议删掉。
 - **`footer.html` 里的邮箱是占位符** `liwei@example.com`，应换成真实邮箱。
 - **favicon 不符合期末要求。** 四个页面现在是 `<link rel="icon" href="xlm.jpg" type="image/png">`，但 `xlm.jpg` 实际是 **JPEG** 格式、尺寸 **457×428（非方形）**。期末项目书要求 32×32 的方形 PNG。
 - **页脚的年份是硬编码的** `2026`，跨年后需要手动改，也可以改成用 JS 自动取当前年份。
-- **`p2/` 目录** 里有另一个空的练习（`index.html` 为空、`project.html` 有 467 字节），与本项目无关，尚未整理。
 - **`.pdfwork/pages/`** 是从 `1.pdf` 渲染出来的教程页面图片，属于临时文件，可以随时删除。
 
 ---

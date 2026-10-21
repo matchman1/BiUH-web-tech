@@ -3,7 +3,7 @@
 
 import { readFile } from 'node:fs/promises';
 
-const files = ['styles.css', 'nav.css'];
+const files = ['styles.css', 'nav.css', 'theme.css'];
 
 function stripComments(css) {
   return css.replace(/\/\*[\s\S]*?\*\//g, (m) => ' '.repeat(m.length));
@@ -61,14 +61,22 @@ for (const f of files) {
   console.log(`\n=== ${f} ===`);
   console.log(`规则数（含 @media 内的）: ${rules.length}`);
 
-  // 检查是否存在我们关心的选择器
-  const want = f === 'styles.css'
-    ? ['.slogans-wrap', '.slogans-grid', '.slogan', '.slogan-brand', '.slogan-line',
-       '.slogan-note', '.slogan-src', '.blanks', '.slogans-footnote', '.slogans-page']
-    : ['nav', '.pill', '#site-footer'];
+  // 检查是否存在我们关心的选择器。
+  // 用「包含」而不是「完全相等」：同一个类在不同文件里可能是带前缀的，
+  // 例如 theme.css 里写的是 html[data-theme="dark"] .pill，
+  // 完全相等会误报成「样式丢了」。
+  const want = {
+    'styles.css': ['.slogans-wrap', '.slogans-grid', '.slogan', '.slogan-brand',
+                   '.slogan-line', '.blanks', '.slogans-page',
+                   '.index-card', '.index-hero-img', '.index-title',
+                   '.cpu-wrap', '.cpu-list', '.cpu-table', '.cpu-brand',
+                   '.contact-list'],
+    'nav.css': ['nav', '.pill', '.theme-toggle', '#site-footer'],
+    'theme.css': ['html[data-theme="dark"]', 'html:not([data-theme])'],
+  }[f] || [];
 
   for (const w of want) {
-    const found = rules.some((r) => r.selector.split(',').some((s) => s.trim() === w));
+    const found = rules.some((r) => r.selector.includes(w));
     console.log(`  ${found ? '✅' : '❌'} 选择器 ${w}`);
   }
 

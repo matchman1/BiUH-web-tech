@@ -1,0 +1,476 @@
+/* ==========================================================================
+   theme.css - the switchable light / dark layer
+
+   Why this file exists
+   --------------------
+   The dark colours live here instead of in styles.css and nav.css, because the
+   navigation has a light / dark switch and a plain
+   @media (prefers-color-scheme: dark) cannot be overruled by a click.
+
+   Every rule that used to sit inside that media query now appears twice:
+
+     html:not([data-theme]) ...    follow the operating system, but only while
+                                   the visitor has not chosen a theme
+     html[data-theme="dark"] ...   an explicit choice; wins over the system in
+                                   both directions
+
+   So the site still follows the OS on a first visit, and the switch in the nav
+   overrides it afterwards. theme.js sets the data-theme attribute.
+
+   Keep this file in step with the base rules in styles.css and nav.css: if a
+   colour is changed there, change its twin here too.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   follows the operating system, until the visitor picks a theme
+   -------------------------------------------------------------------------- */
+
+@media (prefers-color-scheme: dark) {
+
+    /* ---- from styles.css ---- */
+
+    /* home */
+
+    html:not([data-theme]) .index {
+        background: #0e0e0e;
+        color: #ededed;
+    }
+
+    html:not([data-theme]) .index-card {
+        background: #161616;
+        border-color: #262626;
+    }
+
+    html:not([data-theme]) .index-card:hover {
+        border-color: #3a3a3a;
+        box-shadow: none;
+    }
+
+    html:not([data-theme]) .index-eyebrow,
+    html:not([data-theme]) .index-card-label {
+        color: #6f6f6c;
+    }
+
+    html:not([data-theme]) .index-lede,
+    html:not([data-theme]) .index-card-desc {
+        color: #9a9a96;
+    }
+
+    html:not([data-theme]) .index-quote {
+        background: #161616;
+        border-color: #262626;
+        color: #ededed;
+    }
+
+    /* slogans */
+
+    html:not([data-theme]) .slogans-page {
+        background: #0e0e0e;
+        color: #ededed;
+    }
+
+    html:not([data-theme]) .slogans-grid {
+        background: #262626;
+        border-color: #262626;
+    }
+
+    html:not([data-theme]) .slogan {
+        background: #0e0e0e;
+    }
+
+    html:not([data-theme]) .slogan:hover {
+        background: #161616;
+    }
+
+    /* lift the card secondary text, or it vanishes on dark */
+
+    html:not([data-theme]) .slogan-brand {
+        color: #9a9a96;
+    }
+
+    html:not([data-theme]) .slogan::after {
+        color: #4a4a48;
+    }
+
+    html:not([data-theme]) .slogan-note {
+        color: #9a9a96;
+    }
+
+    html:not([data-theme]) .slogan-src,
+    html:not([data-theme]) .slogans-footnote,
+    html:not([data-theme]) .slogans-eyebrow {
+        color: #6f6f6c;
+    }
+
+    html:not([data-theme]) .slogans-footnote code {
+        color: #9a9a96;
+    }
+
+    /* "no short slogan" section */
+
+    html:not([data-theme]) .blanks-title,
+    html:not([data-theme]) .blanks-list dt {
+        color: #9a9a96;
+    }
+
+    html:not([data-theme]) .blanks-note {
+        color: #8a8a86;
+    }
+
+    html:not([data-theme]) .blanks-list,
+    html:not([data-theme]) .blanks-list > div {
+        border-color: #262626;
+    }
+
+    html:not([data-theme]) .blanks-list dd {
+        color: #ededed;
+    }
+
+    html:not([data-theme]) .back-link:hover {
+        color: #ededed;
+    }
+
+    /* projects */
+
+    html:not([data-theme]) .project-page {
+        background: #0e0e0e;
+        color: #ededed;
+    }
+
+    html:not([data-theme]) .arch-brand {
+        border-bottom-color: #ededed;
+    }
+
+    html:not([data-theme]) .chip {
+        border-bottom-color: #262626;
+    }
+
+    html:not([data-theme]) .chip:hover {
+        background: #161616;
+    }
+
+    html:not([data-theme]) .chip-code {
+        color: #b8b8b4;
+    }
+
+    html:not([data-theme]) .chip-date {
+        color: #6f6f6c;
+    }
+
+    html:not([data-theme]) .chip-model {
+        color: #9a9a96;
+    }
+
+    html:not([data-theme]) .project-footnote {
+        color: #6f6f6c;
+    }
+
+    /* contact */
+
+    html:not([data-theme]) .contact-page {
+        background: #0e0e0e;
+        color: #ededed;
+    }
+
+    html:not([data-theme]) .contact-list,
+    html:not([data-theme]) .contact-list li {
+        border-color: #262626;
+    }
+
+    html:not([data-theme]) .contact-value {
+        color: #ededed;
+    }
+
+    html:not([data-theme]) a.contact-value:hover {
+        border-bottom-color: #ededed;
+    }
+
+    /* ---- from nav.css ---- */
+
+    html:not([data-theme]) nav {
+        background: rgba(14, 14, 14, 0.82);
+        border-bottom-color: #262626;
+    }
+
+    html:not([data-theme]) nav .logo,
+    html:not([data-theme]) nav .links a:hover,
+    html:not([data-theme]) nav .links a.active {
+        color: #ededed;
+    }
+
+    html:not([data-theme]) nav .links a {
+        color: #9a9a9a;
+    }
+
+    html:not([data-theme]) nav .pill {
+        color: #ededed;
+        border-color: #3a3a3a;
+    }
+
+    html:not([data-theme]) nav .pill:hover {
+        color: #0e0e0e;
+        background: #ededed;
+        border-color: #ededed;
+    }
+
+    html:not([data-theme]) nav .pill.active {
+        color: #0e0e0e;
+        background: #ededed;
+        border-color: #ededed;
+    }
+
+    html:not([data-theme]) #site-footer {
+        border-top-color: #262626;
+        color: #6f6f6f;
+    }
+
+    html:not([data-theme]) #site-footer a {
+        color: #9a9a9a;
+    }
+
+    html:not([data-theme]) #site-footer a:hover {
+        color: #ededed;
+        border-bottom-color: #ededed;
+    }
+
+
+    /* the switch itself */
+    html:not([data-theme]) .theme-toggle {
+        color: #9a9a96;
+        border-color: #3a3a3a;
+    }
+
+    html:not([data-theme]) .theme-toggle:hover {
+        color: #ededed;
+        border-color: #6a6a66;
+    }
+
+    html:not([data-theme]) .theme-toggle:focus-visible {
+        outline-color: #ededed;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   explicit dark, chosen with the switch
+   -------------------------------------------------------------------------- */
+
+/* ---- from styles.css ---- */
+
+/* home */
+
+html[data-theme="dark"] .index {
+    background: #0e0e0e;
+    color: #ededed;
+}
+
+html[data-theme="dark"] .index-card {
+    background: #161616;
+    border-color: #262626;
+}
+
+html[data-theme="dark"] .index-card:hover {
+    border-color: #3a3a3a;
+    box-shadow: none;
+}
+
+html[data-theme="dark"] .index-eyebrow,
+html[data-theme="dark"] .index-card-label {
+    color: #6f6f6c;
+}
+
+html[data-theme="dark"] .index-lede,
+html[data-theme="dark"] .index-card-desc {
+    color: #9a9a96;
+}
+
+html[data-theme="dark"] .index-quote {
+    background: #161616;
+    border-color: #262626;
+    color: #ededed;
+}
+
+/* slogans */
+
+html[data-theme="dark"] .slogans-page {
+    background: #0e0e0e;
+    color: #ededed;
+}
+
+html[data-theme="dark"] .slogans-grid {
+    background: #262626;
+    border-color: #262626;
+}
+
+html[data-theme="dark"] .slogan {
+    background: #0e0e0e;
+}
+
+html[data-theme="dark"] .slogan:hover {
+    background: #161616;
+}
+
+/* lift the card secondary text, or it vanishes on dark */
+
+html[data-theme="dark"] .slogan-brand {
+    color: #9a9a96;
+}
+
+html[data-theme="dark"] .slogan::after {
+    color: #4a4a48;
+}
+
+html[data-theme="dark"] .slogan-note {
+    color: #9a9a96;
+}
+
+html[data-theme="dark"] .slogan-src,
+html[data-theme="dark"] .slogans-footnote,
+html[data-theme="dark"] .slogans-eyebrow {
+    color: #6f6f6c;
+}
+
+html[data-theme="dark"] .slogans-footnote code {
+    color: #9a9a96;
+}
+
+/* "no short slogan" section */
+
+html[data-theme="dark"] .blanks-title,
+html[data-theme="dark"] .blanks-list dt {
+    color: #9a9a96;
+}
+
+html[data-theme="dark"] .blanks-note {
+    color: #8a8a86;
+}
+
+html[data-theme="dark"] .blanks-list,
+html[data-theme="dark"] .blanks-list > div {
+    border-color: #262626;
+}
+
+html[data-theme="dark"] .blanks-list dd {
+    color: #ededed;
+}
+
+html[data-theme="dark"] .back-link:hover {
+    color: #ededed;
+}
+
+/* projects */
+
+html[data-theme="dark"] .project-page {
+    background: #0e0e0e;
+    color: #ededed;
+}
+
+html[data-theme="dark"] .arch-brand {
+    border-bottom-color: #ededed;
+}
+
+html[data-theme="dark"] .chip {
+    border-bottom-color: #262626;
+}
+
+html[data-theme="dark"] .chip:hover {
+    background: #161616;
+}
+
+html[data-theme="dark"] .chip-code {
+    color: #b8b8b4;
+}
+
+html[data-theme="dark"] .chip-date {
+    color: #6f6f6c;
+}
+
+html[data-theme="dark"] .chip-model {
+    color: #9a9a96;
+}
+
+html[data-theme="dark"] .project-footnote {
+    color: #6f6f6c;
+}
+
+/* contact */
+
+html[data-theme="dark"] .contact-page {
+    background: #0e0e0e;
+    color: #ededed;
+}
+
+html[data-theme="dark"] .contact-list,
+html[data-theme="dark"] .contact-list li {
+    border-color: #262626;
+}
+
+html[data-theme="dark"] .contact-value {
+    color: #ededed;
+}
+
+html[data-theme="dark"] a.contact-value:hover {
+    border-bottom-color: #ededed;
+}
+
+/* ---- from nav.css ---- */
+
+html[data-theme="dark"] nav {
+    background: rgba(14, 14, 14, 0.82);
+    border-bottom-color: #262626;
+}
+
+html[data-theme="dark"] nav .logo,
+html[data-theme="dark"] nav .links a:hover,
+html[data-theme="dark"] nav .links a.active {
+    color: #ededed;
+}
+
+html[data-theme="dark"] nav .links a {
+    color: #9a9a9a;
+}
+
+html[data-theme="dark"] nav .pill {
+    color: #ededed;
+    border-color: #3a3a3a;
+}
+
+html[data-theme="dark"] nav .pill:hover {
+    color: #0e0e0e;
+    background: #ededed;
+    border-color: #ededed;
+}
+
+html[data-theme="dark"] nav .pill.active {
+    color: #0e0e0e;
+    background: #ededed;
+    border-color: #ededed;
+}
+
+html[data-theme="dark"] #site-footer {
+    border-top-color: #262626;
+    color: #6f6f6f;
+}
+
+html[data-theme="dark"] #site-footer a {
+    color: #9a9a9a;
+}
+
+html[data-theme="dark"] #site-footer a:hover {
+    color: #ededed;
+    border-bottom-color: #ededed;
+}
+
+/* the switch itself */
+html[data-theme="dark"] .theme-toggle {
+    color: #9a9a96;
+    border-color: #3a3a3a;
+}
+
+html[data-theme="dark"] .theme-toggle:hover {
+    color: #ededed;
+    border-color: #6a6a66;
+}
+
+html[data-theme="dark"] .theme-toggle:focus-visible {
+    outline-color: #ededed;
+}
