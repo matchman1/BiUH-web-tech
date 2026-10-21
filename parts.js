@@ -42,7 +42,7 @@ load('footer.html', 'site-footer');
 // ---------------------------------------------------------------------------
 
 navReady.then(function () {
-  // 取当前网址的最后一段，例如 "quotes.html"；
+  // Take the last segment of the URL, e.g. "slogans.html";
   // 直接用 file:// 或 http:// 打开根目录时最后一段可能是空，兜底成 "index.html"
   var current = location.pathname.split('/').pop() || 'index.html';
 

@@ -1,31 +1,31 @@
 /* ==========================================================================
    styles.css
    --------------------------------------------------------------------------
-   这个文件同时服务四个页面，用大标题分成几部分，互不干扰：
+   Serves all four pages. Sections are split by big headings and never interfere:
 
-     【第一部分】 index.html    首页      —— 类名前缀 .index-*
-     【第二部分】 quotes.html   语录页    —— 类名前缀 .quotes-* 与 .q
-     【第三部分】 project.html  项目页    —— 类名前缀 .project-*
-     【第四部分】 contact.html  联系页    —— 类名前缀 .contact-*
-     【第五部分】 深色模式（四页共用，只改颜色不动布局）
+     [1] index.html     home      - classes prefixed .index-*
+     [2] slogans.html   slogans   - classes prefixed .slogans-* / .slogan-*
+     [3] project.html   projects  - classes prefixed .project-*
+     [4] contact.html   contact   - classes prefixed .contact-*
+     [5] dark mode (shared by all four pages; colours only, no layout)
 
-   四个页面的类名不交叉：
-     index.html   的 <body class="index">
-     quotes.html  的 <body class="quotes-page">
-     project.html 的 <body class="project-page">
-     contact.html 的 <body class="contact-page">
+   The four pages never share class names:
+     index.html    <body class="index">
+     slogans.html  <body class="slogans-page">
+     project.html  <body class="project-page">
+     contact.html  <body class="contact-page">
 
-   导航栏的样式不在这里，在 nav.css（四页共用一个导航）。
-   改哪个页面，只看对应的那一部分。
+   The nav and footer live in nav.css, since all four pages share them.
+   To change a page, look only at its section.
    ========================================================================== */
 
 
 /* ==========================================================================
-   第一部分：index.html（首页）
+   [1] index.html - home
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1-1  页面骨架
+   1-1  page shell
    -------------------------------------------------------------------------- */
 
 .index {
@@ -41,8 +41,8 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-2  居中容器
-   定宽 + margin auto = 整页内容水平居中
+   1-2  centred container
+   Fixed width + margin auto centres everything
    -------------------------------------------------------------------------- */
 
 .index-wrap {
@@ -53,7 +53,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-3  标题
+   1-3  headings
    -------------------------------------------------------------------------- */
 
 .index-title {
@@ -74,14 +74,14 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-4  图片
-   改尺寸就改这里的 width 值。
-   重要：不要在 HTML 的 <img> 上写 width="200" 这类属性，
-   HTML 属性优先级高于外部 CSS，会把这里的值盖掉，改了也没反应。
+   1-4  images
+   Change the width here to resize the image.
+   Do NOT put width="200" on the <img> in HTML:
+   the HTML attribute outranks external CSS and silently overrides this.
    -------------------------------------------------------------------------- */
 
 .index-hero {
-    display: block;            /* 图片默认是 inline，不转 block 则 margin auto 不居中 */
+    display: block;            /* images are inline by default; without block, margin auto cannot centre them */
     width: 200px;
     max-width: 100%;
     height: auto;
@@ -100,7 +100,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-5  文字与链接
+   1-5  text and links
    -------------------------------------------------------------------------- */
 
 .index-text {
@@ -121,7 +121,7 @@
     border-bottom-color: #1a1a1a;
 }
 
-/* 包图片的链接：不要下划线，否则会把整行撑出一条线 */
+/* link wrapping an image: no underline, or it draws a line across the row */
 
 .img-link {
     display: inline-block;
@@ -130,8 +130,8 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-6  语录卡片（首页备用，现在 index.html 里没用到）
-   用法：给 <article> 加上 class="index-quote"
+   1-6  quote card (spare; not used by index.html right now)
+   Usage: add class="index-quote" to an <article>
    -------------------------------------------------------------------------- */
 
 .index-quote {
@@ -171,30 +171,30 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-7  你原来写的通用工具类（保留）
+   1-7  original utility classes (kept)
    -------------------------------------------------------------------------- */
 
-/* 高亮文字 */
+/* highlighted text */
 .highlight {
     background-color: #ff0;
     color: #000;
 }
 
-/* 右对齐的页脚文字 */
+/* right-aligned footer text */
 .footer {
     width: 100%;
     text-align: right;
 }
 
-/* 四列网格 */
+/* four-column grid */
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
 }
 
-/* 黑底大字语录卡片（你最初写的版本，保留作参考；
-   首页现在用的是上面的 .index-quote） */
+/* original black quote card, kept for reference;
+   the home page now uses .index-quote above */
 .quote {
     border: 1px solid #ccc;
     padding: 10px;
@@ -205,7 +205,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-8  首页移动端
+   1-8  home, mobile
    -------------------------------------------------------------------------- */
 
 @media (max-width: 480px) {
@@ -220,17 +220,20 @@
 
 
 /* ==========================================================================
-   第二部分：quotes.html（语录页）
+   [2] slogans.html - hardware brand slogans
+   --------------------------------------------------------------------------
+   Content is hardware brand slogans, not famous quotations.
+   Classes are .slogans-* / .slogan-* and never clash with the other sections.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   2-1  页面骨架
+   2-1  page shell
    -------------------------------------------------------------------------- */
 
-.quotes-page {
+.slogans-page {
     margin: 0;
     padding: 0;
-    background: #fdfdfc;
+    background: #fafaf9;
     color: #1a1a1a;
     font-family: "Inter", "Helvetica Neue", -apple-system, "Segoe UI",
                  "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
@@ -240,126 +243,234 @@
 }
 
 /* --------------------------------------------------------------------------
-   2-2  居中容器
+   2-2  centred container
    -------------------------------------------------------------------------- */
 
-.quotes-wrap {
-    max-width: 1080px;
+.slogans-wrap {
+    max-width: 1120px;
     margin: 0 auto;
-    padding: 120px 40px 96px;
+    padding: 104px 40px 88px;
 }
 
 /* --------------------------------------------------------------------------
-   2-3  页眉
+   2-3  page header
+   Left-aligned rather than centred: this page is a catalogue, and
+   left alignment suits it and echoes the left-aligned card content.
    -------------------------------------------------------------------------- */
 
-.quotes-head {
-    margin-bottom: 72px;
-    text-align: center;
+.slogans-head {
+    margin-bottom: 64px;
 }
 
-.quotes-eyebrow {
-    margin: 0 0 20px;
+.slogans-eyebrow {
+    margin: 0 0 18px;
     font-size: 11px;
     font-weight: 500;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
-    color: #a8a8a8;
+    color: #b0b0ae;
 }
 
-.quotes-head h1 {
+.slogans-head h1 {
     margin: 0;
-    font-size: 46px;
+    font-size: clamp(34px, 5vw, 54px);
     font-weight: 400;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
 }
 
-.quotes-sub {
-    margin: 20px auto 0;
-    max-width: 34ch;
+.slogans-sub {
+    margin: 20px 0 0;
+    max-width: 40ch;
     font-size: 15px;
-    color: #6b6b6b;
+    color: #6b6b68;
 }
 
 /* --------------------------------------------------------------------------
-   2-4  语录网格
-   用 1px 发丝线代替卡片边框
+   2-4  slogan grid
+   Real gaps plus one hairline border per card, rather than the
+   1px-seam grid, which suits cards holding a full line of text better.
    -------------------------------------------------------------------------- */
 
-.quotes-grid {
+.slogans-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
     gap: 1px;
-    background: #e6e6e6;
-    border-top: 1px solid #e6e6e6;
-    border-bottom: 1px solid #e6e6e6;
+    /* grid background shows through the gaps, drawing the rules */
+    background: #e6e6e3;
+    border: 1px solid #e6e6e3;
 }
 
 /* --------------------------------------------------------------------------
-   2-5  单条语录
-   注意：这里用的是 .q，和第一部分的 .quote / .index-quote 是两套东西
+   2-5  single card
+   A CSS counter numbers each card, giving it a catalogue feel
    -------------------------------------------------------------------------- */
 
-.q {
+.slogans-grid {
+    counter-reset: brand;
+}
+
+.slogan {
+    position: relative;
+    counter-increment: brand;
+
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 32px;
-    padding: 40px;
+    gap: 14px;
+
+    padding: 34px 32px 28px;
     margin: 0;
-    background: #fdfdfc;
-    transition: background-color 0.35s ease;
+    background: #fafaf9;
+
+    transition: background-color 0.3s ease;
 }
 
-.q:hover {
-    background: #f6f6f4;
+.slogan:hover {
+    background: #ffffff;
 }
 
-.q blockquote {
-    margin: 0;
-}
+/* number, top right, very faint */
+.slogan::after {
+    content: counter(brand, decimal-leading-zero);
+    position: absolute;
+    top: 18px;
+    right: 22px;
 
-.q blockquote p {
-    margin: 0;
-    font-size: 19px;
-    font-weight: 300;
-    line-height: 1.5;
-    letter-spacing: -0.005em;
-}
-
-.q footer {
-    margin: 0;
-}
-
-.q cite {
-    display: inline-block;
-    font-style: normal;
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
     font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: #a8a8a8;
-    transition: color 0.35s ease;
+    letter-spacing: 0.06em;
+    color: #c9c9c6;
 }
 
-.q:hover cite {
-    color: #6b6b6b;
+/* brand name: small caps with wide tracking, like a nameplate */
+.slogan-brand {
+    margin: 0;
+    padding-right: 32px;         /* leave room for the number */
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a8a86;
+}
+
+/* the slogan is the point of the card.
+   A serif face at light weight contrasts with the sans UI and reads like a poster. */
+.slogan-line {
+    margin: 0;
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia,
+                 "Songti SC", "SimSun", serif;
+    font-size: clamp(21px, 2.1vw, 27px);
+    font-weight: 400;
+    line-height: 1.28;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+}
+
+/* Chinese wording, shown when it is the official original */
+.slogan-note {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #6b6b68;
+}
+
+/* source, pushed to the bottom of the card */
+.slogan-src {
+    margin: auto 0 0;
+    padding-top: 18px;
+
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #a8a8a4;
 }
 
 /* --------------------------------------------------------------------------
-   2-6  返回首页
+   2-6  "no short slogan" section
+   Some brands publish no one-line slogan. Rather than invent one,
+   list them honestly. This block uses a different shape from the grid
+   above, so it never reads as another slogan card.
    -------------------------------------------------------------------------- */
 
-.quotes-foot {
-    margin-top: 80px;
-    text-align: center;
+.blanks {
+    margin-top: 56px;
 }
+
+.blanks-title {
+    margin: 0 0 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a8a86;
+}
+
+.blanks-note {
+    margin: 0 0 28px;
+    max-width: 62ch;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #6b6b68;
+}
+
+.blanks-list {
+    margin: 0;
+    border-top: 1px solid #e6e6e3;
+}
+
+.blanks-list > div {
+    display: grid;
+    grid-template-columns: minmax(140px, 200px) 1fr;
+    gap: 20px;
+
+    padding: 14px 0;
+    border-bottom: 1px solid #e6e6e3;
+}
+
+.blanks-list dt {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8a8a86;
+    padding-top: 2px;
+}
+
+.blanks-list dd {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #1a1a1a;
+}
+
+/* --------------------------------------------------------------------------
+   2-7  source note at the foot of the page
+   -------------------------------------------------------------------------- */
+
+.slogans-footnote {
+    margin: 48px 0 0;
+    max-width: 68ch;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #a8a8a4;
+}
+
+.slogans-footnote code {
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: #6b6b68;
+}
+
+/* --------------------------------------------------------------------------
+   2-8  back link
+   This page no longer has a back link, since the nav has Home,
+   but project.html and contact.html still use .back-link, so it stays.
+   -------------------------------------------------------------------------- */
 
 .back-link {
     font-size: 13px;
     letter-spacing: 0.04em;
-    color: #6b6b6b;
+    color: #6b6b68;
     text-decoration: none;
     border-bottom: 1px solid transparent;
     padding-bottom: 2px;
@@ -372,35 +483,35 @@
 }
 
 /* --------------------------------------------------------------------------
-   2-7  语录页移动端
+   2-9  slogans, mobile
    -------------------------------------------------------------------------- */
 
-@media (max-width: 480px) {
-    .quotes-wrap {
-        padding: 72px 20px 72px;
+@media (max-width: 640px) {
+    .slogans-wrap {
+        padding: 64px 20px 64px;
     }
 
-    .quotes-head {
-        margin-bottom: 48px;
+    .slogans-head {
+        margin-bottom: 40px;
     }
 
-    .quotes-head h1 {
-        font-size: 32px;
+    /* one column on narrow screens; tighten the card padding too */
+    .slogans-grid {
+        grid-template-columns: 1fr;
     }
 
-    .q {
-        padding: 28px 22px;
-        gap: 22px;
+    .slogan {
+        padding: 28px 22px 24px;
     }
 }
 
 
 /* ==========================================================================
-   第三部分：project.html（项目想法页）
+   [3] project.html - CPU and GPU generations
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   3-1  页面骨架
+   3-1  page shell
    -------------------------------------------------------------------------- */
 
 .project-page {
@@ -416,26 +527,21 @@
 }
 
 /* --------------------------------------------------------------------------
-   3-2  居中容器（比首页宽一点，列表读起来更舒服）
+   3-2  centred container
    -------------------------------------------------------------------------- */
 
 .project-wrap {
-    max-width: 720px;
+    max-width: 880px;
     margin: 0 auto;
-    padding: 96px 24px 88px;
+    padding: 104px 32px 88px;
 }
 
 /* --------------------------------------------------------------------------
-   3-3  页眉
+   3-3  page header
    -------------------------------------------------------------------------- */
 
 .project-head {
     margin-bottom: 72px;
-}
-
-.project-head .back-link {
-    display: inline-block;
-    margin-bottom: 40px;
 }
 
 .project-eyebrow {
@@ -449,156 +555,165 @@
 
 .project-head h1 {
     margin: 0;
-    font-size: 40px;
+    font-size: clamp(32px, 4.6vw, 46px);
     font-weight: 400;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
 }
 
 .project-sub {
     margin: 20px 0 0;
+    max-width: 54ch;
     font-size: 15px;
     color: #6b6b6b;
 }
 
 /* --------------------------------------------------------------------------
-   3-4  区块与小区块标题
+   3-4  one group per vendor
    -------------------------------------------------------------------------- */
 
-.project-section {
+.arch-group {
     margin-bottom: 64px;
 }
 
-.project-label {
-    margin: 0 0 24px;
-    font-size: 11px;
+.arch-brand {
+    margin: 0 0 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #1a1a1a;
+
+    font-size: 20px;
     font-weight: 500;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    letter-spacing: -0.01em;
+}
+
+/* the product family, quieter than the vendor name */
+.arch-brand-note {
+    margin-left: 6px;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
     color: #a8a8a8;
 }
 
 /* --------------------------------------------------------------------------
-   3-5  项目列表
-   用 1px 发丝线分隔，和语录页的网格是同一套做法
+   3-5  the rows
+   A grid rather than a table: same alignment, but it reflows on narrow
+   screens instead of scrolling sideways.
    -------------------------------------------------------------------------- */
 
-.project-list {
+.arch-list {
     margin: 0;
     padding: 0;
     list-style: none;
-    border-top: 1px solid #e6e6e6;
 }
 
-.project-list li {
-    padding: 18px 4px;
+.chip {
+    display: grid;
+    grid-template-columns: 1.15fr 1.5fr 76px 1.25fr;
+    align-items: baseline;
+    gap: 16px;
+
+    padding: 14px 6px;
     border-bottom: 1px solid #e6e6e6;
-    font-size: 17px;
-    font-weight: 300;
-    transition: padding-left 0.25s ease, color 0.25s ease;
+
+    transition: background-color 0.25s ease, padding-left 0.25s ease;
 }
 
-.project-list li:hover {
-    padding-left: 12px;
-    color: #6b6b6b;
+.chip:hover {
+    background: #f4f4f2;
+    padding-left: 14px;
 }
 
-/* --------------------------------------------------------------------------
-   3-6  名词解释 dl / dt / dd
-   左边一条竖线把解释归到词条下面
-   -------------------------------------------------------------------------- */
-
-.project-dl {
-    margin: 0;
-    border-left: 1px solid #e6e6e6;
-    padding-left: 24px;
-}
-
-.project-dl dt {
-    font-size: 17px;
-    font-weight: 400;
-    color: #1a1a1a;
-}
-
-.project-dl dd {
-    margin: 6px 0 24px;
+/* generation label, e.g. "12th gen" or "Zen 5" */
+.chip-gen {
     font-size: 15px;
-    color: #6b6b6b;
+    font-weight: 500;
+    letter-spacing: -0.005em;
 }
 
-.project-dl dd:last-child {
-    margin-bottom: 0;
+/* architecture codename, e.g. "Alder Lake" */
+.chip-code {
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, "Songti SC", serif;
+    font-size: 17px;
+    font-style: italic;
+    color: #3a3a38;
+}
+
+/* launch date, monospaced so the digits line up down the column */
+.chip-date {
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: #a8a8a4;
+    white-space: nowrap;
+}
+
+/* the example part number */
+.chip-model {
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: #6b6b68;
+    text-align: right;
 }
 
 /* --------------------------------------------------------------------------
-   3-7  项目页移动端
+   3-6  footnote
    -------------------------------------------------------------------------- */
 
-@media (max-width: 480px) {
+.project-footnote {
+    margin: 0;
+    max-width: 66ch;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #a8a8a4;
+}
+
+/* --------------------------------------------------------------------------
+   3-7  projects, mobile
+   Two lines per chip instead of four columns.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 720px) {
     .project-wrap {
-        padding: 56px 20px 64px;
+        padding: 64px 20px 64px;
     }
 
     .project-head {
         margin-bottom: 48px;
     }
 
-    .project-head h1 {
-        font-size: 29px;
+    .chip {
+        grid-template-columns: 1fr auto;
+        gap: 4px 12px;
+        padding: 14px 4px;
     }
 
-    .project-dl {
-        padding-left: 18px;
+    /* generation on the left, date on the right */
+    .chip-gen { grid-column: 1; }
+    .chip-date { grid-column: 2; text-align: right; }
+
+    /* codename and model stack underneath */
+    .chip-code {
+        grid-column: 1 / -1;
+        font-size: 15px;
+    }
+
+    .chip-model {
+        grid-column: 1 / -1;
+        text-align: left;
+    }
+
+    .chip:hover {
+        padding-left: 4px;
     }
 }
-
-
-
-/*==================
-nav
-================*/
-
-nav {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 2rem;
-}
-
-nav .links{
-    display: flex;
-    gap: 1.5rem;
-    margin: 0 auto;
-    list-style: none;
-    padding: 0;
-}
-
-nav a {
-    text-decoration: none;
-    color: #000;
-}
-
-nav .logo {
-    font-weight: 800;
-    color: gold;
-}
-
-nav .action {
-    border: 1.5px solid lightblue;
-    border-radius: 99px;
-    padding: .3em 1em;
-    color: blue;
-}
-
-nav a:hover{color: red;}
 
 
 /* ==========================================================================
-   第四部分：contact.html（联系页）
+   [4] contact.html - contact
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   4-1  页面骨架
+   4-1  page shell
    -------------------------------------------------------------------------- */
 
 .contact-page {
@@ -614,7 +729,7 @@ nav a:hover{color: red;}
 }
 
 /* --------------------------------------------------------------------------
-   4-2  居中容器
+   4-2  centred container
    -------------------------------------------------------------------------- */
 
 .contact-wrap {
@@ -624,7 +739,7 @@ nav a:hover{color: red;}
 }
 
 /* --------------------------------------------------------------------------
-   4-3  页眉
+   4-3  page header
    -------------------------------------------------------------------------- */
 
 .contact-head {
@@ -655,8 +770,8 @@ nav a:hover{color: red;}
 }
 
 /* --------------------------------------------------------------------------
-   4-4  联系方式列表
-   左边是标签、右边是值，中间用发丝线分隔
+   4-4  contact list
+   Label on the left, value on the right, hairlines between rows
    -------------------------------------------------------------------------- */
 
 .contact-list {
@@ -699,7 +814,7 @@ a.contact-value:hover {
 }
 
 /* --------------------------------------------------------------------------
-   4-5  页脚
+   4-5  footer
    -------------------------------------------------------------------------- */
 
 .contact-foot {
@@ -707,7 +822,7 @@ a.contact-value:hover {
 }
 
 /* --------------------------------------------------------------------------
-   4-6  联系页移动端
+   4-6  contact, mobile
    -------------------------------------------------------------------------- */
 
 @media (max-width: 480px) {
@@ -719,7 +834,7 @@ a.contact-value:hover {
         font-size: 29px;
     }
 
-    /* 窄屏改成上下两行，避免长邮箱挤在一起 */
+    /* stack on narrow screens so long addresses do not crowd */
     .contact-list li {
         flex-direction: column;
         align-items: flex-start;
@@ -729,12 +844,12 @@ a.contact-value:hover {
 
 
 /* ==========================================================================
-   第五部分：深色模式（四页共用，只改颜色不动布局）
+   [5] dark mode - shared by all four pages, colours only
    ========================================================================== */
 
 @media (prefers-color-scheme: dark) {
 
-    /* 首页 */
+    /* home */
     .index {
         background: #0e0e0e;
         color: #ededed;
@@ -750,50 +865,106 @@ a.contact-value:hover {
         color: #ededed;
     }
 
-    /* 语录页 */
-    .quotes-page {
+    /* slogans */
+    .slogans-page {
         background: #0e0e0e;
         color: #ededed;
     }
 
-    .quotes-grid {
+    .slogans-grid {
         background: #262626;
         border-color: #262626;
     }
 
-    .q {
+    .slogan {
         background: #0e0e0e;
     }
 
-    .q:hover {
+    .slogan:hover {
         background: #161616;
+    }
+
+    /* lift the card secondary text, or it vanishes on dark */
+    .slogan-brand {
+        color: #9a9a96;
+    }
+
+    .slogan::after {
+        color: #4a4a48;
+    }
+
+    .slogan-note {
+        color: #9a9a96;
+    }
+
+    .slogan-src,
+    .slogans-footnote,
+    .slogans-eyebrow {
+        color: #6f6f6c;
+    }
+
+    .slogans-footnote code {
+        color: #9a9a96;
+    }
+
+    /* "no short slogan" section */
+    .blanks-title,
+    .blanks-list dt {
+        color: #9a9a96;
+    }
+
+    .blanks-note {
+        color: #8a8a86;
+    }
+
+    .blanks-list,
+    .blanks-list > div {
+        border-color: #262626;
+    }
+
+    .blanks-list dd {
+        color: #ededed;
     }
 
     .back-link:hover {
         color: #ededed;
     }
 
-    /* 项目页 */
+    /* projects */
     .project-page {
         background: #0e0e0e;
         color: #ededed;
     }
 
-    .project-list,
-    .project-list li,
-    .project-dl {
-        border-color: #262626;
+    .arch-brand {
+        border-bottom-color: #ededed;
     }
 
-    .project-dl dt {
-        color: #ededed;
+    .chip {
+        border-bottom-color: #262626;
     }
 
-    .project-list li:hover {
-        color: #9a9a9a;
+    .chip:hover {
+        background: #161616;
     }
 
-    /* 联系页 */
+    .chip-code {
+        color: #b8b8b4;
+    }
+
+    .chip-date {
+        color: #6f6f6c;
+    }
+
+    .chip-model {
+        color: #9a9a96;
+    }
+
+    .project-footnote {
+        color: #6f6f6c;
+    }
+
+    /* contact */
     .contact-page {
         background: #0e0e0e;
         color: #ededed;

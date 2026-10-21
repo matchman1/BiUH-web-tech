@@ -9,7 +9,7 @@
 import { readFile } from 'node:fs/promises';
 
 const DIR = 'C:/Users/itx/Desktop/BiUH-web/';
-const PAGES = ['index.html', 'quotes.html', 'project.html', 'contact.html'];
+const PAGES = ['index.html', 'slogans.html', 'project.html', 'contact.html'];
 
 // ---------------------------------------------------------------------------
 // 极简 DOM 模拟
@@ -57,7 +57,7 @@ function checkFragment(html, kind) {
     if (!/class="logo"/.test(html)) problems.push('缺少 .logo');
     if (!/class="links"/.test(html)) problems.push('缺少 .links');
     if (!/class="pill"/.test(html)) problems.push('缺少 .pill');
-    for (const f of ['index.html', 'quotes.html', 'project.html'])
+    for (const f of ['index.html', 'slogans.html', 'project.html'])
       if (!html.includes(`href="${f}"`)) problems.push(`缺少指向 ${f} 的链接`);
     if (!/<li>\s*<a href="[^"]+">[^<]*<\/a>\s*<\/li>/.test(html))
       problems.push('<li> 没有正确包住 <a>');

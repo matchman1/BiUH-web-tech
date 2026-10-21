@@ -1,19 +1,21 @@
 /* ==========================================================================
    nav.css
    --------------------------------------------------------------------------
-   导航栏样式。三个页面共用这一个文件，因为它必须长得完全一样。
+   Styles for the shared nav and footer. All four pages link this one file,
+   because the nav has to look identical everywhere.
 
-   为什么单独一个文件、而不是写进 styles.css？
-     因为 index.html / quotes.html 用的是 styles.css，
-     而 project.html 用的是 styles-dd.css。
-     写在任何一个里面，另一个页面就套不上。
-     单独一个 nav.css，三页都 <link> 它就行。
+   Why a separate file rather than a section in styles.css?
+     Because every page links it. Styles for a shared component belong with
+     the component, not inside one page's stylesheet.
 
-   样式由 parts.js 注入的 nav.html 片段使用：
+   The rules here style the nav.html and footer.html fragments that parts.js
+   injects:
      <nav>
-       <a class="logo">…</a>
-       <ul class="links"> <li><a>…</a></li> … </ul>
+       <a class="logo">...</a>
+       <ul class="links"> <li><a>...</a></li> ... </ul>
+       <a class="pill">Contact</a>
      </nav>
+     <footer id="site-footer">...</footer>
    ========================================================================== */
 
 /* --------------------------------------------------------------------------

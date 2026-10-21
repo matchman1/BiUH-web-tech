@@ -39,8 +39,8 @@ http://127.0.0.1:8000/index.html
 ```
 BiUH-web/
 ├── index.html         首页
-├── quotes.html        语录页（8 条语录）
-├── project.html       项目想法页
+├── slogans.html       标语页（16 条硬件厂商标语）
+├── project.html       CPU / GPU 历代架构
 ├── contact.html       联系页
 │
 ├── nav.html           导航片段   ← 不含 DOCTYPE/html/head/body
@@ -86,7 +86,7 @@ BiUH-web/
     <a class="logo" href="index.html">…</a>
     <ul class="links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="quotes.html">Quotes</a></li>
+        <li><a href="slogans.html">Slogans</a></li>
         <li><a href="project.html">Project</a></li>
     </ul>
     <a class="pill" href="contact.html" target="_blank" rel="noopener">Contact</a>
@@ -147,8 +147,8 @@ load('footer.html', 'site-footer');
 | 部分 | 负责 | 类名前缀 |
 |---|---|---|
 | 第一部分 | index.html 首页 | `.index-*` |
-| 第二部分 | quotes.html 语录页 | `.quotes-*` 和 `.q` |
-| 第三部分 | project.html 项目页 | `.project-*` |
+| 第二部分 | slogans.html 标语页 | `.slogans-*` / `.slogan-*` |
+| 第三部分 | project.html 架构页 | `.project-*` / `.arch-*` / `.chip*` |
 | 第四部分 | contact.html 联系页 | `.contact-*` |
 | 第五部分 | 深色模式 | 四页共用 |
 
@@ -156,7 +156,7 @@ load('footer.html', 'site-footer');
 
 ```html
 <body class="index">          <!-- 首页 -->
-<body class="quotes-page">    <!-- 语录页 -->
+<body class="slogans-page">   <!-- 标语页 -->
 <body class="project-page">   <!-- 项目页 -->
 <body class="contact-page">   <!-- 联系页 -->
 ```
@@ -233,14 +233,10 @@ node verify-parts.mjs
 
 | 页面 | 内容 |
 |---|---|
-| **index.html** | 标题、`bilibili.jpg` 配图（链接到 bilibili）、两个入口链接分别指向 quotes 和 project |
-| **quotes.html** | 8 条名人语录（Žižek、中本聪、Tolle、McLuhan ×2、Virilio、Eatock、Engelbart），用 `auto-fit` 网格 + 1px 发丝线排布 |
-| **project.html** | 项目想法列表（Catastagram、Teethbrush、Vegasushi、ChatGrandma、Where's Bike?）和一个 `<dl>` 名词解释 |
+| **index.html** | 标题、`bilibili.jpg` 配图（链接到 bilibili）、两个入口链接分别指向 slogans 和 project |
+| **slogans.html** | 16 条硬件厂商标语（ASUS、AMD、Intel、ROG、Corsair 等），每条注明出处；另有「无短标语」板块 5 条 |
+| **project.html** | Intel / AMD / NVIDIA 的历代架构列表，每代含代号、发布时间、桌面旗舰型号 |
 | **contact.html** | 联系方式列表（Email / GitHub / Location），从导航的药丸按钮以新标签页打开 |
-
-### `project.html` 里还是占位文字
-
-`<dl>` 里的 `AAAAAA` / `sdfygdyugf` 之类是占位内容，需要替换成真实描述。
 
 ---
 
@@ -248,6 +244,7 @@ node verify-parts.mjs
 
 - **导航栏布局与教程说明不一致。** `1.pdf` 第 44 页的复习要点写的是 `logo left, nav centred, action right`（logo 左、**导航居中**、按钮右），但当前实现是 logo 左、**导航右**。若要改成居中，需要调整 `nav.css` 里 `.links` 的 `margin-left: auto`。
 - **`w3.png` 未被引用。** 首页配图已经从它换成了 `bilibili.jpg`。
+- **`slogans.md` 记录了标语调研与校对结果**，其中有 10 条网上流传的标语被查实为编造，未采用。
 - **`styles.css` 末尾有一条 `nav a:hover { color: red; }`。** 它是全局的，会盖掉 `nav.css` 里导航链接的悬停变色。如果是试验代码，建议删掉。
 - **`footer.html` 里的邮箱是占位符** `liwei@example.com`，应换成真实邮箱。
 - **favicon 不符合期末要求。** 四个页面现在是 `<link rel="icon" href="xlm.jpg" type="image/png">`，但 `xlm.jpg` 实际是 **JPEG** 格式、尺寸 **457×428（非方形）**。期末项目书要求 32×32 的方形 PNG。

@@ -313,3 +313,43 @@ daee146  09-23 10:36  1        ← 首次提交
 | 本地 `main` | 领先 `origin/main` **1 个提交**（`95248aa` 未 push） |
 
 远程仓库：`https://github.com/matchman1/BiUH-web-tech.git`
+
+
+---
+
+## 阶段七：内容转向硬件主题
+
+### 选题变化
+
+项目从「名人语录」转向**电脑硬件主题**：
+
+| 页面 | 变化 |
+|---|---|
+| `quotes.html` → `slogans.html` | 8 条名人语录 → 16 条硬件厂商品牌标语 |
+| `project.html` | 项目想法列表 → Intel / AMD / NVIDIA 历代架构对照 |
+
+文件名、类名、导航文字全部同步更新（用 `git mv` 保留提交历史）。
+
+### 标语的核实
+
+标语素材最初由 AI 生成（两个 CSV）。**逐条核对官方来源后发现 25 条里有 10 条是编造的**，例如：
+
+- Intel 的「What's Wonderful?」——查无此句，真实的 2025 年新句式是 `That's the power of Intel Inside®`
+- ASRock 的「Motherboard, We Master It!」——虚构
+- MSI 的「Dragon Spirit, Gaming Spirit」——把中文品牌概念拼成了英文标语
+
+另有两处品牌名张冠李戴：**金百达是 KINGBANK**（不是 KingSpec），**雅浚的英文名是 ProArtist**（不是 YAJUN）。
+
+处理方式：**查不到官方出处的一律不上页面**。最终收录 16 条可核实的，并单独做了一个「No short slogan published」板块，如实说明 Noctua、G.SKILL、Lian Li 等 5 家确实没有一句话标语——而不是替它们编一句。
+
+完整记录见 [`slogans.md`](slogans.md)。
+
+### 新增的验证工具
+
+- `check-css.mjs` —— 解析 CSS，检查括号/分号配对、选择器是否存在。用来回答「为什么样式没生效」这类问题。这次它就证明了 CSS 语法完全正常，问题出在浏览器缓存。
+
+### 又踩的坑
+
+**浏览器缓存。** 改完 CSS 立刻刷新，浏览器仍用旧的 `styles.css`（里面没有新的类名），页面只剩纯文字。正确做法是 `Ctrl+F5` 强刷。这个现象看起来很像「CSS 写错了」，实际不是。
+
+**`styles.css` 里混进了 nav 样式。** 文件里有一段早期试验留下的 `nav { ... }` 和 `nav a:hover{color: red;}`。它们和 `nav.css` 冲突（`styles.css` 后加载，同优先级下会盖掉），且全局的红色悬停会破坏导航外观。已删除——导航样式只应存在于 `nav.css`。
