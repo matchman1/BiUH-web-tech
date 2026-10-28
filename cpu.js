@@ -1,24 +1,34 @@
 /* ==========================================================================
-   cpu.js - the CPU Explorer interaction
+   cpu.js — CPU Explorer 的交互
+   ==========================================================================
 
-   Turns window.CPUS (data/cpus.js) into a searchable list with a side-by-side
-   comparison. This is the browser version of a small desktop app that read the
-   same database with Tkinter and sqlite3.
+   把 window.CPUS（来自 data/cpus.js）变成可搜索、可对比的界面。
+   这是桌面版 Tkinter 程序（cpu/cpu_viewer.py）的网页移植，三条行为对应：
+     搜索框过滤列表 / 品牌筛选 / 选中若干颗并排对比
 
-   Three behaviours, all from that app:
-     1. filter the list by typing         (a search box)
-     2. filter by brand                   (chips)
-     3. pick a few CPUs and compare them  (a compare table)
+   数据从哪来
+     cpu/cpus.db 里的数据已导出成 data/cpus.js
+     只保留了 30 列里对比用得上的 14 列
+
+   主要函数
+     brandOf()       由型号名推断品牌（数据库没有品牌列）→ 筛选和表格首行都用它
+     matches()       搜索与筛选的判定                    → 被 filtered() 调用
+     renderList()    画结果列表（每次 80 条）             → 写入 #cpu-list
+     renderCompare() 画对比表，数值列标出更高的一方       → 写入 #cpu-compare-body
+
+   状态只有一个 state 对象：query / brand / shown / picked。
+   所有改动都是「改 state → 重新渲染」，没有零散的 DOM 操作。
+
+   对应的 HTML 骨架见 cpus.html，样式见 styles.css 第 [3] 部分。
    ========================================================================== */
-
 (function () {
     'use strict';
 
     var DATA = window.CPUS || [];
 
-    /* how many rows to render at a time; the rest wait behind "Show more" */
+    /* 一次渲染多少行；其余的藏在「再显示更多」后面 */
     var PAGE = 80;
-    /* three columns is as many as fit before the table stops being readable */
+    /* 三列是表格还能读的上限 */
     var MAX_COMPARE = 3;
 
     var el = {
@@ -31,7 +41,7 @@
         brands: document.querySelectorAll('.cpu-brand')
     };
 
-    /* nothing to do on pages that do not have the explorer */
+    /* 没有这个浏览器的页面直接退出 */
     if (!el.list || !DATA.length) return;
 
     var state = {
@@ -42,11 +52,11 @@
     };
 
     /* ---------------------------------------------------------------------
-       helpers
+       小工具函数
        --------------------------------------------------------------------- */
 
-    /* Same rule as the export script: work the brand out from the name, since
-       the database has no brand column of its own. */
+    /* 和导出脚本用同一条规则：数据库没有品牌列，
+       所以只能从型号名推断品牌。 */
     function brandOf(cpu) {
         var text = (cpu.m || '') + ' ' + (cpu.s || '');
 
@@ -64,7 +74,7 @@
         return value + ' ' + unit;
     }
 
-    /* numeric rows: which CPU wins this column */
+    /* 数值行：这一列哪颗 CPU 更高 */
     var SPECS = [
         { label: 'Brand',        text: function (c) { return brandOf(c); } },
         { label: 'Series',       text: function (c) { return dashes(c.s); } },
@@ -83,7 +93,7 @@
     ];
 
     /* ---------------------------------------------------------------------
-       filtering
+       筛选逻辑
        --------------------------------------------------------------------- */
 
     function matches(cpu) {
@@ -91,7 +101,7 @@
         if (!state.query) return true;
 
         var hay = (cpu.m + ' ' + (cpu.s || '') + ' ' + (cpu.a || '') + ' ' + (cpu.k || '')).toLowerCase();
-        /* every word must appear somewhere, so "ryzen 5800" finds 5800X3D */
+        /* 每个词都要出现，所以输入 "ryzen 5800" 也能找到 5800X3D */
         return state.query.toLowerCase().split(/\s+/).every(function (word) {
             return hay.indexOf(word) !== -1;
         });
@@ -102,7 +112,7 @@
     }
 
     /* ---------------------------------------------------------------------
-       rendering: the list
+       渲染：结果列表
        --------------------------------------------------------------------- */
 
     function renderList() {
@@ -160,7 +170,7 @@
     }
 
     /* ---------------------------------------------------------------------
-       rendering: the comparison table
+       渲染：对比表
        --------------------------------------------------------------------- */
 
     function renderCompare() {
@@ -212,7 +222,7 @@
     }
 
     /* ---------------------------------------------------------------------
-       events
+       事件绑定
        --------------------------------------------------------------------- */
 
     el.search.addEventListener('input', function () {
@@ -238,8 +248,8 @@
         renderList();
     });
 
-    /* one listener for the whole list: the rows are re-rendered constantly,
-       so binding to each button would mean re-binding every time */
+    /* 整个列表只挂一个监听器：行会被反复重绘，
+       逐个绑定等于每次都要重绑一遍 */
     el.list.addEventListener('click', function (event) {
         var button = event.target.closest('.cpu-pick');
         if (!button) return;
@@ -251,7 +261,7 @@
             state.picked.splice(at, 1);
         } else {
             if (state.picked.length >= MAX_COMPARE) {
-                /* replace the oldest pick so the click is never a dead end */
+                /* 顶掉最早选的那个，保证点击永远有反馈 */
                 state.picked.shift();
             }
             state.picked.push(cpu);
@@ -277,7 +287,7 @@
     });
 
     /* ---------------------------------------------------------------------
-       start
+       启动
        --------------------------------------------------------------------- */
 
     renderList();

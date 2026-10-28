@@ -4,14 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CPU Explorer</title>
+<!--
+  cpus.html — CPU Explorer（可搜索、可按品牌筛选、可三款并排对比）
+  ==========================================================================
+
+  这是全站的交互页：搜索框、品牌按钮、点选对比，
+  对应项目书里 "at least one thing that responds to the user" 那一条。
+
+  页面结构，以及每一块由哪段 CSS 负责
+    #site-header      空占位，导航由 parts.js 注入      → nav.css §1–§7
+    页眉              标题 + 一句说明                   → styles.css §3-3
+    工具栏            搜索框 + 品牌筛选                 → styles.css §3-4
+    左栏 Results      结果列表（cpu.js 生成）           → styles.css §3-5、§3-6
+    右栏 Compare      对比表（cpu.js 生成）             → styles.css §3-5、§3-7
+    页脚说明          数据来源与口径                    → styles.css §3-8
+    #site-footer      空占位，页脚由 parts.js 注入      → nav.css §8
+
+  下列 id / 类由 cpu.js 接管（改行为去 cpu.js，改外观去上面对应的 CSS 段）
+    #cpu-search         搜索框                → el.search
+    .cpu-brand ×3       品牌筛选按钮          → el.brands
+    #cpu-list           结果列表容器          → 里面的 <li> 由 renderList() 生成
+    #cpu-count          结果条数文字
+    #cpu-more           「Show N more」按钮，每次追加 80 条
+    #cpu-compare-body   对比表容器            → renderCompare() 写入
+    #cpu-clear          清空对比
+
+  脚本顺序（都放在 body 末尾，顺序不能错）
+    1 data/cpus.js   先把 3551 条数据挂到 window.CPUS
+    2 cpu.js         读数据并渲染界面
+    3 theme.js       深浅开关
+    4 parts.js       注入导航与页脚
+  cpu.js 依赖 window.CPUS，所以 1 必须排在 2 前面。
+
+  数据来源：cpu/cpus.db 导出为 data/cpus.js（3551 条）
+-->
+    <!-- 链接预览用的标签。og:image 必须是完整网址，另外
+         property 和 name 不能互换：Open Graph 用 property，Twitter 用 name。
+         站点换地址时，四个页面里的这几行要一起改。 -->
+    <meta property="og:title" content="CPU Explorer">
+    <meta property="og:description" content="Search 3,551 processors and compare up to three of them side by side.">
+    <meta property="og:image" content="https://matchman1.github.io/BiUH-web-tech/images/og-image.jpg">
+    <meta property="og:url" content="https://matchman1.github.io/BiUH-web-tech/cpus.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="nav.css">
     <link rel="stylesheet" href="theme.css">
     <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 
-    <!-- Theme is applied before the first paint so a page never flashes light
-         before switching to dark. Details live in theme.js. -->
+    <!-- 主题在首次绘制前就设好，避免深色模式下
+         先闪一下白。具体逻辑见 theme.js。 -->
     <script>
         try {
             var savedTheme = localStorage.getItem('theme');
@@ -23,11 +66,12 @@
 </head>
 <body class="cpu-page">
 
-    <!-- Nav is injected here by parts.js, so this stays empty -->
+    <!-- 导航占位：parts.js 把 nav.html 的内容填进来 → nav.css §1–§7 -->
     <header id="site-header"></header>
 
     <main class="cpu-wrap">
 
+        <!-- 页眉：小标签 + 标题 + 一句说明 → styles.css §3-3 -->
         <header class="cpu-head">
             <p class="cpu-eyebrow">Database</p>
             <h1>CPU Explorer</h1>
@@ -37,6 +81,11 @@
             </p>
         </header>
 
+        <!-- 工具栏：左边搜索、右边品牌筛选 → styles.css §3-4
+
+             label 的 for 指向 #cpu-search，点「Search」两个字也能聚焦输入框；
+             aria-describedby 让读屏软件在输入时念出结果条数（#cpu-count）。
+             三个品牌按钮用 <button> 而不是 <a>：它们不跳转，只切状态。 -->
         <div class="cpu-toolbar">
             <div class="cpu-search-wrap">
                 <label class="cpu-search-label" for="cpu-search">Search</label>
@@ -54,6 +103,8 @@
 
         <div class="cpu-board">
 
+            <!-- 左栏 Results → styles.css §3-5（容器与计数）
+                 里面的 <li> 全部由 cpu.js 的 renderList() 生成 → styles.css §3-6 -->
             <section class="cpu-results" aria-labelledby="cpu-results-title">
                 <div class="cpu-panel-head">
                     <h2 id="cpu-results-title" class="cpu-panel-title">Results</h2>
@@ -65,6 +116,9 @@
                 <button type="button" class="cpu-more" id="cpu-more" hidden>Show more</button>
             </section>
 
+            <!-- 右栏 Compare → styles.css §3-5（容器的外框）
+                 表格由 cpu.js 的 renderCompare() 写入 → styles.css §3-7
+                 aria-live="polite"：选/删 CPU 后，读屏软件会念出这一块的变化 -->
             <section class="cpu-compare" aria-labelledby="cpu-compare-title">
                 <div class="cpu-panel-head">
                     <h2 id="cpu-compare-title" class="cpu-panel-title">Compare</h2>
@@ -76,6 +130,7 @@
 
         </div>
 
+        <!-- 页脚说明：数据来源与口径（缺值不猜、TDP 随主板变化）→ styles.css §3-8 -->
         <p class="cpu-footnote">
             Specs are drawn from a local database of 3,551 processors. Values a factory sheet
             left blank are shown as a dash rather than guessed at. Boost clocks and TDP vary by
@@ -84,11 +139,15 @@
 
     </main>
 
-    <!-- Footer is injected here by parts.js, so this stays empty -->
+    <!-- 页脚占位：parts.js 把 footer.html 的内容填进来 → nav.css §8 -->
     <footer id="site-footer"></footer>
 
-    <!-- data/cpus.js defines window.CPUS; cpu.js turns it into the UI.
-         Both sit at the end of the body so the page renders before parsing 500 KB of JSON. -->
+    <!-- 脚本顺序不能动（原因见文件头）：
+         1 data/cpus.js 定义 window.CPUS —— 500 KB 的数据，
+           放在最后解析，先让页面把骨架渲染出来
+         2 cpu.js      读 window.CPUS 渲染列表与对比表
+         3 theme.js    深浅开关
+         4 parts.js    注入导航与页脚 -->
     <script src="data/cpus.js"></script>
     <script src="cpu.js"></script>
     <script src="theme.js"></script>

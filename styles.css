@@ -1,32 +1,53 @@
 /* ==========================================================================
-   styles.css
+   styles.css — 四个页面各自的样式
+   ==========================================================================
+
+   只放「某一个页面自己的样式」，按页分四段（[1]–[4]）。
+   深色配色不在这个文件里，见 theme.css：那里把这里的浅色值换成深色值。
+
    --------------------------------------------------------------------------
-   Serves all four pages. Sections are split by big headings and never interfere:
+   文件地图
+   --------------------------------------------------------------------------
 
-     [1] index.html     home      - classes prefixed .index-*
-     [2] slogans.html   slogans   - classes prefixed .slogans-* / .slogan-*
-     [3] cpus.html      CPUs      - classes prefixed .cpu-*
-     [4] contact.html   contact   - classes prefixed .contact-*
-     [5] dark mode (shared by all four pages; colours only, no layout)
+     [1]  index.html     首页             类名前缀 .index-*
+     [2]  slogans.html   硬件标语页       类名前缀 .slogans-* / .slogan-*
+     [3]  cpus.html      CPU Explorer    类名前缀 .cpu-*
+     [4]  contact.html   联系页           类名前缀 .contact-*
 
-   The four pages never share class names:
-     index.html    <body class="index">
-     slogans.html  <body class="slogans-page">
-     cpus.html     <body class="cpu-page">
-     contact.html  <body class="contact-page">
+   每个段落内部再用「1-1」「1-2」这样的小节编号，注释里也用同样的编号互相引用
+   （theme.css 里出现「对应 styles.css §3」即指这里的第 3 段）。
 
-   The nav and footer live in nav.css, since all four pages share them.
-   To change a page, look only at its section.
+   --------------------------------------------------------------------------
+   一段样式该写在哪
+   --------------------------------------------------------------------------
+
+     一个页面用   → 本文件对应段落
+     多个页面共用 → nav.css（导航、页脚）或 theme.css（深色）
+     不写进本文件 → 共享组件、深色配色
+
+   四个页面的 <body> 各带一个作用域类，保证类名不互相污染：
+
+     index.html    class="index"
+     slogans.html  class="slogans-page"
+     cpus.html     class="cpu-page"
+     contact.html  class="contact-page"
+
+   页面里由 JS 生成的元素，样式也写在这里（例如 .cpu-pick 由 cpu.js 生成），
+   注释里会注明「由 xxx.js 生成」，因为你在 HTML 里搜不到它们。
    ========================================================================== */
 
+
 /* ==========================================================================
-   [1] index.html - home
+   [1]  index.html — 首页
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1-1  page shell
+   1-1  页面骨架
+   作用对象：index.html 的 <body class="index">
    -------------------------------------------------------------------------- */
 
+/* body：底色、正文字体与行高。
+   这是全站默认值的基准，其他三页的 body 规则都是它的翻版，只有底色不同。 */
 .index {
     margin: 0;
     padding: 0;
@@ -40,11 +61,13 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-2  container
-   Left aligned, not centred: the photo, the heading and the cards all line up
-   on the same left edge.
+   1-2  内容容器
+   作用对象：index.html 的 <main class="index-main">
+
+   左对齐而不是居中：大图、主标题、两个通栏按钮都齐左边，视线不用来回跳。
    -------------------------------------------------------------------------- */
 
+/* 定宽 960px 居中，左右留白由 padding 给 */
 .index-main {
     max-width: 960px;
     margin: 0 auto;
@@ -52,39 +75,44 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-3  hero photo
-   The bottom of the picture fades to nothing, so the heading below it sits on
-   the page rather than under a hard edge. mask-image fades the image itself,
-   which works on any background colour (no need to match the page colour).
+   1-3  顶部大图
+   作用对象：index.html 的 <figure class="index-hero"> 与里面的 <img>
+
+   图片底部渐变成透明，让下面的主标题落在页面上，而不是顶在一条硬边上。
+   渐变做在图片本身（mask），所以任何底色下都成立，不需要去对齐页面颜色。
    -------------------------------------------------------------------------- */
 
+/* 大图容器，紧贴导航下方 */
 .index-hero {
     margin: 0 0 8px;
 }
 
+/* 图片本身：占满宽度，下缘渐隐。
+   渐变在 84% 处完全结束，因此下面用负边距上移的标题只会压在全透明区域上。 */
 .index-hero-img {
     display: block;
     width: 100%;
     height: auto;
 
-    /* The fade is finished well before the bottom edge (84%), so the heading
-       that overlaps the last few pixels always sits on fully transparent
-       image — never on top of the photo itself. */
     -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent 84%);
     mask-image: linear-gradient(to bottom, #000 40%, transparent 84%);
 }
 
 /* --------------------------------------------------------------------------
-   1-4  heading block
-   A small negative margin tucks the type into the faded tail of the photo.
-   Keep this overlap small: the mask above guarantees that area is empty.
+   1-4  主标题区块
+   作用对象：index.html 的 <header class="index-intro"> 及其中的三行文字
+
+   用一点负边距把文字塞进图片淡出的尾部。重叠量要小 ——
+   1-3 的掩膜保证了那块区域是透明的，压多少都不会盖住照片内容。
    -------------------------------------------------------------------------- */
 
+/* 主标题区块：上移 28px，压进照片淡出的尾部 */
 .index-intro {
     margin: -28px 0 0;
-    position: relative;   /* keeps the heading above the faded image */
+    position: relative;   /* 让标题压在图片之上 */
 }
 
+/* 主标题上方的小标签（ITX · DIY） */
 .index-eyebrow {
     margin: 0 0 16px;
     font-size: 11px;
@@ -94,6 +122,7 @@
     color: #a8a8a4;
 }
 
+/* 主标题：字号随屏宽缩放，宽度限制在 17 个字以内，避免长行读起来累 */
 .index-title {
     margin: 0 0 20px;
     max-width: 17ch;
@@ -105,6 +134,7 @@
     text-wrap: balance;
 }
 
+/* 主标题下方那句说明 */
 .index-lede {
     margin: 0;
     max-width: 46ch;
@@ -114,10 +144,15 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-5  the two long buttons
-   Text on the left, photo running off the right edge and fading into the card.
+   1-5  两个通栏按钮
+   作用对象：index.html 的 <div class="index-cards"> 与里面的两个 <a class="index-card">
+
+   左边放文字、右边放照片；照片从右侧铺到边缘，并向卡片中间渐隐。
+   （HTML 里这两个卡片特意用 <div> 而不是 <nav>，
+    因为 nav.css 的 nav{} 会把任何 <nav> 变成吸顶导航。）
    -------------------------------------------------------------------------- */
 
+/* 两个按钮竖向排列 */
 .index-cards {
     display: flex;
     flex-direction: column;
@@ -125,15 +160,17 @@
     margin-top: 56px;
 }
 
+/* 单个按钮：左文字列 + 右照片列的网格。
+   右侧不留 padding，照片才能铺到卡片边缘。 */
 .index-card {
     display: grid;
     grid-template-columns: 1fr 340px;
     align-items: stretch;
 
     min-height: 148px;
-    overflow: hidden;              /* keeps the photo inside the rounded corner */
+    overflow: hidden;              /* 让照片不超出圆角 */
 
-    padding: 28px 0 28px 30px;     /* no right padding: the photo bleeds to the edge */
+    padding: 28px 0 28px 30px;
     text-decoration: none;
     color: inherit;
 
@@ -144,12 +181,13 @@
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* 悬停：边框加深 + 一层很淡的投影，提示整张卡可点 */
 .index-card:hover {
     border-color: #c9c9c5;
     box-shadow: 0 2px 18px rgba(26, 26, 26, 0.06);
 }
 
-/* text column */
+/* 文字列：三行（标签 / 名称 / 说明）居中排布 */
 .index-card-text {
     display: flex;
     flex-direction: column;
@@ -158,6 +196,7 @@
     padding-right: 28px;
 }
 
+/* 按钮左上角的小标签（Collection / Database） */
 .index-card-label {
     font-size: 11px;
     font-weight: 500;
@@ -166,6 +205,7 @@
     color: #a8a8a4;
 }
 
+/* 按钮的主标题（Hardware Slogans / CPU Explorer） */
 .index-card-name {
     font-size: 25px;
     font-weight: 400;
@@ -173,19 +213,22 @@
     letter-spacing: -0.022em;
 }
 
+/* 按钮下方那一行说明 */
 .index-card-desc {
     font-size: 14px;
     line-height: 1.5;
     color: #6b6b68;
 }
 
-/* photo column: fills the height and fades away towards the centre of the card */
+/* 照片列：铺满卡片高度 */
 .index-card-media {
     position: relative;
     display: block;
     min-height: 92px;
 }
 
+/* 照片本身：绝对定位铺满这一列，左缘渐隐进卡片。
+   mask 让照片「融进」卡片，而不是从一条竖直硬线开始。 */
 .index-card-media img {
     position: absolute;
     inset: 0;
@@ -195,23 +238,25 @@
     height: 100%;
     object-fit: cover;
 
-    /* left edge transparent -> fully visible at 46%: the photo dissolves
-       into the card instead of starting on a hard vertical line */
     -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 46%);
     mask-image: linear-gradient(to right, transparent 0%, #000 46%);
 
     transition: transform 0.6s ease;
 }
 
+/* 卡片悬停时照片轻微放大（配合 overflow:hidden，不会溢出） */
 .index-card:hover .index-card-media img {
     transform: scale(1.04);
 }
 
 /* --------------------------------------------------------------------------
-   1-6  quote card (spare; not used by index.html right now)
-   Usage: add class="index-quote" to an <article>
+   1-6  备用语录卡片（当前没有页面在用）
+   作用对象：给任意 <article> 加 class="index-quote" 即可
+
+   是从最早那版「名人语录」页挪过来的样式，保留着以便以后复用。
    -------------------------------------------------------------------------- */
 
+/* 白底 + 细边框的卡片，字号比正文大、字重更细 */
 .index-quote {
     margin: 40px 0 0;
     padding: 24px 26px;
@@ -225,20 +270,24 @@
     text-align: left;
 }
 
+/* 去掉 <blockquote> 默认的左右缩进 */
 .index-quote blockquote {
     margin: 0;
 }
 
+/* 卡片内文字沿用卡片的字号与颜色 */
 .index-quote p {
     margin: 0;
     font-size: inherit;
     color: inherit;
 }
 
+/* 作者署名与正文之间留出间距 */
 .index-quote footer {
     margin-top: 16px;
 }
 
+/* 作者名：小字大写、灰色、宽字距 */
 .index-quote cite {
     font-style: normal;
     font-size: 11px;
@@ -249,30 +298,35 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-7  original utility classes (kept)
+   1-7  工具类与早期遗留（当前没有页面在用）
+   作用对象：给任意元素加对应类名即可，属于「留着备用」的一批
+
+   这四个类是最早做语录页时留下的：
+     .highlight  黄底高亮
+     .footer     右对齐的页脚文字
+     .grid       四列等宽网格
+     .quote      最初的黑底大字语录卡片（30px 白字黑底）
+
+   它们和当前设计语言（近白底、发丝线、细字重）不一致，
+   真要复用之前先确认还符不符合现在的风格。
    -------------------------------------------------------------------------- */
 
-/* highlighted text */
 .highlight {
     background-color: #ff0;
     color: #000;
 }
 
-/* right-aligned footer text */
 .footer {
     width: 100%;
     text-align: right;
 }
 
-/* four-column grid */
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
 }
 
-/* original black quote card, kept for reference;
-   the home page now uses .index-quote above */
 .quote {
     border: 1px solid #ccc;
     padding: 10px;
@@ -283,7 +337,11 @@
 }
 
 /* --------------------------------------------------------------------------
-   1-8  home, tablet and mobile
+   1-8  首页：平板与手机
+   作用对象：同上 1-1 ~ 1-5，全部是窄屏下的覆盖规则
+
+   两档：860px（照片列压缩）、560px（进一步压缩并缩小字号）。
+   媒体查询不增加优先级，所以这两段必须放在基础规则之后。
    -------------------------------------------------------------------------- */
 
 @media (max-width: 860px) {
@@ -291,7 +349,7 @@
         padding: 0 24px 80px;
     }
 
-    /* the photo column shrinks first, so the text keeps its room */
+    /* 先压缩照片列，把宽度让给文字 */
     .index-card {
         grid-template-columns: 1fr 220px;
         min-height: 132px;
@@ -302,6 +360,7 @@
         font-size: 22px;
     }
 
+    /* 照片列变矮，压图的负边距也要跟着减小 */
     .index-intro {
         margin-top: -18px;
     }
@@ -343,17 +402,21 @@
     }
 }
 
+
 /* ==========================================================================
-   [2] slogans.html - hardware brand slogans
+   [2]  slogans.html — 硬件厂商标语
    --------------------------------------------------------------------------
-   Content is hardware brand slogans, not famous quotations.
-   Classes are .slogans-* / .slogan-* and never clash with the other sections.
+   页面内容是硬件厂商的品牌标语，不是名人语录。
+   类名用 .slogans-* / .slogan-*，与其他段落不冲突。
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   2-1  page shell
+   2-1  页面骨架
+   作用对象：slogans.html 的 <body class="slogans-page">
    -------------------------------------------------------------------------- */
 
+/* body 比首页略暖一档（#fafaf9 而不是 #fdfdfc），
+   配合卡片底色，让整页像一张纸而不是纯白屏幕 */
 .slogans-page {
     margin: 0;
     padding: 0;
@@ -367,7 +430,10 @@
 }
 
 /* --------------------------------------------------------------------------
-   2-2  centred container
+   2-2  居中容器
+   作用对象：slogans.html 的 <main class="slogans-wrap">
+
+   这一页最宽（1120px），因为卡片要能排成多列。
    -------------------------------------------------------------------------- */
 
 .slogans-wrap {
@@ -377,15 +443,18 @@
 }
 
 /* --------------------------------------------------------------------------
-   2-3  page header
-   Left-aligned rather than centred: this page is a catalogue, and
-   left alignment suits it and echoes the left-aligned card content.
+   2-3  页眉
+   作用对象：slogans.html 的 <header class="slogans-head"> 及其中的标题、说明
+
+   左对齐而不是居中：这一页是目录性质，左对齐更贴它的性格，
+   也和卡片内左对齐的内容呼应。
    -------------------------------------------------------------------------- */
 
 .slogans-head {
     margin-bottom: 64px;
 }
 
+/* 页眉上方的小标签 Collection */
 .slogans-eyebrow {
     margin: 0 0 18px;
     font-size: 11px;
@@ -395,6 +464,7 @@
     color: #b0b0ae;
 }
 
+/* 页面大标题 Hardware Slogans */
 .slogans-head h1 {
     margin: 0;
     font-size: clamp(34px, 5vw, 54px);
@@ -403,6 +473,7 @@
     letter-spacing: -0.025em;
 }
 
+/* 标题下方的一句说明 */
 .slogans-sub {
     margin: 20px 0 0;
     max-width: 40ch;
@@ -411,29 +482,34 @@
 }
 
 /* --------------------------------------------------------------------------
-   2-4  slogan grid
-   Real gaps plus one hairline border per card, rather than the
-   1px-seam grid, which suits cards holding a full line of text better.
+   2-4  标语网格
+   作用对象：slogans.html 的 <div class="slogans-grid">
+
+   用 1px 缝隙 + 容器底色造分隔线，不逐张画边框：
+   卡片一多，边框会叠成 2px，缝隙永远只有 1px。
+   同时在这里初始化计数器，供 2-5 的编号使用。
    -------------------------------------------------------------------------- */
 
 .slogans-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
     gap: 1px;
-    /* grid background shows through the gaps, drawing the rules */
+    /* 网格底色从缝隙里透出来，形成分割线 */
     background: #e6e6e3;
     border: 1px solid #e6e6e3;
-}
 
-/* --------------------------------------------------------------------------
-   2-5  single card
-   A CSS counter numbers each card, giving it a catalogue feel
-   -------------------------------------------------------------------------- */
-
-.slogans-grid {
     counter-reset: brand;
 }
 
+/* --------------------------------------------------------------------------
+   2-5  单张卡片
+   作用对象：slogans.html 里每个 <article class="slogan">
+
+   四行内容：品牌 / 标语 / 中文说明 / 出处。
+   右上角用 CSS 计数器自动编号，营造目录感。
+   -------------------------------------------------------------------------- */
+
+/* 卡片本体：竖向排布，参与编号计数 */
 .slogan {
     position: relative;
     counter-increment: brand;
@@ -449,11 +525,12 @@
     transition: background-color 0.3s ease;
 }
 
+/* 悬停时底色由米白变纯白，比加阴影更安静 */
 .slogan:hover {
     background: #ffffff;
 }
 
-/* number, top right, very faint */
+/* 右上角编号：01、02……很淡，只作为暗示 */
 .slogan::after {
     content: counter(brand, decimal-leading-zero);
     position: absolute;
@@ -466,10 +543,10 @@
     color: #c9c9c6;
 }
 
-/* brand name: small caps with wide tracking, like a nameplate */
+/* 厂商名：小字大写 + 宽字距，像铭牌 */
 .slogan-brand {
     margin: 0;
-    padding-right: 32px;         /* leave room for the number */
+    padding-right: 32px;         /* 给右上角的编号让位 */
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.18em;
@@ -477,8 +554,8 @@
     color: #8a8a86;
 }
 
-/* the slogan is the point of the card.
-   A serif face at light weight contrasts with the sans UI and reads like a poster. */
+/* 标语是整张卡的主角。
+   衬线体 + 细字重，与界面无衬线形成对比，读起来像海报。 */
 .slogan-line {
     margin: 0;
     font-family: "Iowan Old Style", "Palatino Linotype", Georgia,
@@ -490,7 +567,7 @@
     text-wrap: balance;
 }
 
-/* Chinese wording, shown when it is the official original */
+/* 中文原文：当官方原话是中文时显示 */
 .slogan-note {
     margin: 0;
     font-size: 14px;
@@ -498,7 +575,8 @@
     color: #6b6b68;
 }
 
-/* source, pushed to the bottom of the card */
+/* 出处：margin-top:auto 把它推到卡片底部，
+   这样同一行里的卡片不管文字长短，出处都对齐在同一条线上 */
 .slogan-src {
     margin: auto 0 0;
     padding-top: 18px;
@@ -510,16 +588,20 @@
 }
 
 /* --------------------------------------------------------------------------
-   2-6  "no short slogan" section
-   Some brands publish no one-line slogan. Rather than invent one,
-   list them honestly. This block uses a different shape from the grid
-   above, so it never reads as another slogan card.
+   2-6  「没有短标语」板块
+   作用对象：slogans.html 的 <section class="blanks"> 与里面的 <dl class="blanks-list">
+
+   有些厂商确实没有一句话标语。与其编一句，不如如实列出。
+   这块故意用与上面网格不同的形态（定义列表 + 横线），
+   避免看起来又像一张标语卡。
    -------------------------------------------------------------------------- */
 
+/* 与上方网格之间的间距 */
 .blanks {
     margin-top: 56px;
 }
 
+/* 板块小标题 */
 .blanks-title {
     margin: 0 0 12px;
     font-size: 11px;
@@ -529,6 +611,7 @@
     color: #8a8a86;
 }
 
+/* 板块的说明文字 */
 .blanks-note {
     margin: 0 0 28px;
     max-width: 62ch;
@@ -537,11 +620,15 @@
     color: #6b6b68;
 }
 
+/* 列表容器：只画上边线，行与行之间由下面的 border-bottom 接上 */
 .blanks-list {
     margin: 0;
     border-top: 1px solid #e6e6e3;
 }
 
+/* 一行：左品牌（dt）、右官方说法（dd）。
+   这里给 .blanks-list 的直接子元素排版，而不是给 dt/dd 各自定位，
+   是为了让两列宽度由整行统一决定。 */
 .blanks-list > div {
     display: grid;
     grid-template-columns: minmax(140px, 200px) 1fr;
@@ -551,6 +638,7 @@
     border-bottom: 1px solid #e6e6e3;
 }
 
+/* 品牌名（小字大写） */
 .blanks-list dt {
     font-size: 11px;
     font-weight: 600;
@@ -560,6 +648,7 @@
     padding-top: 2px;
 }
 
+/* 该品牌的官方说法（<dd> 默认有左缩进，必须清掉） */
 .blanks-list dd {
     margin: 0;
     font-size: 14px;
@@ -568,9 +657,11 @@
 }
 
 /* --------------------------------------------------------------------------
-   2-7  source note at the foot of the page
+   2-7  页面底部的来源说明
+   作用对象：slogans.html 的 <p class="slogans-footnote"> 与其中的 <code>
    -------------------------------------------------------------------------- */
 
+/* 页面最底部的来源与版权说明：最弱的一档，不抢卡片注意力 */
 .slogans-footnote {
     margin: 48px 0 0;
     max-width: 68ch;
@@ -579,6 +670,7 @@
     color: #a8a8a4;
 }
 
+/* 说明文字里提到的文件名用等宽字体，和正文区分开 */
 .slogans-footnote code {
     font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
     font-size: 12px;
@@ -586,11 +678,14 @@
 }
 
 /* --------------------------------------------------------------------------
-   2-8  back link
-   This page no longer has a back link, since the nav has Home,
-   but project.html and contact.html still use .back-link, so it stays.
+   2-8  返回链接（跨页面）
+   作用对象：contact.html 页脚的 <a class="back-link">（目前只有这一处在用）
+
+   样式放在标语页这段，是因为它和这里的「小字大写、灰字、悬停出下划线」
+   语言一致。如果以后多个页面都要用，按「谁用」的规则应该搬去 nav.css。
    -------------------------------------------------------------------------- */
 
+/* 返回链接：平时只有文字，悬停才出现下划线 */
 .back-link {
     font-size: 13px;
     letter-spacing: 0.04em;
@@ -601,13 +696,15 @@
     transition: color 0.25s ease, border-color 0.25s ease;
 }
 
+/* 悬停：文字变深、下划线出现 */
 .back-link:hover {
     color: #1a1a1a;
     border-bottom-color: #1a1a1a;
 }
 
 /* --------------------------------------------------------------------------
-   2-9  slogans, mobile
+   2-9  标语页：移动端
+   作用对象：同上 2-1 ~ 2-6，560px 以下的覆盖规则
    -------------------------------------------------------------------------- */
 
 @media (max-width: 640px) {
@@ -619,7 +716,7 @@
         margin-bottom: 40px;
     }
 
-    /* one column on narrow screens; tighten the card padding too */
+    /* 窄屏单列，卡片内边距也收紧 */
     .slogans-grid {
         grid-template-columns: 1fr;
     }
@@ -629,12 +726,18 @@
     }
 }
 
+
 /* ==========================================================================
-   [3] cpus.html - CPU Explorer
+   [3]  cpus.html — CPU Explorer
+   --------------------------------------------------------------------------
+   这一页有真实交互：搜索框、品牌筛选、点选对比。
+   样式分成「静态部分」和「由 cpu.js 生成的元素」两类，
+   后者的注释里会写明是哪个脚本生成的。
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   3-1  page shell
+   3-1  页面骨架
+   作用对象：cpus.html 的 <body class="cpu-page">
    -------------------------------------------------------------------------- */
 
 .cpu-page {
@@ -650,7 +753,10 @@
 }
 
 /* --------------------------------------------------------------------------
-   3-2  container
+   3-2  内容容器
+   作用对象：cpus.html 的 <main class="cpu-wrap">
+
+   比其他页都宽（1180px），因为要并排放下结果列表和对比表。
    -------------------------------------------------------------------------- */
 
 .cpu-wrap {
@@ -660,13 +766,15 @@
 }
 
 /* --------------------------------------------------------------------------
-   3-3  page header
+   3-3  页眉
+   作用对象：cpus.html 的 <header class="cpu-head"> 及其中的标题、说明
    -------------------------------------------------------------------------- */
 
 .cpu-head {
     margin-bottom: 40px;
 }
 
+/* 页眉上方的小标签（Database） */
 .cpu-eyebrow {
     margin: 0 0 18px;
     font-size: 11px;
@@ -676,6 +784,7 @@
     color: #a8a8a4;
 }
 
+/* 页面大标题 CPU Explorer */
 .cpu-head h1 {
     margin: 0;
     font-size: clamp(32px, 4.6vw, 46px);
@@ -684,6 +793,7 @@
     letter-spacing: -0.025em;
 }
 
+/* 大标题下方的一句说明 */
 .cpu-sub {
     margin: 18px 0 0;
     max-width: 56ch;
@@ -692,9 +802,13 @@
 }
 
 /* --------------------------------------------------------------------------
-   3-4  toolbar: the search field and the brand chips
+   3-4  工具栏：搜索框 + 品牌筛选
+   作用对象：cpus.html 的 <div class="cpu-toolbar"> 及其中的 input 和 button
+
+   左搜索、右筛选，底部一条分隔线把工具栏和结果区分开。
    -------------------------------------------------------------------------- */
 
+/* 工具栏：两端对齐，窄屏自动换行 */
 .cpu-toolbar {
     display: flex;
     align-items: flex-end;
@@ -707,11 +821,13 @@
     border-bottom: 1px solid #e6e6e3;
 }
 
+/* 搜索框那一列：可伸缩，但有两个下限（240px 起步，能长到 320px 以上） */
 .cpu-search-wrap {
     flex: 1 1 320px;
     min-width: 240px;
 }
 
+/* 搜索框上方的小标签 Search */
 .cpu-search-label {
     display: block;
     margin-bottom: 8px;
@@ -723,6 +839,8 @@
     color: #a8a8a4;
 }
 
+/* 搜索输入框外观。
+   font-family:inherit 是必须的 —— <input> 不会自动继承页面字体。 */
 .cpu-search {
     width: 100%;
     box-sizing: border-box;
@@ -739,22 +857,27 @@
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* 占位文字（那串示例型号）压暗，免得被当成已输入的内容 */
 .cpu-search::placeholder {
     color: #b4b4b0;
 }
 
+/* 聚焦：边框变黑 + 一圈淡光晕。
+   去掉浏览器默认的 outline，换成这个更贴设计语言的描边。 */
 .cpu-search:focus {
     outline: none;
     border-color: #1a1a1a;
     box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08);
 }
 
-/* brand filter chips */
+/* 品牌按钮组 */
 .cpu-brands {
     display: flex;
     gap: 8px;
 }
 
+/* 单个品牌按钮：默认描边态。
+   选中态的类 .is-active 由 cpu.js 切换。 */
 .cpu-brand {
     padding: 9px 16px;
 
@@ -772,26 +895,32 @@
                 background-color 0.2s ease;
 }
 
+/* 悬停：文字变黑、描边加深 */
 .cpu-brand:hover {
     color: #1a1a1a;
     border-color: #b4b4b0;
 }
 
+/* 选中态：黑底白字（不是浅灰底，方便和悬停区分开） */
 .cpu-brand.is-active {
     color: #fdfdfc;
     background: #1a1a1a;
     border-color: #1a1a1a;
 }
 
+/* 键盘 Tab 聚焦时才出现的轮廓线。
+   用 :focus-visible 而不是 :focus，鼠标点击不会留下轮廓。 */
 .cpu-brand:focus-visible {
     outline: 2px solid #1a1a1a;
     outline-offset: 2px;
 }
 
 /* --------------------------------------------------------------------------
-   3-5  two panels side by side: results on the left, comparison on the right
+   3-5  左右两栏：左结果、右对比
+   作用对象：cpus.html 的 <div class="cpu-board"> 与其中两个 <section>
    -------------------------------------------------------------------------- */
 
+/* 两栏等宽网格，顶对齐 */
 .cpu-board {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -799,17 +928,20 @@
     align-items: start;
 }
 
-/* min-width:0 is what lets the result list and the comparison table scroll
-   inside their own panel instead of stretching the grid column */
+/* min-width:0 让两栏能被内容压缩：
+   结果列表和对比表都可能在内部滚动，不加这个值，
+   长型号名会把整栏（甚至整页）撑宽。 */
 .cpu-results,
 .cpu-compare {
     min-width: 0;
 }
 
+/* 对比区的内容容器（表格或空状态框） */
 .cpu-compare-body {
     min-height: 72px;
 }
 
+/* 面板标题行：左边标题，右边计数或「Clear all」 */
 .cpu-panel-head {
     display: flex;
     align-items: baseline;
@@ -821,6 +953,7 @@
     border-bottom: 1px solid #e6e6e3;
 }
 
+/* 面板标题（Results / Compare）：小字大写，像标签而不像标题 */
 .cpu-panel-title {
     margin: 0;
     font-size: 11px;
@@ -830,6 +963,8 @@
     color: #8a8a86;
 }
 
+/* 结果条数文字。等宽字体是为了数字变化时宽度不跳，
+   aria-live 会把这个区域的变化念给读屏软件。 */
 .cpu-count {
     margin: 0;
     font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
@@ -837,6 +972,7 @@
     color: #a8a8a4;
 }
 
+/* 「Clear all」按钮：做成文字链接的样子，因为它是次要操作 */
 .cpu-clear {
     padding: 0;
     font-family: inherit;
@@ -849,17 +985,20 @@
     transition: color 0.2s ease, border-color 0.2s ease;
 }
 
+/* 悬停：文字变深，下划线跟着变深 */
 .cpu-clear:hover {
     color: #1a1a1a;
     border-bottom-color: #1a1a1a;
 }
 
 /* --------------------------------------------------------------------------
-   3-6  the result rows
-   Fixed height and their own scroll area, so a long result list never pushes
-   the comparison table off the screen.
+   3-6  结果行（由 cpu.js 的 renderList() 生成）
+   作用对象：<li> 里的 <button class="cpu-pick">、.cpu-row-* 与空状态行
+
+   列表本身有固定高度和独立滚动区，结果再多也不会把对比表挤出屏幕。
    -------------------------------------------------------------------------- */
 
+/* 列表容器：去掉列表符号与默认缩进 */
 .cpu-list {
     margin: 0;
     padding: 0;
@@ -870,6 +1009,8 @@
     overscroll-behavior: contain;
 }
 
+/* 一条结果：整行可点，点一下加入对比。
+   用 <button> 而不是 <li onclick>，键盘和读屏软件都能用。 */
 .cpu-pick {
     display: flex;
     align-items: center;
@@ -892,21 +1033,24 @@
     transition: background-color 0.15s ease;
 }
 
+/* 悬停时的浅底 —— 只是提示可点，不如选中态明显（见 .is-picked） */
 .cpu-pick:hover {
     background: #f4f4f2;
 }
 
+/* 键盘聚焦：用内描边，因为整行贴着列表边缘，外描边会被裁掉 */
 .cpu-pick:focus-visible {
     outline: 2px solid #1a1a1a;
     outline-offset: -2px;
 }
 
-/* a picked CPU keeps a marker, so the list shows what is already compared */
+/* 已加入对比：底色变深 + 左侧 3px 黑条，一眼能看出选了哪些 */
 .cpu-pick.is-picked {
     background: #f0f0ec;
     box-shadow: inset 3px 0 0 #1a1a1a;
 }
 
+/* 左侧文字列（型号 + 品牌/系列/平台） */
 .cpu-row-main {
     display: flex;
     flex-direction: column;
@@ -914,6 +1058,7 @@
     min-width: 0;
 }
 
+/* 型号名：过长时省略号，不换行（换行会让每一行高矮不一） */
 .cpu-row-model {
     font-size: 14.5px;
     font-weight: 500;
@@ -924,6 +1069,7 @@
     white-space: nowrap;
 }
 
+/* 型号下方的品牌 / 系列 / 平台 */
 .cpu-row-meta {
     font-size: 11.5px;
     color: #a8a8a4;
@@ -933,6 +1079,7 @@
     white-space: nowrap;
 }
 
+/* 右侧的规格摘要（核心/线程/频率）：不参与压缩，永远完整显示 */
 .cpu-row-specs {
     flex: none;
     font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
@@ -941,12 +1088,14 @@
     white-space: nowrap;
 }
 
+/* 搜索无结果时的提示行 */
 .cpu-empty {
     padding: 24px 4px;
     font-size: 14px;
     color: #8a8a86;
 }
 
+/* 「Show N more」按钮：占满整行的描边按钮，文字由 cpu.js 拼（每次 80 条） */
 .cpu-more {
     display: block;
     width: 100%;
@@ -966,15 +1115,18 @@
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
+/* 更多按钮悬停：底色与描边同时加深 */
 .cpu-more:hover {
     background: #f4f4f2;
     border-color: #b4b4b0;
 }
 
 /* --------------------------------------------------------------------------
-   3-7  the comparison table
+   3-7  对比表（由 cpu.js 的 renderCompare() 生成）
+   作用对象：#cpu-compare-body 里的空状态框、.cpu-table-scroll 与 <table class="cpu-table">
    -------------------------------------------------------------------------- */
 
+/* 还没选 CPU 时的虚线空状态框 */
 .cpu-compare-empty {
     margin: 0;
     padding: 28px 22px;
@@ -987,19 +1139,22 @@
     border-radius: 4px;
 }
 
-/* three columns of long model names will not fit a phone: scroll sideways
-   inside this box instead of stretching the page */
+/* 三列型号名在手机上放不下：让表格自己横向滚动，
+   而不是把整个页面撑宽 */
 .cpu-table-scroll {
     overflow-x: auto;
     overscroll-behavior-x: contain;
 }
 
+/* 表格本体 */
 .cpu-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
 }
 
+/* 所有单元格：统一的内边距与发丝线。
+   用 border-collapse 时边框会合并，所以只写下边框就够了。 */
 .cpu-table th,
 .cpu-table td {
     padding: 9px 10px;
@@ -1008,6 +1163,7 @@
     border-bottom: 1px solid #eeeee9;
 }
 
+/* 表头：每列一颗 CPU。position:relative 是给右上角的删除按钮定位用的 */
 .cpu-table thead th {
     position: relative;
     padding-right: 26px;
@@ -1015,6 +1171,7 @@
     vertical-align: bottom;
 }
 
+/* 表头左上角那格（写着 Spec） */
 .cpu-table-corner {
     width: 112px;
     font-size: 11px;
@@ -1024,6 +1181,7 @@
     color: #a8a8a4;
 }
 
+/* 表头里的型号名 */
 .cpu-table-model {
     display: block;
     font-size: 13px;
@@ -1032,6 +1190,7 @@
     color: #1a1a1a;
 }
 
+/* 表头右上角的 × 删除按钮：圆形、无底色，悬停才出现浅底 */
 .cpu-table-remove {
     position: absolute;
     top: 4px;
@@ -1056,9 +1215,10 @@
 
 .cpu-table-remove:hover {
     color: #1a1a1a;
-    background: #ececeA;
+    background: #ececea;
 }
 
+/* 表格左侧一列：规格名称（小字大写、灰色） */
 .cpu-table tbody th {
     font-weight: 400;
     font-size: 11.5px;
@@ -1068,13 +1228,15 @@
     white-space: nowrap;
 }
 
+/* 表格正文：具体数值用等宽字体，上下对齐好比较 */
 .cpu-table tbody td {
     font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
     font-size: 12.5px;
     color: #3a3a38;
 }
 
-/* the winning value in a numeric row */
+/* 数值更高的那一方：加粗 + 底色标记。
+   .is-best 由 cpu.js 算出来再加，不是手写的。 */
 .cpu-table tbody td.is-best {
     font-weight: 700;
     color: #1a1a1a;
@@ -1082,7 +1244,8 @@
 }
 
 /* --------------------------------------------------------------------------
-   3-8  footnote
+   3-8  页面底部说明
+   作用对象：cpus.html 的 <p class="cpu-footnote">
    -------------------------------------------------------------------------- */
 
 .cpu-footnote {
@@ -1094,7 +1257,11 @@
 }
 
 /* --------------------------------------------------------------------------
-   3-9  one column on narrower screens
+   3-9  CPU 页：窄屏
+   作用对象：同上 3-1 ~ 3-8
+
+   900px 以下两栏改单栏（对比表移到结果下方），
+   560px 以下再收一档并隐藏规格摘要。
    -------------------------------------------------------------------------- */
 
 @media (max-width: 900px) {
@@ -1107,7 +1274,7 @@
         gap: 36px;
     }
 
-    /* the list gets a natural height once it is full width */
+    /* 满宽之后列表不必再占满 60vh */
     .cpu-list {
         max-height: 46vh;
     }
@@ -1126,10 +1293,12 @@
         gap: 14px;
     }
 
+    /* 小屏上型号和品牌才是重点，右侧的规格摘要让位 */
     .cpu-row-specs {
-        display: none;      /* the model and brand are the useful part here */
+        display: none;
     }
 
+    /* 表头第一列收窄，给三个型号名多留点空间 */
     .cpu-table-corner {
         width: 84px;
     }
@@ -1137,11 +1306,12 @@
 
 
 /* ==========================================================================
-   [4] contact.html - contact
+   [4]  contact.html — 联系页
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   4-1  page shell
+   4-1  页面骨架
+   作用对象：contact.html 的 <body class="contact-page">
    -------------------------------------------------------------------------- */
 
 .contact-page {
@@ -1157,7 +1327,10 @@
 }
 
 /* --------------------------------------------------------------------------
-   4-2  centred container
+   4-2  居中容器
+   作用对象：contact.html 的 <main class="contact-wrap">
+
+   最窄的一页（640px）：内容只有三行联系方式，再宽就散了。
    -------------------------------------------------------------------------- */
 
 .contact-wrap {
@@ -1167,13 +1340,15 @@
 }
 
 /* --------------------------------------------------------------------------
-   4-3  page header
+   4-3  页眉
+   作用对象：contact.html 的 <header class="contact-head"> 与其中的标题、说明
    -------------------------------------------------------------------------- */
 
 .contact-head {
     margin-bottom: 56px;
 }
 
+/* 页眉上方的小标签 Contact */
 .contact-eyebrow {
     margin: 0 0 20px;
     font-size: 11px;
@@ -1183,6 +1358,7 @@
     color: #a8a8a8;
 }
 
+/* 页面大标题 Say hello */
 .contact-head h1 {
     margin: 0;
     font-size: 40px;
@@ -1191,6 +1367,7 @@
     letter-spacing: -0.02em;
 }
 
+/* 标题下方的一句说明 */
 .contact-sub {
     margin: 20px 0 0;
     font-size: 15px;
@@ -1198,10 +1375,15 @@
 }
 
 /* --------------------------------------------------------------------------
-   4-4  contact list
-   Label on the left, value on the right, hairlines between rows
+   4-4  联系信息列表
+   作用对象：contact.html 的 <ul class="contact-list"> 与每个 <li>
+
+   左边标签、右边内容，行间用发丝线分隔。
+   每一行是「标签 + 值」两段，所以用 flex + space-between，
+   而不是给标签定一个固定宽度 —— 中英文标签长度差很多。
    -------------------------------------------------------------------------- */
 
+/* 列表外框：只画上边线，行与行之间由 li 的 border-bottom 接上 */
 .contact-list {
     margin: 0;
     padding: 0;
@@ -1209,6 +1391,7 @@
     border-top: 1px solid #e6e6e6;
 }
 
+/* 一行：左标签、右内容，基线对齐 */
 .contact-list li {
     display: flex;
     align-items: baseline;
@@ -1219,6 +1402,7 @@
     border-bottom: 1px solid #e6e6e6;
 }
 
+/* 左侧的标签（Email / GitHub / Location） */
 .contact-key {
     flex: none;
     font-size: 11px;
@@ -1228,6 +1412,7 @@
     color: #a8a8a8;
 }
 
+/* 右侧的内容。平时无下划线，悬停才出现（只对链接生效，见下一条） */
 .contact-value {
     font-size: 15px;
     color: #1a1a1a;
@@ -1237,12 +1422,15 @@
     transition: border-color 0.25s ease, color 0.25s ease;
 }
 
+/* 只有真的可点击的那几行（a.contact-value）才有悬停下划线；
+   Location 那行是纯 <span>，不该看起来像链接 */
 a.contact-value:hover {
     border-bottom-color: #1a1a1a;
 }
 
 /* --------------------------------------------------------------------------
-   4-5  footer
+   4-5  页脚
+   作用对象：contact.html 的 <footer class="contact-foot">（返回首页链接）
    -------------------------------------------------------------------------- */
 
 .contact-foot {
@@ -1250,7 +1438,8 @@ a.contact-value:hover {
 }
 
 /* --------------------------------------------------------------------------
-   4-6  contact, mobile
+   4-6  联系页：移动端
+   作用对象：同上 4-1 ~ 4-5，480px 以下的覆盖规则
    -------------------------------------------------------------------------- */
 
 @media (max-width: 480px) {
@@ -1262,7 +1451,7 @@ a.contact-value:hover {
         font-size: 29px;
     }
 
-    /* stack on narrow screens so long addresses do not crowd */
+    /* 窄屏改成上下两行：长邮箱地址和标签挤在一行会换行断得很丑 */
     .contact-list li {
         flex-direction: column;
         align-items: flex-start;
@@ -1270,7 +1459,12 @@ a.contact-value:hover {
     }
 }
 
-/* ==========================================================================
-   [5] dark mode - shared by all four pages, colours only
-   ========================================================================== */
 
+/* ==========================================================================
+   深色配色
+   ==========================================================================
+
+   不在这里。所有深色规则都写在 theme.css，分两套：
+   跟随系统的 @media 和手选的 html[data-theme="dark"]。
+   这个文件只负责浅色下长什么样，那边负责同一批元素在深色下的颜色。
+   ========================================================================== */

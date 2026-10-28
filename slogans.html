@@ -4,13 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hardware Slogans</title>
+<!--
+  slogans.html — 硬件厂商标语（16 条可核实的品牌标语 + 5 家「无短标语」的说明）
+  ==========================================================================
+
+  页面结构，以及每一块由哪段 CSS 负责
+
+    #site-header    空占位，导航由 parts.js 注入        → nav.css §1–§7
+    页眉            标题 + 一句说明                     → styles.css §2-3
+    标语网格        16 张卡片，1px 缝隙当分隔线          → styles.css §2-4
+    单张卡片        品牌 / 标语 / 说明 / 出处四行        → styles.css §2-5
+    「无短标语」     <dl> 列出确实没有一句话标语的品牌    → styles.css §2-6
+    页脚说明        来源与版权                          → styles.css §2-7
+    #site-footer    空占位，页脚由 parts.js 注入        → nav.css §8
+
+  每张卡片固定四个 <p>，顺序不能变（CSS 的 gap 和「出处贴底」都依赖这个顺序）：
+    .slogan-brand   厂商名，小字大写
+    .slogan-line    标语原文，保留官方大小写与标点符号
+    .slogan-note    中文原文或说明
+    .slogan-src     出处
+
+  为什么每条都要注明出处
+    项目书要求「你自己的内容，或注明出处的正规来源」。这里每一条都查过官方来源，
+    查不到的没有写进来 —— 调研与勘误的完整记录见 slogans.md。
+
+  外部依赖：styles.css §2 · nav.css · theme.css · theme.js · parts.js
+-->
+    <!-- 链接预览用的标签。og:image 必须是完整网址，另外
+         property 和 name 不能互换：Open Graph 用 property，Twitter 用 name。
+         站点换地址时，四个页面里的这几行要一起改。 -->
+    <meta property="og:title" content="Hardware Slogans">
+    <meta property="og:description" content="Sixteen brand lines from PC hardware makers, each traced back to an official source.">
+    <meta property="og:image" content="https://matchman1.github.io/BiUH-web-tech/images/og-image.jpg">
+    <meta property="og:url" content="https://matchman1.github.io/BiUH-web-tech/slogans.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="nav.css">
     <link rel="stylesheet" href="theme.css">
     <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <!-- Theme is applied before the first paint so a page never flashes light
-         before switching to dark. Details live in theme.js. -->
+    <!-- 主题在首次绘制前就设好，避免深色模式下
+         先闪一下白。具体逻辑见 theme.js。 -->
     <script>
         try {
             var savedTheme = localStorage.getItem('theme');
@@ -22,7 +57,7 @@
 </head>
 <body class="slogans-page">
 
-    <!-- Nav is injected here by parts.js, so this stays empty -->
+    <!-- 导航由 parts.js 注入到这里，所以这里是空的 -->
     <header id="site-header"></header>
 
     <main class="slogans-wrap">
@@ -37,7 +72,8 @@
         </header>
 
         <div class="slogans-grid">
-            <!-- Each card: brand / slogan (official wording, case and symbols kept) / note / source -->
+            <!-- 每张卡：品牌 / 标语（保留官方大小写与符号）/ 说明 / 出处
+                 四行的顺序决定版面，见文件头的说明 → styles.css §2-5 -->
 
             <article class="slogan">
                 <p class="slogan-brand">ASUS</p>
@@ -177,8 +213,11 @@
         </div>
 
         <!-- ------------------------------------------------------------------
-             Some brands genuinely publish no short slogan. Rather than invent
-             one, say so and quote what they actually write.
+             有些厂商确实没有一句话标语，与其编一句，
+             不如如实说明，并引用他们真正的说法。
+
+             用 <dl> 而不是 <ul>：<dt> 是品牌名、<dd> 是官方说法，
+             这本来就是「词条 + 释义」的对应关系 → styles.css §2-6
              ------------------------------------------------------------------ -->
         <section class="blanks">
             <h2 class="blanks-title">No short slogan published</h2>
@@ -221,10 +260,11 @@
 
     </main>
 
-    <!-- Footer is injected here by parts.js, so this stays empty -->
+    <!-- 页脚占位：parts.js 把 footer.html 的内容填进来，所以这里保持空 -->
     <footer id="site-footer"></footer>
 
-    <!-- Kept before </body> so both empty elements already exist when the script runs -->
+    <!-- 两个脚本都放在 body 末尾，且顺序无所谓：
+         theme.js 只管开关，parts.js 只管注入导航与页脚。 -->
     <script src="theme.js"></script>
     <script src="parts.js"></script>
 </body>

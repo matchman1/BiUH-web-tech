@@ -1,40 +1,64 @@
 <!--
-  nav.html — nav fragment
-  This file deliberately holds only <nav> — no DOCTYPE / html / head / body.
-  It is a fragment, fetched by parts.js and injected into #site-header on every page.
-  Do not open it on its own — it means nothing alone.
+  nav.html — 导航片段（由 parts.js 注入到四个页面的 #site-header）
+  ==========================================================================
+
+  这个文件故意只有 <nav>，没有 DOCTYPE / html / head / body。
+  它是一段「零件」而不是完整页面 —— 单独用浏览器打开没有意义。
+
+  结构，以及每一块由哪段 CSS 负责
+    a.logo               左侧标识，含一个内联 SVG         → nav.css §3
+    ul.links             三个页面链接，当前页会高亮        → nav.css §4、§5
+    a.pill               Contact 药丸，新标签页打开        → nav.css §2
+    button.theme-toggle  浅色 / 深色开关，在最右          → nav.css §6
+
+  谁在用它
+    parts.js  fetch 这个文件，把内容塞进 #site-header；
+              注入完成后调用 window.updateThemeButton()，
+              让开关的图标与文字跟当前主题一致（函数定义在 theme.js）。
+
+  为什么抽成片段
+    改导航只改这一个文件，四个页面同时生效。
+    代价是必须通过 HTTP 打开（file:// 下 fetch 会被 CORS 拦住），
+    所以项目里才需要 serve.bat 那套本地服务器。
 -->
 <nav>
+    <!-- 左侧标识。图标是一条十字准星，悬停时转 90°（nav.css §3）-->
     <a class="logo" href="index.html">
-        <!-- the SVG needs xmlns or it may not render in HTML -->
+        <!-- SVG 必须带 xmlns，否则在 HTML 里可能不渲染 -->
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="1.5"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="9"></circle>
             <path d="M12 3v18M3 12h18"></path>
         </svg>
-        <span>My First Website</span>
+        <span>Hardware Reference</span>
     </a>
 
+    <!-- 页面链接。窄屏（≤560px）时 logo 的文字会隐藏，只留图标（nav.css §7）-->
     <ul class="links">
         <li><a href="index.html">Home</a></li>
         <li><a href="slogans.html">Slogans</a></li>
         <li><a href="cpus.html">CPUs</a></li>
     </ul>
 
-    <!-- Contact pill, far right; target="_blank" opens a new tab -->
+    <!-- Contact 药丸，最右；target="_blank" 在新标签页打开。
+         rel="noopener" 是配 target="_blank" 的必需项：
+         否则新页面能通过 window.opener 反向操作本页。 -->
     <a class="pill" href="contact.html" target="_blank" rel="noopener">Contact</a>
 
-    <!-- Light / dark switch, to the right of Contact.
-         The icon is chosen by CSS from aria-pressed, which theme.js keeps in
-         step with the theme actually on screen. -->
+    <!-- 浅色 / 深色开关，在药丸右边。
+         aria-pressed 表示「深色是否已打开」，图标由 CSS 按它切换（nav.css §6），
+         theme.js 负责让这个属性和实际主题保持一致，
+         所以「跟随系统」的访客看到的图标也是对的。 -->
     <button class="theme-toggle" type="button" aria-pressed="false" title="Switch to dark mode">
         <span class="theme-toggle-icon" aria-hidden="true">
+            <!-- 月亮：浅色时显示，表示「点了会变深色」 -->
             <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
                  stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
             </svg>
+            <!-- 太阳：深色时显示，表示「点了会变回浅色」 -->
             <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -42,6 +66,7 @@
                 <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
             </svg>
         </span>
+        <!-- 文字标签，窄屏隐藏（nav.css §7），留图标就够 -->
         <span class="theme-toggle-label">Dark</span>
     </button>
 </nav>

@@ -1,24 +1,12 @@
 # 不该进入版本库的东西
 
-# 从 PDF 渲染出来的临时页面图片（7 MB 左右，纯中间产物）
-.pdfwork/
-
-# 我自己写的一次性脚本和备份
-.tmp/
-
 # 早期版本的备份留档
 backup/
-
-# 另一个与本项目无关的练习
-p2/
 
 # 系统与编辑器
 .vscode/
 Thumbs.db
 desktop.ini
-
-# 豆包导出的原始表格（内容有大量错误，结论已整理进 slogans.md）
-表格_*.csv
 
 # Python
 __pycache__/

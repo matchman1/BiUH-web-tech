@@ -1,16 +1,45 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact</title>
+<!--
+  contact.html — 联系页（三行联系方式）
+  ==========================================================================
+
+  页面结构，以及每一块由哪段 CSS 负责
+    #site-header   空占位，导航由 parts.js 注入      → nav.css §1–§7
+    页眉           小标签 + 标题 + 一句说明          → styles.css §4-3
+    联系信息       标签 / 值两列的三行               → styles.css §4-4
+    页脚           返回首页的链接                     → styles.css §4-5
+    #site-footer   空占位，页脚由 parts.js 注入      → nav.css §8
+
+  入口：导航右侧的 Contact 药丸（nav.html 里的 a.pill，用 target="_blank" 打开本页）。
+  因为导航在每个页面上都有，本页导航里的 Home 就是回去的路；
+  页脚那条「← Back home」是给从站外直接点进本页的人多留一条退路。
+
+  ⚠ 下面三行联系方式目前是占位值（example.com / yourname / xxx），
+    交作业前必须换成真实信息 —— 项目书明确要求「无占位内容」。
+
+  外部依赖：styles.css §4 · nav.css · theme.css · theme.js · parts.js
+-->
+    <!-- 链接预览标签（Open Graph / Twitter）。
+         og:image 必须是完整网址；Open Graph 用 property，Twitter 用 name。
+         站点换地址时，四个页面里的这几行要一起改。 -->
+    <meta property="og:title" content="Contact">
+    <meta property="og:description" content="Get in touch.">
+    <meta property="og:image" content="https://matchman1.github.io/BiUH-web-tech/images/og-image.jpg">
+    <meta property="og:url" content="https://matchman1.github.io/BiUH-web-tech/contact.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="nav.css">
     <link rel="stylesheet" href="theme.css">
     <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <!-- Theme is applied before the first paint so a page never flashes light
-         before switching to dark. Details live in theme.js. -->
+    <!-- 主题必须在首次绘制前定好，否则深色模式下会先闪一下白。
+         这里只负责读出上次的选择，点击切换的逻辑在 theme.js。 -->
     <script>
         try {
             var savedTheme = localStorage.getItem('theme');
@@ -22,17 +51,22 @@
 </head>
 <body class="contact-page">
 
-    <!-- 导航由 parts.js 把 nav.html 的内容填进这里，所以这里是空的 -->
+    <!-- 导航占位：parts.js 把 nav.html 的内容填进来 → nav.css §1–§7 -->
     <header id="site-header"></header>
 
     <main class="contact-wrap">
 
+        <!-- 页眉：小标签 + 大标题 + 一句说明 → styles.css §4-3 -->
         <header class="contact-head">
             <p class="contact-eyebrow">Contact</p>
             <h1>Say hello</h1>
-            <p class="contact-sub">有想法、有问题，或者只是想打个招呼，都可以写信给我。</p>
+            <p class="contact-sub" lang="zh-Hans">有想法、有问题，或者只是想打个招呼，都可以写信给我。</p>
         </header>
 
+        <!-- 联系信息：一行一个「标签 + 值」 → styles.css §4-4
+             用 <ul>/<li> 而不是 <dl>：这三行是并列的条目，不是词条释义。
+             值如果是链接就用 <a>（Email、GitHub），纯文字就用 <span>（Location），
+             因为 CSS 只给 a.contact-value 加悬停下划线，纯文字不该看起来像链接。 -->
         <ul class="contact-list">
             <li>
                 <span class="contact-key">Email</span>
@@ -48,16 +82,17 @@
             </li>
         </ul>
 
+        <!-- 页脚返回链接 → styles.css §2-8（.back-link）与 §4-5（间距） -->
         <footer class="contact-foot">
             <a class="back-link" href="index.html">← Back home</a>
         </footer>
 
     </main>
 
-    <!-- 页脚由 parts.js 把 footer.html 的内容填进这里，所以这里是空的 -->
+    <!-- 页脚占位：parts.js 把 footer.html 的内容填进来 → nav.css §8 -->
     <footer id="site-footer"></footer>
 
-    <!-- 放在 </body> 前：此时两个空元素都已存在，脚本才找得到它们 -->
+    <!-- 脚本放在 body 末尾：此时两个空占位元素已经存在，parts.js 才找得到它们 -->
     <script src="theme.js"></script>
     <script src="parts.js"></script>
 </body>

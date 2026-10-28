@@ -1,23 +1,34 @@
-// parts.js — 把 HTML 片段插进对应页面里
-//
-// 原名 nav.js。因为现在要加载两个片段（导航 + 页脚），
-// 按教程第 42 页的要求重命名为 parts.js —— 它不再只管 nav 了。
-// 改名后记得三个页面的 <script src> 也要跟着改。
-//
+/* ==========================================================================
+   parts.js — 把 HTML 片段注入页面
+   ==========================================================================
+
+   问题  四个页面都有导航和页脚。每个页面复制一份 HTML，改一个链接就要改四处。
+   做法  把公共部分抽成 nav.html / footer.html，每个页面只留两个空占位元素，
+        由这里的 load() 填进去。
+
+   注入目标
+     nav.html    → #site-header    见 index.html / slogans.html / cpus.html / contact.html
+     footer.html → #site-footer
+
+   注入完成后还做两件事
+     1 给当前页对应的链接加 .active                        → 见下方 navReady.then()
+     2 调用 window.updateThemeButton()                     → updateThemeButton
+       因为深色开关按钮就在刚注入的 nav.html 里，
+       在它存在之前 theme.js 找不到按钮。
+
+   注意 fetch 在 file:// 下会被浏览器的 CORS 规则拦掉，
+        所以必须通过本地服务器打开 —— 见 README.md「快速开始」。
+   ========================================================================== */
+
 // ---------------------------------------------------------------------------
-// 教程第 42 页的核心：不要写两遍 fetch
+// 为什么写成一个函数，而不是写两遍 fetch
 //
-// 写两遍是这样（第 41 页演示的「重复自己」）：
-//   fetch('nav.html').then(...).then(html => {
-//     document.getElementById('site-header').innerHTML = html;
-//   });
-//   fetch('footer.html').then(...).then(html => {
-//     document.getElementById('site-footer').innerHTML = html;
-//   });
-// 两块代码除了两个词之外完全相同。
+// 教程（1.pdf 第 41 页）演示过「重复自己」的写法：加载 nav.html 一段 fetch，
+// 加载 footer.html 又一段 fetch，两块代码除了文件名和目标元素之外完全相同。
 //
-// 所以写成一个函数，用不同的值调用两次：
-//   function 描述一次要做的事，file 和 target 是会变的部分。
+// 所以抽成函数 —— 描述一次要做的事，file 和 target 是会变的部分：
+//     load('nav.html',    'site-header');
+//     load('footer.html', 'site-footer');
 // ---------------------------------------------------------------------------
 
 function load(file, target) {
@@ -42,7 +53,7 @@ load('footer.html', 'site-footer');
 // ---------------------------------------------------------------------------
 
 navReady.then(function () {
-  // Take the last segment of the URL, e.g. "slogans.html";
+  // 取网址最后一段，例如 "slogans.html"；
   // 直接用 file:// 或 http:// 打开根目录时最后一段可能是空，兜底成 "index.html"
   var current = location.pathname.split('/').pop() || 'index.html';
 

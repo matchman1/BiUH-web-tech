@@ -1,28 +1,52 @@
 /* ==========================================================================
-   nav.css
+   nav.css — 导航栏与页脚（四个页面共用的同一份）
+   ==========================================================================
+
+   这个文件里只有两样东西：顶部导航 <nav> 和站内页脚 #site-footer。
+   它们由 parts.js 从 nav.html / footer.html 取来、注入到每个页面，
+   所以四个页面（index / slogans / cpus / contact）看到的是同一份样式。
+   改这里，四页同时变；改任何一页自己的样式，去 styles.css 对应段落。
+
+   深色配色不在这里。颜色规则写在 theme.css，
+   因为媒体查询没法被导航栏的开关覆盖，必须拆成 data-theme 选择器。
+
    --------------------------------------------------------------------------
-   Styles for the shared nav and footer. All four pages link this one file,
-   because the nav has to look identical everywhere.
+   段落地图
+   --------------------------------------------------------------------------
 
-   Why a separate file rather than a section in styles.css?
-     Because every page links it. Styles for a shared component belong with
-     the component, not inside one page's stylesheet.
+     §1  导航外框        <nav>                      吸顶、毛玻璃、底部发丝线
+     §2  Contact 药丸    <a class="pill">           最右，新标签页打开
+     §3  Logo            <a class="logo"> + <svg>   最左，悬停转 90°
+     §4  链接列表        <ul class="links">         Home / Slogans / CPUs
+     §5  当前页高亮      .links a.active            由 parts.js 比对地址后加
+     §6  深浅开关        <button class="theme-toggle"> 状态由 theme.js 维护
+     §7  移动端          @media (max-width: 560px)  窄屏收紧规则
+     §8  站内页脚        #site-footer                由 footer.html 注入
 
-   The rules here style the nav.html and footer.html fragments that parts.js
-   injects:
-     <nav>
-       <a class="logo">...</a>
-       <ul class="links"> <li><a>...</a></li> ... </ul>
-       <a class="pill">Contact</a>
-     </nav>
-     <footer id="site-footer">...</footer>
+   §6 必须排在 §7 之前：媒体查询不增加优先级，
+   同优先级下靠后的规则赢，所以移动端的覆盖规则要写在基础规则之后。
+
+   --------------------------------------------------------------------------
+   两条容易踩的坑，留在这里免得重犯
+   --------------------------------------------------------------------------
+
+   1) nav { } 是裸选择器，页面里任何 <nav> 都会被影响。
+      首页那两个通栏按钮因此特意写成 <div class="index-cards">，
+      没有用 <nav>，就是为了避开这段吸顶样式。
+
+   2) nav 上不能同时写 gap 和 justify-content，也不能给 .pill 再加一个 auto 外边距。
+      三种「推开」手段叠在一起，空余空间会被切成两块：
+      一块把 .links 推到中途、一块把药丸推到最右，结果链接停在中间不靠右。
+      现在只留一个来源 —— .links 的 margin-left:auto 吃掉全部空余空间。
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   1  导航外框
-   吸顶 + 半透明毛玻璃 + 底部一条发丝线
-   -------------------------------------------------------------------------- */
 
+/* ==========================================================================
+   §1  导航外框
+   作用对象：nav.html 里的 <nav>，注入到每个页面的 #site-header
+   ========================================================================== */
+
+/* 吸顶导航：粘在视口顶部，半透明底 + 毛玻璃，底部一条发丝线收尾 */
 nav {
     position: sticky;
     top: 0;
@@ -31,11 +55,9 @@ nav {
     display: flex;
     align-items: center;
 
-    /* 这里故意不写 gap、也不写 justify-content：
-       横向间距全部由 .pill 的 margin-left 控制。
-       原先这里写了 justify-content:space-between + gap:24px，
-       会让剩余空间被分成两块 —— 一块把 .links 推到中途、一块把药丸推到最右，
-       结果 home/quotes/project 停在中间而不靠右。 */
+    /* 这里的留白是唯一一处「故意不写」的样式：
+       gap 和 justify-content 都留空，横向间距全部交给 .pill 的 margin-left
+       和 .links 的 margin-left:auto 处理（原因见文件头第 2 条）。 */
 
     padding: 14px clamp(20px, 5vw, 48px);
 
@@ -48,24 +70,26 @@ nav {
                  "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }
 
-/* 导航里的链接一律不带默认下划线，由各自的形态决定样式 */
+/* 导航里的所有链接一律去掉默认下划线和蓝紫色，
+   具体形态（药丸、文字链接）由 §2 和 §4 各自决定 */
 nav a {
     text-decoration: none;
     color: inherit;
 }
 
-/* --------------------------------------------------------------------------
-   2  药丸按钮 Contact（最右）
-   border-radius 用 999px 而不是固定值，高度怎么变都能保持两端半圆
-   -------------------------------------------------------------------------- */
 
+/* ==========================================================================
+   §2  Contact 药丸（最右）
+   作用对象：nav.html 里的 <a class="pill" href="contact.html">
+   ========================================================================== */
+
+/* 药丸按钮：默认只有描边，与左侧链接拉开 40px */
 nav .pill {
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    /* 与 .links 之间的距离。
-       nav 上已经没有 gap（见 1 的注释），所以这段间距写在这里。 */
+    /* 与 .links 之间的距离只有这一个来源 */
     margin-left: 40px;
 
     padding: 6px 16px;
@@ -79,8 +103,8 @@ nav .pill {
     color: #1a1a1a;
     background: transparent;
 
-    /* 两端半圆的药丸形状：
-       半径大于等于高度的一半，浏览器会自动收敛成半圆，所以写个大值最稳 */
+    /* 半径写到大于高度的一半，浏览器会自动收敛成半圆，
+       高度以后怎么调都不会走形 */
     border: 1px solid #d8d8d8;
     border-radius: 999px;
 
@@ -89,23 +113,27 @@ nav .pill {
                 color 0.25s ease;
 }
 
+/* 悬停：反色填充，最直接的可点击反馈 */
 nav .pill:hover {
     color: #fdfdfc;
     background: #1a1a1a;
     border-color: #1a1a1a;
 }
 
-/* 当前就停在联系页时，药丸保持实心（由 parts.js 加 .active） */
+/* 就停在 contact.html 时保持实心（.active 由 parts.js 加） */
 nav .pill.active {
     color: #fdfdfc;
     background: #1a1a1a;
     border-color: #1a1a1a;
 }
 
-/* --------------------------------------------------------------------------
-   3  Logo（最左）
-   -------------------------------------------------------------------------- */
 
+/* ==========================================================================
+   §3  Logo（最左）
+   作用对象：nav.html 里的 <a class="logo">，内含一个内联 <svg>
+   ========================================================================== */
+
+/* 图标与站名横排；窄屏只留图标（见 §7） */
 nav .logo {
     display: inline-flex;
     align-items: center;
@@ -118,22 +146,26 @@ nav .logo {
     white-space: nowrap;
 }
 
+/* 图标本身：固定尺寸，留出旋转的过渡 */
 nav .logo svg {
     display: block;
     flex: none;
     transition: transform 0.5s ease;
 }
 
+/* 悬停时图标转 90°：那个十字本来就像个准星，转一下是个轻量的彩蛋 */
 nav .logo:hover svg {
     transform: rotate(90deg);
 }
 
-/* --------------------------------------------------------------------------
-   4  链接列表（右）
-   margin-left:auto 把 logo 之后的所有空余空间吃掉，
-   于是 .links 连同后面的药丸一起被推到最右边，logo 独自留在最左。
-   -------------------------------------------------------------------------- */
 
+/* ==========================================================================
+   §4  链接列表（靠右）
+   作用对象：nav.html 里的 <ul class="links">，三个页面链接
+   ========================================================================== */
+
+/* margin-left:auto 是这里的关键：
+   它吃掉 logo 之后的全部空余空间，于是链接组和药丸一起被推到最右边 */
 nav .links {
     display: flex;
     align-items: center;
@@ -144,6 +176,7 @@ nav .links {
     list-style: none;
 }
 
+/* 单个链接的字体与基准色 */
 nav .links a {
     position: relative;
 
@@ -154,11 +187,14 @@ nav .links a {
     transition: color 0.25s ease;
 }
 
+/* 悬停：文字变黑 */
 nav .links a:hover {
     color: #1a1a1a;
 }
 
-/* 悬停下划线：从左侧生长出来，比直接变色更细腻 */
+/* 悬停下划线先画好、再靠 transform 展开：
+   比直接给 border-bottom 多一层「从左往右长出来」的动效，
+   而且不占布局高度，文字不会跳动 */
 nav .links a::after {
     content: "";
     position: absolute;
@@ -174,74 +210,38 @@ nav .links a::after {
     transition: transform 0.3s ease;
 }
 
+/* 悬停时下划线从左向右展开 */
 nav .links a:hover::after {
     transform: scaleX(1);
 }
 
-/* --------------------------------------------------------------------------
-   4  当前页高亮
-   由 parts.js 比对地址后给当前页加 .active
-   -------------------------------------------------------------------------- */
 
+/* ==========================================================================
+   §5  当前页高亮
+   作用对象：.links 里的 <a>，.active 由 parts.js 比对 location.pathname 后加上
+   ========================================================================== */
+
+/* 当前页的链接保持深色 */
 nav .links a.active {
     color: #1a1a1a;
 }
 
+/* 当前页的下划线常驻，不靠悬停 */
 nav .links a.active::after {
     transform: scaleX(1);
 }
 
-/* --------------------------------------------------------------------------
-   5  移动端
-   -------------------------------------------------------------------------- */
 
-@media (max-width: 560px) {
-    nav {
-        padding: 12px 20px;
-    }
+/* ==========================================================================
+   §6  浅色 / 深色开关
+   作用对象：nav.html 里的 <button class="theme-toggle">，位于药丸右侧
 
-    /* 窄屏放不下 logo 文字，只留图标 */
-    nav .logo span {
-        display: none;
-    }
+   沿用同样的药丸语言，但更安静 —— 它是工具，不是去处。
+   图标由 aria-pressed 切换，theme.js 负责让这个属性和实际主题保持一致，
+   所以「跟随系统」的访客也能看到正确的图标。
+   ========================================================================== */
 
-    nav .links {
-        gap: 16px;
-    }
-
-    nav .links a {
-        font-size: 13px;
-    }
-
-    /* 窄屏收紧药丸，但不隐藏文字（它是唯一入口，不能只剩个圆点） */
-    nav .pill {
-        margin-left: 20px;
-        padding: 5px 12px;
-        font-size: 12px;
-    }
-
-    /* narrow screens: the switch drops its label and keeps just the icon */
-    nav .theme-toggle {
-        margin-left: 8px;
-        padding: 0;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-    }
-
-    nav .theme-toggle-label {
-        display: none;
-    }
-}
-
-/* --------------------------------------------------------------------------
-   6  light / dark switch
-   Sits to the right of the Contact pill. Same pill language as Contact, but
-   round-friendly and quieter, since it is a utility rather than a destination.
-   The icon is picked by aria-pressed, which theme.js keeps truthful, so a
-   visitor following the operating system still sees the correct glyph.
-   -------------------------------------------------------------------------- */
-
+/* 开关按钮：药丸 + 图标 + 文字 */
 nav .theme-toggle {
     display: inline-flex;
     align-items: center;
@@ -267,52 +267,105 @@ nav .theme-toggle {
     transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
 }
 
+/* 悬停：文字与描边加深 */
 nav .theme-toggle:hover {
     color: #1a1a1a;
     border-color: #b4b4b0;
 }
 
+/* 键盘聚焦时的轮廓线，鼠标点击不出现 */
 nav .theme-toggle:focus-visible {
     outline: 2px solid #1a1a1a;
     outline-offset: 2px;
 }
 
+/* 包着太阳 / 月亮两个图标的容器 */
 nav .theme-toggle-icon {
     display: inline-flex;
     align-items: center;
 }
 
-/* only one glyph is visible at a time */
+/* 两个图标同时存在，靠下面三条只显示一个；
+   默认（浅色、未按下）= 月亮，因为下一步操是「切到深色」 */
 nav .theme-toggle .icon-sun {
     display: none;
 }
 
+/* 已切到深色（aria-pressed="true"）就藏起月亮 */
 nav .theme-toggle[aria-pressed="true"] .icon-moon {
     display: none;
 }
 
+/* 同时露出太阳，表示「再点一下回到浅色」 */
 nav .theme-toggle[aria-pressed="true"] .icon-sun {
     display: block;
 }
 
-/* --------------------------------------------------------------------------
-   7  深色模式
-   The dark colours for the nav used to live here. They now sit in theme.css,
-   so that the switch can override the operating system. Add a colour there.
-   -------------------------------------------------------------------------- */
 
 /* ==========================================================================
-   站内页脚 #site-footer
-   --------------------------------------------------------------------------
-   和导航一样，这是四个页面共用的组件（由 parts.js 把 footer.html 注入进来），
-   所以样式放在这个文件里，不写进任何单个页面的 styles.css。
+   §7  移动端（≤ 560px）
+   作用对象：同 §1–§6，全部是窄屏下的收窄规则
+
+   必须排在 §1–§6 之后：媒体查询本身不增加优先级，
+   靠后的同优先级规则才能覆盖前面的基础规则。
+   （之前这段排在最前面，导致 .theme-toggle 的 padding/margin 覆盖失效。）
    ========================================================================== */
 
+@media (max-width: 560px) {
+    /* 导航左右留白收紧 */
+    nav {
+        padding: 12px 20px;
+    }
+
+    /* 站名文字放不下，只留图标 */
+    nav .logo span {
+        display: none;
+    }
+
+    /* 链接之间收紧 */
+    nav .links {
+        gap: 16px;
+    }
+
+    nav .links a {
+        font-size: 13px;
+    }
+
+    /* 药丸缩小，但不隐藏文字 —— 它是联系页的唯一入口 */
+    nav .pill {
+        margin-left: 20px;
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+
+    /* 开关缩成一个圆形按钮，去掉文字只留图标 */
+    nav .theme-toggle {
+        margin-left: 8px;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+
+    nav .theme-toggle-label {
+        display: none;
+    }
+}
+
+
+/* ==========================================================================
+   §8  站内页脚
+   作用对象：footer.html 注入到每个页面的 <footer id="site-footer">
+
+   和导航一样是四页共用的组件，所以样式放在这个文件，
+   不写进任何单个页面的 styles.css。
+   ========================================================================== */
+
+/* 页脚外框：居中、上方一条发丝线与导航的下边框呼应 */
 #site-footer {
     max-width: 1080px;
     margin: 0 auto;
 
-    /* 上方留白 + 一条发丝线，和导航的下边框呼应 */
     padding: 40px clamp(24px, 6vw, 64px) 56px;
     border-top: 1px solid #e6e6e6;
 
@@ -323,16 +376,18 @@ nav .theme-toggle[aria-pressed="true"] .icon-sun {
     color: #a8a8a8;
 }
 
+/* 署名行（footer.html 里的第一个 <p>） */
 #site-footer p {
     margin: 0;
 }
 
-/* <address> 浏览器默认是斜体，这里按极简风格去掉斜体，只靠颜色区分 */
+/* <address> 浏览器默认斜体，这里去掉斜体，只靠颜色弱化 */
 #site-footer address {
     margin-top: 6px;
     font-style: normal;
 }
 
+/* 邮箱链接：平时无下划线 */
 #site-footer a {
     color: #6b6b6b;
     text-decoration: none;
@@ -341,12 +396,8 @@ nav .theme-toggle[aria-pressed="true"] .icon-sun {
     transition: color 0.25s ease, border-color 0.25s ease;
 }
 
+/* 悬停时才出现下划线 */
 #site-footer a:hover {
     color: #1a1a1a;
     border-bottom-color: #1a1a1a;
 }
-
-/* --------------------------------------------------------------------------
-   7  页脚深色模式
-   -------------------------------------------------------------------------- */
-

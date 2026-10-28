@@ -1,93 +1,133 @@
 /* ==========================================================================
-   theme.css - the switchable light / dark layer
+   theme.css — 深色配色（可被导航栏的开关覆盖）
+   ==========================================================================
 
-   Why this file exists
-   --------------------
-   The dark colours live here instead of in styles.css and nav.css, because the
-   navigation has a light / dark switch and a plain
-   @media (prefers-color-scheme: dark) cannot be overruled by a click.
+   这个文件只做一件事：在深色模式下，把 styles.css 和 nav.css 里写死的
+   浅色值换成深色值。这里没有任何布局、间距、字号 —— 那些留在原文件。
 
-   Every rule that used to sit inside that media query now appears twice:
+   --------------------------------------------------------------------------
+   为什么单独一个文件
+   --------------------------------------------------------------------------
 
-     html:not([data-theme]) ...    follow the operating system, but only while
-                                   the visitor has not chosen a theme
-     html[data-theme="dark"] ...   an explicit choice; wins over the system in
-                                   both directions
+   深色配色原来写在 styles.css / nav.css 的 @media (prefers-color-scheme: dark)
+   里。媒体查询只认操作系统的设置，访客点按钮改不了它。
+   要支持「手动切换」，就必须换成能被属性覆盖的选择器，于是规则搬到这里，
+   每条写两遍：
 
-   So the site still follows the OS on a first visit, and the switch in the nav
-   overrides it afterwards. theme.js sets the data-theme attribute.
+     @media (prefers-color-scheme: dark) { html:not([data-theme]) … }
+         跟随操作系统，但只在访客还没手动选过主题时生效
 
-   Keep this file in step with the base rules in styles.css and nav.css: if a
-   colour is changed there, change its twin here too.
+     html[data-theme="dark"] …
+         手动选择，双向覆盖系统
+
+   html:not([data-theme]) 是关键：
+   访客一旦手选了浅色，data-theme="light" 会让这组选择器不再匹配，
+   即使系统是深色也拉不回来。
+
+   --------------------------------------------------------------------------
+   谁在设置属性
+   --------------------------------------------------------------------------
+
+     theme.js              点按钮时写入 / 移除 data-theme
+     各页面 <head> 的内联脚本  首次绘制前先设一次，防止深色下先闪一下白
+
+   --------------------------------------------------------------------------
+   维护约定（重要）
+   --------------------------------------------------------------------------
+
+   上半段（媒体查询）和下半段（data-theme）**规则顺序完全一致**，
+   一条对一条。改颜色时两段一起改，改完可以上下对着看。
+   想给某个组件加深色，就在两段各自的对应位置加，别只加一处。
+
+   分组顺序与源文件一致：
+     首页  → styles.css §1
+     标语  → styles.css §2
+     联系  → styles.css §4
+     CPU  → styles.css §3
+     导航与页脚、开关 → nav.css §1–§8
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   follows the operating system, until the visitor picks a theme
-   -------------------------------------------------------------------------- */
+
+/* ==========================================================================
+   上半段：跟随操作系统（访客还没手动选过主题）
+   作用对象：<html> 上没有 data-theme 属性的所有页面
+   ========================================================================== */
 
 @media (prefers-color-scheme: dark) {
 
-    /* ---- from styles.css ---- */
+    /* ----------------------------------------------------------------------
+       首页 —— 对应 styles.css §1
+       ---------------------------------------------------------------------- */
 
-    /* home */
-
+    /* body 底色与正文色：深色整体基调 */
     html:not([data-theme]) .index {
         background: #0e0e0e;
         color: #ededed;
     }
 
+    /* 两张通栏卡片：深灰底 + 深描边，比页面底色稍亮一点 */
     html:not([data-theme]) .index-card {
         background: #161616;
         border-color: #262626;
     }
 
+    /* 卡片悬停：只加深描边，不要投影（深色下投影看不出来，只会显脏） */
     html:not([data-theme]) .index-card:hover {
         border-color: #3a3a3a;
         box-shadow: none;
     }
 
+    /* 小标签（ITX · DIY / Collection）压暗一档 */
     html:not([data-theme]) .index-eyebrow,
     html:not([data-theme]) .index-card-label {
         color: #6f6f6c;
     }
 
+    /* 说明文字提亮，保证在深底上还读得清 */
     html:not([data-theme]) .index-lede,
     html:not([data-theme]) .index-card-desc {
         color: #9a9a96;
     }
 
+    /* 备用语录卡片（当前没有页面在用） */
     html:not([data-theme]) .index-quote {
         background: #161616;
         border-color: #262626;
         color: #ededed;
     }
 
-    /* slogans */
+    /* ----------------------------------------------------------------------
+       标语页 —— 对应 styles.css §2
+       ---------------------------------------------------------------------- */
 
+    /* body 底色与正文色 */
     html:not([data-theme]) .slogans-page {
         background: #0e0e0e;
         color: #ededed;
     }
 
+    /* 网格底色是分隔线的来源，深色下也要跟着变深 */
     html:not([data-theme]) .slogans-grid {
         background: #262626;
         border-color: #262626;
     }
 
+    /* 单张卡片：跟页面同色，靠分隔线区分彼此 */
     html:not([data-theme]) .slogan {
         background: #0e0e0e;
     }
 
+    /* 卡片悬停时略微提亮 */
     html:not([data-theme]) .slogan:hover {
         background: #161616;
     }
 
-    /* lift the card secondary text, or it vanishes on dark */
-
+    /* 卡片里的次要文字整体提亮，否则在深色下会消失 */
     html:not([data-theme]) .slogan-brand {
         color: #9a9a96;
     }
 
+    /* 右上角的编号压到很淡，只作为目录感的暗示 */
     html:not([data-theme]) .slogan::after {
         color: #4a4a48;
     }
@@ -96,18 +136,19 @@
         color: #9a9a96;
     }
 
+    /* 出处、页脚说明、页眉小标签：最弱的一档 */
     html:not([data-theme]) .slogan-src,
     html:not([data-theme]) .slogans-footnote,
     html:not([data-theme]) .slogans-eyebrow {
         color: #6f6f6c;
     }
 
+    /* 说明文字里的行内文件名 */
     html:not([data-theme]) .slogans-footnote code {
         color: #9a9a96;
     }
 
-    /* "no short slogan" section */
-
+    /* 「没有短标语」板块 */
     html:not([data-theme]) .blanks-title,
     html:not([data-theme]) .blanks-list dt {
         color: #9a9a96;
@@ -117,6 +158,7 @@
         color: #8a8a86;
     }
 
+    /* 该板块的分隔线 */
     html:not([data-theme]) .blanks-list,
     html:not([data-theme]) .blanks-list > div {
         border-color: #262626;
@@ -126,52 +168,21 @@
         color: #ededed;
     }
 
+    /* 返回链接（contact.html 在用，样式定义在 styles.css §2-8） */
     html:not([data-theme]) .back-link:hover {
         color: #ededed;
     }
 
-    /* projects */
-
-    html:not([data-theme]) .project-page {
-        background: #0e0e0e;
-        color: #ededed;
-    }
-
-    html:not([data-theme]) .arch-brand {
-        border-bottom-color: #ededed;
-    }
-
-    html:not([data-theme]) .chip {
-        border-bottom-color: #262626;
-    }
-
-    html:not([data-theme]) .chip:hover {
-        background: #161616;
-    }
-
-    html:not([data-theme]) .chip-code {
-        color: #b8b8b4;
-    }
-
-    html:not([data-theme]) .chip-date {
-        color: #6f6f6c;
-    }
-
-    html:not([data-theme]) .chip-model {
-        color: #9a9a96;
-    }
-
-    html:not([data-theme]) .project-footnote {
-        color: #6f6f6c;
-    }
-
-    /* contact */
+    /* ----------------------------------------------------------------------
+       联系页 —— 对应 styles.css §4
+       ---------------------------------------------------------------------- */
 
     html:not([data-theme]) .contact-page {
         background: #0e0e0e;
         color: #ededed;
     }
 
+    /* 联系信息的分隔线 */
     html:not([data-theme]) .contact-list,
     html:not([data-theme]) .contact-list li {
         border-color: #262626;
@@ -185,28 +196,199 @@
         border-bottom-color: #ededed;
     }
 
-    /* ---- from nav.css ---- */
+    /* ----------------------------------------------------------------------
+       CPU 页 —— 对应 styles.css §3
+       ---------------------------------------------------------------------- */
 
+    /* body 底色与正文色 */
+    html:not([data-theme]) .cpu-page {
+        background: #0e0e0e;
+        color: #ededed;
+    }
+
+    /* 页眉的小标签与说明 */
+    html:not([data-theme]) .cpu-eyebrow {
+        color: #6f6f6c;
+    }
+
+    html:not([data-theme]) .cpu-sub {
+        color: #9a9a96;
+    }
+
+    /* 工具栏底部的分隔线 */
+    html:not([data-theme]) .cpu-toolbar {
+        border-bottom-color: #262626;
+    }
+
+    /* 搜索框：深底、深描边、亮字 */
+    html:not([data-theme]) .cpu-search {
+        background: #161616;
+        border-color: #3a3a3a;
+        color: #ededed;
+    }
+
+    html:not([data-theme]) .cpu-search::placeholder {
+        color: #6f6f6c;
+    }
+
+    /* 聚焦时描边变亮 + 一圈淡光晕（与浅色下同样的逻辑，方向相反） */
+    html:not([data-theme]) .cpu-search:focus {
+        border-color: #ededed;
+        box-shadow: 0 0 0 3px rgba(237, 237, 237, 0.10);
+    }
+
+    /* 品牌筛选按钮：默认描边态 */
+    html:not([data-theme]) .cpu-brand {
+        color: #9a9a96;
+        border-color: #3a3a3a;
+    }
+
+    html:not([data-theme]) .cpu-brand:hover {
+        color: #ededed;
+        border-color: #6a6a66;
+    }
+
+    html:not([data-theme]) .cpu-brand:focus-visible {
+        outline-color: #ededed;
+    }
+
+    /* 选中态整体反色：亮底黑字 */
+    html:not([data-theme]) .cpu-brand.is-active {
+        color: #0e0e0e;
+        background: #ededed;
+        border-color: #ededed;
+    }
+
+    /* 两个面板（Results / Compare）的标题行与标题 */
+    html:not([data-theme]) .cpu-panel-head {
+        border-bottom-color: #262626;
+    }
+
+    html:not([data-theme]) .cpu-panel-title {
+        color: #9a9a96;
+    }
+
+    /* 结果条数文字：最弱的一档 */
+    html:not([data-theme]) .cpu-count {
+        color: #6f6f6c;
+    }
+
+    /* 「Clear all」按钮 */
+    html:not([data-theme]) .cpu-clear {
+        color: #9a9a96;
+        border-bottom-color: #3a3a3a;
+    }
+
+    html:not([data-theme]) .cpu-clear:hover {
+        color: #ededed;
+        border-bottom-color: #ededed;
+    }
+
+    /* 结果行（由 cpu.js 生成） */
+    html:not([data-theme]) .cpu-pick {
+        border-bottom-color: #212121;
+        color: #ededed;
+    }
+
+    html:not([data-theme]) .cpu-pick:hover {
+        background: #161616;
+    }
+
+    /* 已加入对比的行：底色加深 + 左侧 3px 亮条 */
+    html:not([data-theme]) .cpu-pick.is-picked {
+        background: #1c1c1c;
+        box-shadow: inset 3px 0 0 #ededed;
+    }
+
+    html:not([data-theme]) .cpu-row-meta {
+        color: #6f6f6c;
+    }
+
+    html:not([data-theme]) .cpu-row-specs {
+        color: #9a9a96;
+    }
+
+    /* 搜索无结果时的提示行 */
+    html:not([data-theme]) .cpu-empty {
+        color: #9a9a96;
+    }
+
+    /* 「Show N more」按钮 */
+    html:not([data-theme]) .cpu-more {
+        color: #ededed;
+        border-color: #3a3a3a;
+    }
+
+    html:not([data-theme]) .cpu-more:hover {
+        background: #161616;
+        border-color: #6a6a66;
+    }
+
+    /* 还没选 CPU 时的虚线空状态框 */
+    html:not([data-theme]) .cpu-compare-empty {
+        color: #6f6f6c;
+        border-color: #3a3a3a;
+    }
+
+    /* 对比表的分隔线、列头型号名、删除按钮 */
+    html:not([data-theme]) .cpu-table th,
+    html:not([data-theme]) .cpu-table td {
+        border-bottom-color: #212121;
+    }
+
+    html:not([data-theme]) .cpu-table-model {
+        color: #ededed;
+    }
+
+    html:not([data-theme]) .cpu-table-remove {
+        color: #6f6f6c;
+    }
+
+    /* 表格正文数值：比型号名弱一档 */
+    html:not([data-theme]) .cpu-table tbody td {
+        color: #b8b8b4;
+    }
+
+    /* 数值更高的那一方：加亮 + 底色标记，和浅色下 is-best 的思路一致 */
+    html:not([data-theme]) .cpu-table tbody td.is-best {
+        color: #ededed;
+        background: #1c1c1c;
+    }
+
+    /* 页面底部说明 */
+    html:not([data-theme]) .cpu-footnote {
+        color: #6f6f6c;
+    }
+
+    /* ----------------------------------------------------------------------
+       导航与页脚 —— 对应 nav.css §1–§8
+       ---------------------------------------------------------------------- */
+
+    /* 导航底色：半透明深色，毛玻璃效果由 nav.css 提供 */
     html:not([data-theme]) nav {
         background: rgba(14, 14, 14, 0.82);
         border-bottom-color: #262626;
     }
 
+    /* logo、悬停中的链接、当前页链接：最亮的一档 */
     html:not([data-theme]) nav .logo,
     html:not([data-theme]) nav .links a:hover,
     html:not([data-theme]) nav .links a.active {
         color: #ededed;
     }
 
+    /* 普通导航链接 */
     html:not([data-theme]) nav .links a {
         color: #9a9a9a;
     }
 
+    /* Contact 药丸：描边态 */
     html:not([data-theme]) nav .pill {
         color: #ededed;
         border-color: #3a3a3a;
     }
 
+    /* 药丸悬停与「停在联系页」都反色成亮底黑字 */
     html:not([data-theme]) nav .pill:hover {
         color: #0e0e0e;
         background: #ededed;
@@ -219,6 +401,7 @@
         border-color: #ededed;
     }
 
+    /* 页脚：上边线、署名文字、邮箱链接 */
     html:not([data-theme]) #site-footer {
         border-top-color: #262626;
         color: #6f6f6f;
@@ -233,8 +416,7 @@
         border-bottom-color: #ededed;
     }
 
-
-    /* the switch itself */
+    /* 深浅开关本身 */
     html:not([data-theme]) .theme-toggle {
         color: #9a9a96;
         border-color: #3a3a3a;
@@ -250,13 +432,17 @@
     }
 }
 
-/* --------------------------------------------------------------------------
-   explicit dark, chosen with the switch
-   -------------------------------------------------------------------------- */
 
-/* ---- from styles.css ---- */
+/* ==========================================================================
+   下半段：手动选择的深色（点开关切换过来）
+   作用对象：<html data-theme="dark"> —— 由 theme.js 写入
 
-/* home */
+   规则与上半段一一对应、顺序相同。改颜色时请上下对照着改。
+   ========================================================================== */
+
+/* ----------------------------------------------------------------------
+   首页 —— 对应 styles.css §1
+   ---------------------------------------------------------------------- */
 
 html[data-theme="dark"] .index {
     background: #0e0e0e;
@@ -289,7 +475,9 @@ html[data-theme="dark"] .index-quote {
     color: #ededed;
 }
 
-/* slogans */
+/* ----------------------------------------------------------------------
+   标语页 —— 对应 styles.css §2
+   ---------------------------------------------------------------------- */
 
 html[data-theme="dark"] .slogans-page {
     background: #0e0e0e;
@@ -308,8 +496,6 @@ html[data-theme="dark"] .slogan {
 html[data-theme="dark"] .slogan:hover {
     background: #161616;
 }
-
-/* lift the card secondary text, or it vanishes on dark */
 
 html[data-theme="dark"] .slogan-brand {
     color: #9a9a96;
@@ -333,8 +519,6 @@ html[data-theme="dark"] .slogans-footnote code {
     color: #9a9a96;
 }
 
-/* "no short slogan" section */
-
 html[data-theme="dark"] .blanks-title,
 html[data-theme="dark"] .blanks-list dt {
     color: #9a9a96;
@@ -357,42 +541,9 @@ html[data-theme="dark"] .back-link:hover {
     color: #ededed;
 }
 
-/* projects */
-
-html[data-theme="dark"] .project-page {
-    background: #0e0e0e;
-    color: #ededed;
-}
-
-html[data-theme="dark"] .arch-brand {
-    border-bottom-color: #ededed;
-}
-
-html[data-theme="dark"] .chip {
-    border-bottom-color: #262626;
-}
-
-html[data-theme="dark"] .chip:hover {
-    background: #161616;
-}
-
-html[data-theme="dark"] .chip-code {
-    color: #b8b8b4;
-}
-
-html[data-theme="dark"] .chip-date {
-    color: #6f6f6c;
-}
-
-html[data-theme="dark"] .chip-model {
-    color: #9a9a96;
-}
-
-html[data-theme="dark"] .project-footnote {
-    color: #6f6f6c;
-}
-
-/* contact */
+/* ----------------------------------------------------------------------
+   联系页 —— 对应 styles.css §4
+   ---------------------------------------------------------------------- */
 
 html[data-theme="dark"] .contact-page {
     background: #0e0e0e;
@@ -412,7 +563,154 @@ html[data-theme="dark"] a.contact-value:hover {
     border-bottom-color: #ededed;
 }
 
-/* ---- from nav.css ---- */
+/* ----------------------------------------------------------------------
+   CPU 页 —— 对应 styles.css §3
+   ---------------------------------------------------------------------- */
+
+html[data-theme="dark"] .cpu-page {
+    background: #0e0e0e;
+    color: #ededed;
+}
+
+html[data-theme="dark"] .cpu-eyebrow {
+    color: #6f6f6c;
+}
+
+html[data-theme="dark"] .cpu-sub {
+    color: #9a9a96;
+}
+
+html[data-theme="dark"] .cpu-toolbar {
+    border-bottom-color: #262626;
+}
+
+html[data-theme="dark"] .cpu-search {
+    background: #161616;
+    border-color: #3a3a3a;
+    color: #ededed;
+}
+
+html[data-theme="dark"] .cpu-search::placeholder {
+    color: #6f6f6c;
+}
+
+html[data-theme="dark"] .cpu-search:focus {
+    border-color: #ededed;
+    box-shadow: 0 0 0 3px rgba(237, 237, 237, 0.10);
+}
+
+html[data-theme="dark"] .cpu-brand {
+    color: #9a9a96;
+    border-color: #3a3a3a;
+}
+
+html[data-theme="dark"] .cpu-brand:hover {
+    color: #ededed;
+    border-color: #6a6a66;
+}
+
+html[data-theme="dark"] .cpu-brand:focus-visible {
+    outline-color: #ededed;
+}
+
+html[data-theme="dark"] .cpu-brand.is-active {
+    color: #0e0e0e;
+    background: #ededed;
+    border-color: #ededed;
+}
+
+html[data-theme="dark"] .cpu-panel-head {
+    border-bottom-color: #262626;
+}
+
+html[data-theme="dark"] .cpu-panel-title {
+    color: #9a9a96;
+}
+
+html[data-theme="dark"] .cpu-count {
+    color: #6f6f6c;
+}
+
+html[data-theme="dark"] .cpu-clear {
+    color: #9a9a96;
+    border-bottom-color: #3a3a3a;
+}
+
+html[data-theme="dark"] .cpu-clear:hover {
+    color: #ededed;
+    border-bottom-color: #ededed;
+}
+
+html[data-theme="dark"] .cpu-pick {
+    border-bottom-color: #212121;
+    color: #ededed;
+}
+
+html[data-theme="dark"] .cpu-pick:hover {
+    background: #161616;
+}
+
+html[data-theme="dark"] .cpu-pick.is-picked {
+    background: #1c1c1c;
+    box-shadow: inset 3px 0 0 #ededed;
+}
+
+html[data-theme="dark"] .cpu-row-meta {
+    color: #6f6f6c;
+}
+
+html[data-theme="dark"] .cpu-row-specs {
+    color: #9a9a96;
+}
+
+html[data-theme="dark"] .cpu-empty {
+    color: #9a9a96;
+}
+
+html[data-theme="dark"] .cpu-more {
+    color: #ededed;
+    border-color: #3a3a3a;
+}
+
+html[data-theme="dark"] .cpu-more:hover {
+    background: #161616;
+    border-color: #6a6a66;
+}
+
+html[data-theme="dark"] .cpu-compare-empty {
+    color: #6f6f6c;
+    border-color: #3a3a3a;
+}
+
+html[data-theme="dark"] .cpu-table th,
+html[data-theme="dark"] .cpu-table td {
+    border-bottom-color: #212121;
+}
+
+html[data-theme="dark"] .cpu-table-model {
+    color: #ededed;
+}
+
+html[data-theme="dark"] .cpu-table-remove {
+    color: #6f6f6c;
+}
+
+html[data-theme="dark"] .cpu-table tbody td {
+    color: #b8b8b4;
+}
+
+html[data-theme="dark"] .cpu-table tbody td.is-best {
+    color: #ededed;
+    background: #1c1c1c;
+}
+
+html[data-theme="dark"] .cpu-footnote {
+    color: #6f6f6c;
+}
+
+/* ----------------------------------------------------------------------
+   导航与页脚 —— 对应 nav.css §1–§8
+   ---------------------------------------------------------------------- */
 
 html[data-theme="dark"] nav {
     background: rgba(14, 14, 14, 0.82);
@@ -460,7 +758,6 @@ html[data-theme="dark"] #site-footer a:hover {
     border-bottom-color: #ededed;
 }
 
-/* the switch itself */
 html[data-theme="dark"] .theme-toggle {
     color: #9a9a96;
     border-color: #3a3a3a;

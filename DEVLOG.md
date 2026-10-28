@@ -16,12 +16,16 @@
 | 09-20 16:34 | 学习材料 | 放入教程 `1.pdf`（22 页，导航与片段注入那几课） |
 | 09-20 16:42 | 配图 | `bilibili.jpg` 替换 `w3.png` 作为首页大图 |
 | 09-20 17:28 | 统一样式表 | `styles.css` 合并完成；`nav.css` 拆分出共用组件 |
-| 09-20 17:29 | 导航系统 | `nav.html` + `parts.js` + `verify-parts.mjs` 全部就位 |
+| 09-20 17:29 | 导航系统 | `nav.html` + `parts.js` 就位，四个页面接入 |
 | 09-23 11:29 | 本地服务器 | `serve.bat` / `serve-hidden.vbs` / `stop-server.bat` / `stop-server.ps1` |
 | 09-23 15:43 | 页脚 | `footer.html` 片段实现，四个页面接入 `parts.js` |
 | 09-23 16:05 | 联系页 | `contact.html` 建成，导航药丸按钮指向它 |
 | 09-23 16:34 | 整理 | `nav.html` 最后一轮调整 |
 | 10-14 | 文档与项目书 | `README.md` 写成；放入期末项目说明 `yourpen.pdf` |
+| 10-21 10:47 | 内容转向 | 语录页换成硬件厂商标语；新增 CPU 页，导航改为 Home / Slogans / CPUs |
+| 10-21 16:41 | 页面改名 | `project.html` → `cpus.html`，类名由 `.project-*` 改为 `.cpu-*` |
+| 10-28 11:17 | CPU 页定稿 | 搜索、品牌筛选、最多三颗并排对比 |
+| 10-28 | 交付整理 | 补齐 CPU 页的深色配色；删除开发脚本；`README.md` 重写 |
 
 **首次提交：** 09-23 10:36（`daee146`）。也就是说 09-20 那一整天的开发成果，是在三天后一次性打包提交的——这件事的后果见最后一节。
 
@@ -420,3 +424,110 @@ html[data-theme="dark"] .index { ... }      /* 手动选择，双向覆盖系统
 **4. 测试脚本自己也会错。** CPU 对比测试一度报「3 列变成 4 列」，
 查下来是统计列数的正则把表头左上角那个「Spec」单元格也算进去了 —— 代码没问题，是测试错了。
 这类误报同样要当真去查，否则会去改本来正确的代码。
+
+---
+
+## 阶段九：清理仓库与补 Open Graph
+
+### 数据管线搬进 tools/
+
+`.tmp/` 里那些一次性脚本删掉之前，把真正有价值的部分挪到了 `tools/`：
+
+- `export_cpus.py` —— 从 `cpu/cpus.db` 生成 `data/cpus.js`
+- `check_data.py` —— 比对 CSV 与数据库，判断某个源文件是否冗余
+- `test-cpu.mjs` / `test-theme.mjs` —— 两个不依赖浏览器的逻辑测试
+- `README.md` —— 说明管线怎么用
+
+顺手把脚本里硬编码的绝对路径改成从脚本位置推导，现在从任意目录都能跑。
+**验证过可复现性：重新导出的 `data/cpus.js` 与之前字节完全一致。**
+
+### 删掉的东西
+
+| 目标 | 大小 | 原因 |
+|---|---|---|
+| `.pdfwork/` | 8.9 MB | 从 PDF 渲染的页面图片，随时能重新生成 |
+| `images/og-image.png` | 4.2 MB | 已被压缩过的 `og-image.jpg`（67 KB）取代 |
+| `p2/` | 0 | 两个空文件 |
+| `.tmp/` | 0.6 MB | 一次性脚本与备份，有用的已移入 `tools/` |
+| `1.pdf` | 2.2 MB | 教程原文，需要的内容已全部提取并落地 |
+
+原始大图（8.1 MB）和 `cpu/`（3.7 MB）保留在本地。
+
+### 从 git 索引移出
+
+`.pdfwork/` 曾被提交进仓库（42 个文件），执行了 `git rm -r --cached .pdfwork`。
+索引里已不再出现；历史里的旧提交仍保留，不影响使用。
+
+### Open Graph 标签
+
+四个页面的 `<head>` 各加 6 行（`og:title` / `og:description` / `og:image` /
+`og:url` / `og:type` + `twitter:card`），由 `tools/add_og.py` 统一写入。
+
+两个容易踩的点写进了注释：
+
+- **`og:image` 必须是完整网址**，相对路径部分应用读不到
+- **Open Graph 用 `property`，Twitter 用 `name`**，不能互换
+
+`images/og-image.jpg` 实测 1200×630、66.7 KB，符合项目书要求（严格 1200×630、100 KB 以内）。
+
+---
+
+## 阶段十：交付前的整理
+
+### 补上 CPU 页缺失的深色配色
+
+页面从「语录 + 项目」改成「标语 + CPU」之后，`theme.css` 里仍然留着上一版的深色规则：
+`.project-page`、`.arch-brand`、`.chip*` 共 16 条，而 `.cpu-*` **一条都没有**。
+
+结果就是：切到深色模式后，其它三个页面都正常，只有 CPU 页仍是白底黑字。
+
+修法是先删掉那 16 条指向已不存在元素的规则，再照 `styles.css` 里 CPU 段的浅色值配一套深色值。
+配色的对应关系：
+
+| 用途 | 浅色 | 深色 |
+|---|---|---|
+| 页面底色 / 正文 | `#fdfdfc` / `#1a1a1a` | `#0e0e0e` / `#ededed` |
+| 卡片、输入框底色 | `#ffffff` | `#161616` |
+| 分隔线 | `#e6e6e3` | `#262626` |
+| 次要文字 | `#8a8a86` | `#9a9a96` |
+| 更淡的说明文字 | `#a8a8a4` | `#6f6f6c` |
+
+因为 `theme.css` 每条规则要写两遍（跟随系统一份、手动选择一份），所以这套规则一共 62 条。
+改完用 `check-css` 确认规则数从 89 变成 135（删 16、加 62），括号依然配对。
+
+### 删除开发脚本
+
+网站运行时只加载 3 个 CSS、4 个 JS 和 `data/cpus.js`。其余脚本都是开发期用的，交付前全部删除：
+
+| 删除 | 原本的用途 |
+|---|---|
+| `verify-parts.mjs` | 离线跑 `parts.js`，检查片段结构与四页接入 |
+| `check-css.mjs` | 检查三个样式表的括号 / 分号配对 |
+| `tools/export_cpus.py` | 从 `cpu/cpus.db` 生成 `data/cpus.js` |
+| `tools/check_data.py` | 比对 CSV 与数据库，判断源文件是否冗余 |
+| `tools/add_og.py` | 给四个页面批量写 Open Graph 标签 |
+| `tools/test-cpu.mjs` / `tools/test-theme.mjs` | 不依赖浏览器的逻辑测试 |
+
+数据已经导出成 `data/cpus.js`（508 KB、3551 条），所以删掉导出脚本不影响运行；
+只是以后若要改「展示哪些字段」，需要重写这个脚本。
+
+删文件之后，文件里指向它们的说法也会变成死链接，所以一并改了：
+
+- 四个页面的 OG 说明：由「改 `tools/add_og.py` 里的 BASE」改为「四个页面里的这几行要一起改」
+- `cpus.html` 与 `cpu.js` 的数据来源：由「`cpus.db → tools/export_cpus.py → data/cpus.js`」
+  改为「`cpu/cpus.db` 导出为 `data/cpus.js`」
+- `poster.html` 里的说明：改为「六行 meta 直接写在四个页面的 head 里」
+
+### 重写 README
+
+`README.md` 是给第一次打开这个项目的人看的，但里面还留着好几处上一版的事实：
+`project.html`、`bilibili.jpg`、`styles-dd.css`、五个部分的样式划分、旧邮箱地址，
+以及已经不存在的校验脚本。这些比「没写」更糟——照着做会找不到文件。
+
+所以整篇按当前状态重写：目录结构、三个样式表的分工、深色模式的实现方式、
+CPU 数据从哪来、已知问题清单，都对着实际文件核对过一遍。
+
+### 其他
+
+- `poster.html`（制作 OG 图的模板）已从项目里移除，`images/og-image.jpg` 保留。
+- 四个页面的 favicon 已是 32×32 的 PNG（`images/favicon-32.png`），补了 `apple-touch-icon`。

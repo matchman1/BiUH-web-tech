@@ -1,16 +1,24 @@
 <!--
-  footer.html — 页脚片段
-  和 nav.html 一样，这个文件故意不带 DOCTYPE / html / head / body。
-  它是一段「零件」，由 parts.js 取过来塞进每个页面的 #site-footer 里。
-  不要单独在浏览器里打开它。
+  footer.html — 页脚片段（由 parts.js 注入到四个页面的 #site-footer）
+  ==========================================================================
+
+  和 nav.html 一样：只有内容，没有骨架标签。
+  单独用浏览器打开它没有意义 —— 它不是完整页面，是一段被嵌入的零件。
+
+  结构，以及由哪段 CSS 负责
+    p          署名行                              → nav.css §8（#site-footer p）
+    address    联络方式（邮箱链接）                 → nav.css §8（#site-footer address）
+
+  样式和导航一起放在 nav.css，因为四个页面共用同一份，改一次四页同时变。
+  深色下的颜色在 theme.css 的「导航与页脚」组里。
+
+  ⚠ 下面这个邮箱目前是占位值（example.com），交作业前必须换成真实邮箱。
 -->
 <p>Built by Chen Erjian · Web Technologies 2026</p>
 
-<!--
-  <address> 表示「这个页面或文章的联络方式」。
-  它是少数几个有明确语义归属的元素之一 ——
-  只用于页面/文章的联络信息，不用于正文里碰巧出现的任何邮政地址。
--->
+<!-- <address> 表示「这个页面或文章的联络方式」，是少数语义归属很明确的元素：
+     它只用于页面/文章的联络信息，不用于正文里碰巧出现的任何邮政地址。
+     （浏览器默认把它渲染成斜体，nav.css §8 已去掉。） -->
 <address>
     <a href="mailto:123456@example.com">123456@example.com</a>
 </address>
