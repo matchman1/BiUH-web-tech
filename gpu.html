@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPU Explorer</title>
+<!--
+  gpu.html — GPU Explorer（可搜索、可按厂商筛选、可三张并排对比）
+  ==========================================================================
+
+  这一页和 cpus.html 是同一套「浏览器」组件的两个实例：
+    结构、类名、样式完全一样（.explorer-*，见 styles.css 第 [3] 部分），
+    只有三处不同：id 前缀（#gpu-*）、数据文件（data/gpus.js）、脚本（gpu.js）。
+
+  页面结构，以及每一块由哪段 CSS 负责
+    #site-header      空占位，导航由 parts.js 注入      → nav.css §1–§7
+    页眉              标题 + 一句说明                   → styles.css §3-3
+    工具栏            搜索框 + 厂商筛选                 → styles.css §3-4
+    左栏 Results      结果列表（gpu.js 生成）           → styles.css §3-5、§3-6
+    右栏 Compare      对比表（gpu.js 生成）             → styles.css §3-5、§3-7
+    页脚说明          数据来源与口径                    → styles.css §3-8
+    #site-footer      空占位，页脚由 parts.js 注入      → nav.css §8
+
+  下列 id 由 gpu.js 接管（改行为去 gpu.js，改外观去上面对应的 CSS 段）
+    #gpu-search         搜索框                → el.search
+    .explorer-brand ×4  厂商筛选按钮          → el.brands
+    #gpu-list           结果列表容器          → 里面的 <li> 由 renderList() 生成
+    #gpu-count          结果条数文字
+    #gpu-more           「Show N more」按钮，每次追加 40 条
+    #gpu-compare-body   对比表容器            → renderCompare() 写入
+    #gpu-clear          清空对比
+
+  脚本顺序（都放在 body 末尾，顺序不能错）
+    1 data/gpus.js   先把 94 条数据挂到 window.GPUS
+    2 gpu.js         读数据并渲染界面
+    3 theme.js       深浅开关
+    4 parts.js       注入导航与页脚
+  gpu.js 依赖 window.GPUS，所以 1 必须排在 2 前面。
+
+  数据来源：gpu/deepseek_csv_gpu.txt 导出为 data/gpus.js（94 条）
+-->
+    <!-- 链接预览用的标签。og:image 必须是完整网址，另外
+         property 和 name 不能互换：Open Graph 用 property，Twitter 用 name。
+         站点换地址时，四个页面里的这几行要一起改。 -->
+    <meta property="og:title" content="GPU Explorer">
+    <meta property="og:description" content="Search 94 graphics cards from NVIDIA, AMD and Intel, and compare up to three of them side by side.">
+    <meta property="og:image" content="https://matchman1.github.io/BiUH-web-tech/images/og-image.jpg">
+    <meta property="og:url" content="https://matchman1.github.io/BiUH-web-tech/gpu.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="nav.css">
+    <link rel="stylesheet" href="theme.css">
+    <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+
+    <!-- 主题在首次绘制前就设好，避免深色模式下
+         先闪一下白。具体逻辑见 theme.js。 -->
+    <script>
+        try {
+            var savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || savedTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+        } catch (e) {}
+    </script>
+</head>
+<body class="gpu-page">
+
+    <!-- 导航占位：parts.js 把 nav.html 的内容填进来 → nav.css §1–§7 -->
+    <header id="site-header"></header>
+
+    <main class="explorer-wrap">
+
+        <!-- 页眉：小标签 + 标题 + 一句说明 → styles.css §3-3 -->
+        <header class="explorer-head">
+            <p class="explorer-eyebrow">Database</p>
+            <h1>GPU Explorer</h1>
+            <p class="explorer-sub">
+                Search 94 graphics cards by name, then put up to three side by side and
+                see how the specs actually differ.
+            </p>
+        </header>
+
+        <!-- 工具栏：左边搜索、右边厂商筛选 → styles.css §3-4
+
+             label 的 for 指向 #gpu-search，点「Search」两个字也能聚焦输入框；
+             aria-describedby 让读屏软件在输入时念出结果条数（#gpu-count）。
+             四个厂商按钮用 <button> 而不是 <a>：它们不跳转，只切状态。 -->
+        <div class="explorer-toolbar">
+            <div class="explorer-search-wrap">
+                <label class="explorer-search-label" for="gpu-search">Search</label>
+                <input id="gpu-search" class="explorer-search" type="search" autocomplete="off"
+                       placeholder="RTX 5070, RX 7900 XTX, Arc B580, Blackwell…"
+                       aria-describedby="gpu-count">
+            </div>
+
+            <div class="explorer-brands" role="group" aria-label="Filter by brand">
+                <button type="button" class="explorer-brand is-active" data-brand="all">All</button>
+                <button type="button" class="explorer-brand" data-brand="NVIDIA">NVIDIA</button>
+                <button type="button" class="explorer-brand" data-brand="AMD">AMD</button>
+                <button type="button" class="explorer-brand" data-brand="Intel">Intel</button>
+            </div>
+        </div>
+
+        <div class="explorer-board">
+
+            <!-- 左栏 Results → styles.css §3-5（容器与计数）
+                 里面的 <li> 全部由 gpu.js 的 renderList() 生成 → styles.css §3-6 -->
+            <section class="explorer-results" aria-labelledby="gpu-results-title">
+                <div class="explorer-panel-head">
+                    <h2 id="gpu-results-title" class="explorer-panel-title">Results</h2>
+                    <p class="explorer-count" id="gpu-count">Loading…</p>
+                </div>
+
+                <ul class="explorer-list" id="gpu-list"></ul>
+
+                <button type="button" class="explorer-more" id="gpu-more" hidden>Show more</button>
+            </section>
+
+            <!-- 右栏 Compare → styles.css §3-5（容器的外框）
+                 表格由 gpu.js 的 renderCompare() 写入 → styles.css §3-7
+                 aria-live="polite"：选/删显卡后，读屏软件会念出这一块的变化 -->
+            <section class="explorer-compare" aria-labelledby="gpu-compare-title">
+                <div class="explorer-panel-head">
+                    <h2 id="gpu-compare-title" class="explorer-panel-title">Compare</h2>
+                    <button type="button" class="explorer-clear" id="gpu-clear" hidden>Clear all</button>
+                </div>
+
+                <div id="gpu-compare-body" class="explorer-compare-body" aria-live="polite"></div>
+            </section>
+
+        </div>
+
+        <!-- 页脚说明：数据来源与口径 → styles.css §3-8
+             两点必须说明，否则数字会被误读：
+             1. Intel Arc 那两栏的「核心数」是 Xe 核心，不是着色器数量
+             2. TDP 是厂商标称，实际功耗随非公版设计浮动 -->
+        <p class="explorer-footnote">
+            Specs are drawn from a local sheet of 94 graphics cards. On Intel Arc cards the
+            core count is Xe cores, not shader units, so it is not comparable with the CUDA
+            counts on NVIDIA cards. TDP is the manufacturer's figure and varies with
+            board-partner designs, so treat it as a rough guide.
+        </p>
+
+    </main>
+
+    <!-- 页脚占位：parts.js 把 footer.html 的内容填进来 → nav.css §8 -->
+    <footer id="site-footer"></footer>
+
+    <!-- 脚本顺序不能动（原因见文件头）：
+         1 data/gpus.js 定义 window.GPUS
+         2 gpu.js       读 window.GPUS 渲染列表与对比表
+         3 theme.js     深浅开关
+         4 parts.js     注入导航与页脚 -->
+    <script src="data/gpus.js"></script>
+    <script src="gpu.js"></script>
+    <script src="theme.js"></script>
+    <script src="parts.js"></script>
+</body>
+</html>

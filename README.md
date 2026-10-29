@@ -1,6 +1,6 @@
 # BiUH-web
 
-一个手写的静态网站练习项目：四个页面，加一套由 JavaScript 注入的共享导航与页脚。
+一个手写的静态网站练习项目：五个页面（首页、标语、CPU、GPU、联系），加一套由 JavaScript 注入的共享导航与页脚。
 
 风格是极简：近白底色、墨黑文字、只用 1px 发丝线做分隔，没有圆角卡片和阴影。带深色模式。
 
@@ -43,6 +43,7 @@ BiUH-web/
 ├── index.html         首页：大图 + 主标题 + 两个通栏入口
 ├── slogans.html       标语页（16 条硬件厂商标语，注明出处）
 ├── cpus.html          CPU Explorer（可搜索、可对比）
+├── gpu.html           GPU Explorer（同样的交互，换一套数据）
 ├── contact.html       联系页
 │
 ├── nav.html           导航片段    ← 不含 DOCTYPE/html/head/body
@@ -54,10 +55,13 @@ BiUH-web/
 ├── theme.css          深色模式的颜色（可被导航里的开关覆盖）
 ├── theme.js           浅色 / 深色开关的逻辑
 ├── cpu.js             CPU Explorer 的搜索与对比
+├── gpu.js             GPU Explorer 的搜索与对比
 │
 ├── data/cpus.js       3551 条 CPU 数据，由 cpu/cpus.db 导出
+├── data/gpus.js       94 条 GPU 数据，由 gpu/deepseek_csv_gpu.txt 导出
 ├── images/            图片（`-web.jpg` 是网页实际使用的压缩版）
 ├── cpu/               原始数据库与桌面版程序（网站不直接读取）
+├── gpu/               原始的显卡规格表（网站读取的是 data/gpus.js）
 │
 ├── serve.bat          启动本地服务器（有窗口）
 ├── serve-hidden.vbs   启动本地服务器（无窗口）
@@ -67,7 +71,8 @@ BiUH-web/
 ├── README.md          本文档
 ├── DEVLOG.md          开发过程记录
 ├── slogans.md         标语调研与校对
-└── yourpen.pdf        期末项目说明
+├── yourpen.pdf        期末项目说明
+└── .nojekyll          空文件：让 GitHub Pages 跳过 Jekyll 处理，直接原样发布
 ```
 
 ---
@@ -78,7 +83,7 @@ BiUH-web/
 
 ### 问题
 
-四个页面有相同的导航栏和页脚。如果每个页面都复制一份 HTML，那么「改一个链接」就要改四个文件。
+每个页面都有相同的导航栏和页脚。如果每页都复制一份 HTML，那么「改一个链接」就要改五个文件。
 
 ### 做法
 
@@ -162,7 +167,7 @@ load('footer.html', 'site-footer');
 |---|---|---|
 | `[1]` | index.html 首页 | `.index-*` |
 | `[2]` | slogans.html 标语页 | `.slogans-*` / `.slogan-*` |
-| `[3]` | cpus.html CPU 浏览器 | `.cpu-*` |
+| `[3]` | cpus.html / gpu.html 两个数据页共用的浏览组件 | `.explorer-*` |
 | `[4]` | contact.html 联系页 | `.contact-*` |
 
 四个页面的类名**完全不交叉**，每个页面的 `<body>` 带一个独立的作用域类：
@@ -171,8 +176,12 @@ load('footer.html', 'site-footer');
 <body class="index">          <!-- 首页 -->
 <body class="slogans-page">   <!-- 标语页 -->
 <body class="cpu-page">       <!-- CPU 页 -->
+<body class="gpu-page">       <!-- GPU 页 -->
 <body class="contact-page">   <!-- 联系页 -->
 ```
+
+CPU 页和 GPU 页的结构完全一样，所以共用第 `[3]` 段的样式（`.explorer-*`）。
+区别只在 id 前缀（`#cpu-*` / `#gpu-*`）、数据文件和脚本。
 
 所以改首页样式时只看 `[1]` 段，不会影响别的页面。
 
@@ -224,7 +233,7 @@ html[data-theme="dark"] .index-card { … }
 
 ---
 
-## CPU Explorer 的数据从哪来
+## CPU / GPU 数据从哪来
 
 `data/cpus.js` 是 3551 条处理器数据（约 508 KB），来自 `cpu/cpus.db` 这个 SQLite 数据库（3585 行 × 30 列）。
 
@@ -238,6 +247,20 @@ html[data-theme="dark"] .index-card { … }
 - 最多选 3 颗并排对比，第 4 颗会顶掉最早选的那颗，数值更高的单元格会标出来
 
 `cpu/` 里还有最初的桌面版程序（Tkinter + sqlite3），网站**不依赖**它，只是数据来源。
+
+### GPU 数据
+
+`data/gpus.js` 是 94 张显卡（约 13 KB），来自 `gpu/deepseek_csv_gpu.txt`，11 个字段：
+系列、名称、架构、核心代号、核心数、加速频率、显存容量、显存类型、光追、TDP、发布日期。
+
+覆盖 RTX 50 / 40 / 30 / 20、GTX 16 / 10、RX 9000 / 7000 / 6000 / 5000 / 500、Arc A / B。
+数据里没有厂商列，和 CPU 页一样由系列名推断（RTX / GTX → NVIDIA，RX → AMD，Arc → Intel）。
+
+页面端的行为与 CPU 页一致，只有两处数字不同：一次显示 40 行（总共才 94 条），
+对比最多 3 张。
+
+> **数据口径要注意**：Intel Arc 那一栏的「核心数」是 Xe 核心，不是着色器数量，
+> 不能和 NVIDIA 的 CUDA 数直接比。页面底部的说明里也写了这一点。
 
 ---
 
@@ -273,7 +296,20 @@ html[data-theme="dark"] .index-card { … }
 
 `nav.css` 里的 `nav { … }` 会命中页面里**每一个** `<nav>`。首页那两个通栏按钮本来想用 `<nav>`，结果被套上了吸顶导航的样式，只好改成 `<div class="index-cards">`。
 
-### 8. 共享组件的样式不要写进单个页面的 CSS
+### 8. `hidden` 属性会被 CSS 的 `display` 盖掉
+
+CPU / GPU 页的「Show more」按钮，在列表全部展开后还留在页面上，
+再点一下文字变成 **「Show -26 more」**。
+
+第一反应会去查 JS：是不是少判了？其实 JS 已经设了 `el.hidden = true`。
+真正的原因是按钮的样式里写了 `display: block` ——
+浏览器给 `[hidden]` 的默认规则是 `display: none`，两者优先级相同，
+而**作者样式优先于浏览器默认样式**，所以 `hidden` 属性形同虚设。
+
+修法两处一起做：CSS 里补 `.explorer-more[hidden] { display: none; }`，
+JS 里把剩余条数夹住（`remaining <= 0` 时不再拼文字，点击时也不让计数涨过总数）。
+
+### 9. 共享组件的样式不要写进单个页面的 CSS
 
 `#site-footer` 的样式一度被写进 `styles.css`，结果只对部分页面生效。页脚是四个页面共用的组件，应该放 `nav.css`。
 
@@ -286,22 +322,27 @@ html[data-theme="dark"] .index-card { … }
 | **index.html** | 主板大图、主标题「The hardware behind the machine」、两个通栏入口分别指向 Slogans 和 CPUs（各自配一张显卡照片） |
 | **slogans.html** | 16 条硬件厂商标语（ASUS、AMD、Intel、ROG、Corsair 等），每条注明出处；另有「没有短标语」板块 5 条 |
 | **cpus.html** | CPU Explorer：3551 条处理器，可按名称搜索、按品牌筛选，并选最多 3 颗并排对比规格 |
-| **contact.html** | 联系方式列表（Email / GitHub / Location），从导航的药丸按钮以新标签页打开 |
+| **gpu.html** | GPU Explorer：94 张显卡，同样的搜索 / 筛选 / 三张对比；筛选按钮是 NVIDIA / AMD / Intel |
+| **contact.html** | 联系方式列表（GitHub / Location），从导航的药丸按钮以新标签页打开；不写邮箱，免得留占位地址 |
 
 图片说明：
 
-- `images/zhuban-web.jpg`、`rtx2080-web.jpg`、`gtx780-web.jpg` 是网页实际使用的压缩版（合计约 676 KB）
-- 同名的 `zhuban.jpg`、`rtx2080.jpg`、`gtx780.jpg` 是原始照片，保留但网页不引用（合计约 8 MB）
+- 首页三张卡片图：`cx-web.jpg`、`g1620t-web.jpg`、`rtx2080-web.jpg`
+  （对应原图 `cx.jpg`、`g1620t.jpg`、`rtx2080.jpg`，压缩后合计约 560 KB）
+- `images/zhuban-web.jpg` 是首页顶部大图（原图 `zhuban.jpg`）
+- 原始照片都保留但网页不引用，合计约 17 MB
 - `images/og-image.jpg` 是社交分享用的预览图，1200×630、67 KB，项目书要求 100 KB 以内
 
 ---
 
 ## 还没做的 / 可以再改
 
-- **页脚邮箱是占位符** `123456@example.com`，应换成真实地址。
+- **还没上线**：仓库在 `https://github.com/matchman1/BiUH-web-tech`，但 GitHub Pages 尚未开启，页面里写的线上地址目前是 404。
+- **缺交作业用的截图**：桌面一张（≥1200px、不带浏览器边框）和手机一张（375–414px），项目书要求随作业一起交。
 - **页脚的年份是硬编码的** `2026`，跨年后需要手动改，也可以改成用 JS 自动取当前年份。
 - **导航栏布局与教程说明不一致**：教程复习要点写的是 `logo 左、导航居中、按钮右`，当前是 logo 左、**导航右**。若要改成居中，需要调整 `nav.css` 里 `.links` 的 `margin-left: auto`。
-- **几张图没被引用**：`images/xlm.jpg`、`images/itx.jpg`、`images/favicon-192.png`，可以删掉，也可以留着备用。
+- **几张图没被引用**：`images/xlm.jpg`、`images/itx.jpg`、`images/gtx780-web.jpg`、`images/favicon-192.png`，可以删掉，也可以留着备用。
+- **GPU 数据只到 RTX 50 / RX 9000 这一代**，且没有查证来源，若要对外使用最好核对一下官方规格。
 - **`backup/`、`.vscode/`** 是开发过程中的备份与编辑器配置，不属于网站内容，交付前可以删掉。
 
 已知特性（不算问题）：

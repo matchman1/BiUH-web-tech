@@ -1,5 +1,5 @@
 <!--
-  nav.html — 导航片段（由 parts.js 注入到四个页面的 #site-header）
+  nav.html — 导航片段（由 parts.js 注入到每个页面的 #site-header）
   ==========================================================================
 
   这个文件故意只有 <nav>，没有 DOCTYPE / html / head / body。
@@ -7,7 +7,7 @@
 
   结构，以及每一块由哪段 CSS 负责
     a.logo               左侧标识，含一个内联 SVG         → nav.css §3
-    ul.links             三个页面链接，当前页会高亮        → nav.css §4、§5
+    ul.links             四个页面链接，当前页会高亮        → nav.css §4、§5
     a.pill               Contact 药丸，新标签页打开        → nav.css §2
     button.theme-toggle  浅色 / 深色开关，在最右          → nav.css §6
 
@@ -17,7 +17,7 @@
               让开关的图标与文字跟当前主题一致（函数定义在 theme.js）。
 
   为什么抽成片段
-    改导航只改这一个文件，四个页面同时生效。
+    改导航只改这一个文件，所有页面同时生效。
     代价是必须通过 HTTP 打开（file:// 下 fetch 会被 CORS 拦住），
     所以项目里才需要 serve.bat 那套本地服务器。
 -->
@@ -39,6 +39,7 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="slogans.html">Slogans</a></li>
         <li><a href="cpus.html">CPUs</a></li>
+        <li><a href="gpu.html">GPUs</a></li>
     </ul>
 
     <!-- Contact 药丸，最右；target="_blank" 在新标签页打开。

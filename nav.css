@@ -352,6 +352,33 @@ nav .theme-toggle[aria-pressed="true"] .icon-sun {
     }
 }
 
+/* 更窄的手机（≤400px）：四个链接 + 药丸 + 开关挤在一行会溢出，
+   再收紧一次间距和字号 */
+@media (max-width: 400px) {
+    nav {
+        padding: 10px 14px;
+    }
+
+    nav .links {
+        gap: 11px;
+    }
+
+    nav .links a {
+        font-size: 12.5px;
+    }
+
+    nav .pill {
+        margin-left: 12px;
+        padding: 4px 10px;
+    }
+
+    nav .theme-toggle {
+        margin-left: 6px;
+        width: 28px;
+        height: 28px;
+    }
+}
+
 
 /* ==========================================================================
    §8  站内页脚
@@ -387,7 +414,7 @@ nav .theme-toggle[aria-pressed="true"] .icon-sun {
     font-style: normal;
 }
 
-/* 邮箱链接：平时无下划线 */
+/* 页脚链接（现在指向 GitHub 仓库）：平时无下划线 */
 #site-footer a {
     color: #6b6b6b;
     text-decoration: none;

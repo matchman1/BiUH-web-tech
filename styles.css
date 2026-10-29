@@ -11,7 +11,7 @@
 
      [1]  index.html     首页             类名前缀 .index-*
      [2]  slogans.html   硬件标语页       类名前缀 .slogans-* / .slogan-*
-     [3]  cpus.html      CPU Explorer    类名前缀 .cpu-*
+     [3]  cpus.html / gpu.html  两个数据页共用的浏览组件  类名前缀 .explorer-*
      [4]  contact.html   联系页           类名前缀 .contact-*
 
    每个段落内部再用「1-1」「1-2」这样的小节编号，注释里也用同样的编号互相引用
@@ -32,7 +32,7 @@
      cpus.html     class="cpu-page"
      contact.html  class="contact-page"
 
-   页面里由 JS 生成的元素，样式也写在这里（例如 .cpu-pick 由 cpu.js 生成），
+   页面里由 JS 生成的元素，样式也写在这里（例如 .explorer-pick 由 cpu.js 生成），
    注释里会注明「由 xxx.js 生成」，因为你在 HTML 里搜不到它们。
    ========================================================================== */
 
@@ -728,7 +728,7 @@
 
 
 /* ==========================================================================
-   [3]  cpus.html — CPU Explorer
+   [3]  cpus.html / gpu.html — 浏览器组件（两页共用）
    --------------------------------------------------------------------------
    这一页有真实交互：搜索框、品牌筛选、点选对比。
    样式分成「静态部分」和「由 cpu.js 生成的元素」两类，
@@ -740,7 +740,8 @@
    作用对象：cpus.html 的 <body class="cpu-page">
    -------------------------------------------------------------------------- */
 
-.cpu-page {
+.cpu-page,
+.gpu-page {
     margin: 0;
     padding: 0;
     background: #fdfdfc;
@@ -754,12 +755,12 @@
 
 /* --------------------------------------------------------------------------
    3-2  内容容器
-   作用对象：cpus.html 的 <main class="cpu-wrap">
+   作用对象：cpus.html 的 <main class="explorer-wrap">
 
    比其他页都宽（1180px），因为要并排放下结果列表和对比表。
    -------------------------------------------------------------------------- */
 
-.cpu-wrap {
+.explorer-wrap {
     max-width: 1180px;
     margin: 0 auto;
     padding: 96px 32px 88px;
@@ -767,15 +768,15 @@
 
 /* --------------------------------------------------------------------------
    3-3  页眉
-   作用对象：cpus.html 的 <header class="cpu-head"> 及其中的标题、说明
+   作用对象：cpus.html 的 <header class="explorer-head"> 及其中的标题、说明
    -------------------------------------------------------------------------- */
 
-.cpu-head {
+.explorer-head {
     margin-bottom: 40px;
 }
 
 /* 页眉上方的小标签（Database） */
-.cpu-eyebrow {
+.explorer-eyebrow {
     margin: 0 0 18px;
     font-size: 11px;
     font-weight: 500;
@@ -785,7 +786,7 @@
 }
 
 /* 页面大标题 CPU Explorer */
-.cpu-head h1 {
+.explorer-head h1 {
     margin: 0;
     font-size: clamp(32px, 4.6vw, 46px);
     font-weight: 400;
@@ -794,7 +795,7 @@
 }
 
 /* 大标题下方的一句说明 */
-.cpu-sub {
+.explorer-sub {
     margin: 18px 0 0;
     max-width: 56ch;
     font-size: 15px;
@@ -803,13 +804,13 @@
 
 /* --------------------------------------------------------------------------
    3-4  工具栏：搜索框 + 品牌筛选
-   作用对象：cpus.html 的 <div class="cpu-toolbar"> 及其中的 input 和 button
+   作用对象：cpus.html 的 <div class="explorer-toolbar"> 及其中的 input 和 button
 
    左搜索、右筛选，底部一条分隔线把工具栏和结果区分开。
    -------------------------------------------------------------------------- */
 
 /* 工具栏：两端对齐，窄屏自动换行 */
-.cpu-toolbar {
+.explorer-toolbar {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -822,13 +823,13 @@
 }
 
 /* 搜索框那一列：可伸缩，但有两个下限（240px 起步，能长到 320px 以上） */
-.cpu-search-wrap {
+.explorer-search-wrap {
     flex: 1 1 320px;
     min-width: 240px;
 }
 
 /* 搜索框上方的小标签 Search */
-.cpu-search-label {
+.explorer-search-label {
     display: block;
     margin-bottom: 8px;
 
@@ -841,7 +842,7 @@
 
 /* 搜索输入框外观。
    font-family:inherit 是必须的 —— <input> 不会自动继承页面字体。 */
-.cpu-search {
+.explorer-search {
     width: 100%;
     box-sizing: border-box;
     padding: 11px 14px;
@@ -858,27 +859,27 @@
 }
 
 /* 占位文字（那串示例型号）压暗，免得被当成已输入的内容 */
-.cpu-search::placeholder {
+.explorer-search::placeholder {
     color: #b4b4b0;
 }
 
 /* 聚焦：边框变黑 + 一圈淡光晕。
    去掉浏览器默认的 outline，换成这个更贴设计语言的描边。 */
-.cpu-search:focus {
+.explorer-search:focus {
     outline: none;
     border-color: #1a1a1a;
     box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08);
 }
 
 /* 品牌按钮组 */
-.cpu-brands {
+.explorer-brands {
     display: flex;
     gap: 8px;
 }
 
 /* 单个品牌按钮：默认描边态。
    选中态的类 .is-active 由 cpu.js 切换。 */
-.cpu-brand {
+.explorer-brand {
     padding: 9px 16px;
 
     font-family: inherit;
@@ -896,13 +897,13 @@
 }
 
 /* 悬停：文字变黑、描边加深 */
-.cpu-brand:hover {
+.explorer-brand:hover {
     color: #1a1a1a;
     border-color: #b4b4b0;
 }
 
 /* 选中态：黑底白字（不是浅灰底，方便和悬停区分开） */
-.cpu-brand.is-active {
+.explorer-brand.is-active {
     color: #fdfdfc;
     background: #1a1a1a;
     border-color: #1a1a1a;
@@ -910,18 +911,18 @@
 
 /* 键盘 Tab 聚焦时才出现的轮廓线。
    用 :focus-visible 而不是 :focus，鼠标点击不会留下轮廓。 */
-.cpu-brand:focus-visible {
+.explorer-brand:focus-visible {
     outline: 2px solid #1a1a1a;
     outline-offset: 2px;
 }
 
 /* --------------------------------------------------------------------------
    3-5  左右两栏：左结果、右对比
-   作用对象：cpus.html 的 <div class="cpu-board"> 与其中两个 <section>
+   作用对象：cpus.html 的 <div class="explorer-board"> 与其中两个 <section>
    -------------------------------------------------------------------------- */
 
 /* 两栏等宽网格，顶对齐 */
-.cpu-board {
+.explorer-board {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 32px;
@@ -931,18 +932,18 @@
 /* min-width:0 让两栏能被内容压缩：
    结果列表和对比表都可能在内部滚动，不加这个值，
    长型号名会把整栏（甚至整页）撑宽。 */
-.cpu-results,
-.cpu-compare {
+.explorer-results,
+.explorer-compare {
     min-width: 0;
 }
 
 /* 对比区的内容容器（表格或空状态框） */
-.cpu-compare-body {
+.explorer-compare-body {
     min-height: 72px;
 }
 
 /* 面板标题行：左边标题，右边计数或「Clear all」 */
-.cpu-panel-head {
+.explorer-panel-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -954,7 +955,7 @@
 }
 
 /* 面板标题（Results / Compare）：小字大写，像标签而不像标题 */
-.cpu-panel-title {
+.explorer-panel-title {
     margin: 0;
     font-size: 11px;
     font-weight: 600;
@@ -965,7 +966,7 @@
 
 /* 结果条数文字。等宽字体是为了数字变化时宽度不跳，
    aria-live 会把这个区域的变化念给读屏软件。 */
-.cpu-count {
+.explorer-count {
     margin: 0;
     font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
     font-size: 11.5px;
@@ -973,7 +974,7 @@
 }
 
 /* 「Clear all」按钮：做成文字链接的样子，因为它是次要操作 */
-.cpu-clear {
+.explorer-clear {
     padding: 0;
     font-family: inherit;
     font-size: 12px;
@@ -986,20 +987,20 @@
 }
 
 /* 悬停：文字变深，下划线跟着变深 */
-.cpu-clear:hover {
+.explorer-clear:hover {
     color: #1a1a1a;
     border-bottom-color: #1a1a1a;
 }
 
 /* --------------------------------------------------------------------------
    3-6  结果行（由 cpu.js 的 renderList() 生成）
-   作用对象：<li> 里的 <button class="cpu-pick">、.cpu-row-* 与空状态行
+   作用对象：<li> 里的 <button class="explorer-pick">、.explorer-row-* 与空状态行
 
    列表本身有固定高度和独立滚动区，结果再多也不会把对比表挤出屏幕。
    -------------------------------------------------------------------------- */
 
 /* 列表容器：去掉列表符号与默认缩进 */
-.cpu-list {
+.explorer-list {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -1011,7 +1012,7 @@
 
 /* 一条结果：整行可点，点一下加入对比。
    用 <button> 而不是 <li onclick>，键盘和读屏软件都能用。 */
-.cpu-pick {
+.explorer-pick {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1034,24 +1035,24 @@
 }
 
 /* 悬停时的浅底 —— 只是提示可点，不如选中态明显（见 .is-picked） */
-.cpu-pick:hover {
+.explorer-pick:hover {
     background: #f4f4f2;
 }
 
 /* 键盘聚焦：用内描边，因为整行贴着列表边缘，外描边会被裁掉 */
-.cpu-pick:focus-visible {
+.explorer-pick:focus-visible {
     outline: 2px solid #1a1a1a;
     outline-offset: -2px;
 }
 
 /* 已加入对比：底色变深 + 左侧 3px 黑条，一眼能看出选了哪些 */
-.cpu-pick.is-picked {
+.explorer-pick.is-picked {
     background: #f0f0ec;
     box-shadow: inset 3px 0 0 #1a1a1a;
 }
 
 /* 左侧文字列（型号 + 品牌/系列/平台） */
-.cpu-row-main {
+.explorer-row-main {
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -1059,7 +1060,7 @@
 }
 
 /* 型号名：过长时省略号，不换行（换行会让每一行高矮不一） */
-.cpu-row-model {
+.explorer-row-model {
     font-size: 14.5px;
     font-weight: 500;
     letter-spacing: -0.005em;
@@ -1070,7 +1071,7 @@
 }
 
 /* 型号下方的品牌 / 系列 / 平台 */
-.cpu-row-meta {
+.explorer-row-meta {
     font-size: 11.5px;
     color: #a8a8a4;
 
@@ -1080,7 +1081,7 @@
 }
 
 /* 右侧的规格摘要（核心/线程/频率）：不参与压缩，永远完整显示 */
-.cpu-row-specs {
+.explorer-row-specs {
     flex: none;
     font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
     font-size: 11.5px;
@@ -1089,14 +1090,14 @@
 }
 
 /* 搜索无结果时的提示行 */
-.cpu-empty {
+.explorer-empty {
     padding: 24px 4px;
     font-size: 14px;
     color: #8a8a86;
 }
 
 /* 「Show N more」按钮：占满整行的描边按钮，文字由 cpu.js 拼（每次 80 条） */
-.cpu-more {
+.explorer-more {
     display: block;
     width: 100%;
     margin-top: 14px;
@@ -1115,19 +1116,29 @@
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
+/* hidden 必须真的能藏起来。
+   浏览器给 [hidden] 的默认样式是 display:none，但上面这句 display:block
+   优先级更高（作者样式 > 浏览器默认），会把 hidden 属性盖掉 ——
+   结果就是列表已经全部显示完，按钮还留在页面上，点下去变成「Show -26 more」。
+   所以这里显式补一条。Clear all 同理。 */
+.explorer-more[hidden],
+.explorer-clear[hidden] {
+    display: none;
+}
+
 /* 更多按钮悬停：底色与描边同时加深 */
-.cpu-more:hover {
+.explorer-more:hover {
     background: #f4f4f2;
     border-color: #b4b4b0;
 }
 
 /* --------------------------------------------------------------------------
    3-7  对比表（由 cpu.js 的 renderCompare() 生成）
-   作用对象：#cpu-compare-body 里的空状态框、.cpu-table-scroll 与 <table class="cpu-table">
+   作用对象：#cpu-compare-body 里的空状态框、.explorer-table-scroll 与 <table class="explorer-table">
    -------------------------------------------------------------------------- */
 
 /* 还没选 CPU 时的虚线空状态框 */
-.cpu-compare-empty {
+.explorer-compare-empty {
     margin: 0;
     padding: 28px 22px;
 
@@ -1141,13 +1152,13 @@
 
 /* 三列型号名在手机上放不下：让表格自己横向滚动，
    而不是把整个页面撑宽 */
-.cpu-table-scroll {
+.explorer-table-scroll {
     overflow-x: auto;
     overscroll-behavior-x: contain;
 }
 
 /* 表格本体 */
-.cpu-table {
+.explorer-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
@@ -1155,8 +1166,8 @@
 
 /* 所有单元格：统一的内边距与发丝线。
    用 border-collapse 时边框会合并，所以只写下边框就够了。 */
-.cpu-table th,
-.cpu-table td {
+.explorer-table th,
+.explorer-table td {
     padding: 9px 10px;
     text-align: left;
     vertical-align: top;
@@ -1164,7 +1175,7 @@
 }
 
 /* 表头：每列一颗 CPU。position:relative 是给右上角的删除按钮定位用的 */
-.cpu-table thead th {
+.explorer-table thead th {
     position: relative;
     padding-right: 26px;
     border-bottom: 1px solid #d4d4d0;
@@ -1172,7 +1183,7 @@
 }
 
 /* 表头左上角那格（写着 Spec） */
-.cpu-table-corner {
+.explorer-table-corner {
     width: 112px;
     font-size: 11px;
     font-weight: 600;
@@ -1182,7 +1193,7 @@
 }
 
 /* 表头里的型号名 */
-.cpu-table-model {
+.explorer-table-model {
     display: block;
     font-size: 13px;
     font-weight: 600;
@@ -1191,7 +1202,7 @@
 }
 
 /* 表头右上角的 × 删除按钮：圆形、无底色，悬停才出现浅底 */
-.cpu-table-remove {
+.explorer-table-remove {
     position: absolute;
     top: 4px;
     right: 0;
@@ -1213,13 +1224,13 @@
     transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.cpu-table-remove:hover {
+.explorer-table-remove:hover {
     color: #1a1a1a;
     background: #ececea;
 }
 
 /* 表格左侧一列：规格名称（小字大写、灰色） */
-.cpu-table tbody th {
+.explorer-table tbody th {
     font-weight: 400;
     font-size: 11.5px;
     letter-spacing: 0.04em;
@@ -1229,7 +1240,7 @@
 }
 
 /* 表格正文：具体数值用等宽字体，上下对齐好比较 */
-.cpu-table tbody td {
+.explorer-table tbody td {
     font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
     font-size: 12.5px;
     color: #3a3a38;
@@ -1237,7 +1248,7 @@
 
 /* 数值更高的那一方：加粗 + 底色标记。
    .is-best 由 cpu.js 算出来再加，不是手写的。 */
-.cpu-table tbody td.is-best {
+.explorer-table tbody td.is-best {
     font-weight: 700;
     color: #1a1a1a;
     background: #f0f0ec;
@@ -1245,10 +1256,10 @@
 
 /* --------------------------------------------------------------------------
    3-8  页面底部说明
-   作用对象：cpus.html 的 <p class="cpu-footnote">
+   作用对象：cpus.html 的 <p class="explorer-footnote">
    -------------------------------------------------------------------------- */
 
-.cpu-footnote {
+.explorer-footnote {
     margin: 44px 0 0;
     max-width: 74ch;
     font-size: 12.5px;
@@ -1265,41 +1276,41 @@
    -------------------------------------------------------------------------- */
 
 @media (max-width: 900px) {
-    .cpu-wrap {
+    .explorer-wrap {
         padding: 72px 24px 72px;
     }
 
-    .cpu-board {
+    .explorer-board {
         grid-template-columns: 1fr;
         gap: 36px;
     }
 
     /* 满宽之后列表不必再占满 60vh */
-    .cpu-list {
+    .explorer-list {
         max-height: 46vh;
     }
 }
 
 @media (max-width: 560px) {
-    .cpu-wrap {
+    .explorer-wrap {
         padding: 56px 18px 64px;
     }
 
-    .cpu-head {
+    .explorer-head {
         margin-bottom: 28px;
     }
 
-    .cpu-toolbar {
+    .explorer-toolbar {
         gap: 14px;
     }
 
     /* 小屏上型号和品牌才是重点，右侧的规格摘要让位 */
-    .cpu-row-specs {
+    .explorer-row-specs {
         display: none;
     }
 
     /* 表头第一列收窄，给三个型号名多留点空间 */
-    .cpu-table-corner {
+    .explorer-table-corner {
         width: 84px;
     }
 }
@@ -1419,6 +1430,9 @@
     text-decoration: none;
     border-bottom: 1px solid transparent;
     padding-bottom: 2px;
+    /* GitHub 那行是完整仓库地址，窄屏下比一行还长：
+       允许在任意位置折行，否则会把整页撑出横向滚动条 */
+    overflow-wrap: anywhere;
     transition: border-color 0.25s ease, color 0.25s ease;
 }
 

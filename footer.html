@@ -7,12 +7,13 @@
 
   结构，以及由哪段 CSS 负责
     p          署名行                              → nav.css §8（#site-footer p）
-    address    联络方式（邮箱链接）                 → nav.css §8（#site-footer address）
+    address    联络方式（仓库链接）                 → nav.css §8（#site-footer address）
 
   样式和导航一起放在 nav.css，因为四个页面共用同一份，改一次四页同时变。
   深色下的颜色在 theme.css 的「导航与页脚」组里。
 
-  ⚠ 下面这个邮箱目前是占位值（example.com），交作业前必须换成真实邮箱。
+  页脚不写邮箱：contact.html 也把 Email 一行删了，联系方式统一走 GitHub 仓库，
+  免得一个发不进去的占位地址同时出现在五处（四页页脚 + 联系页）。
 -->
 <p>Built by Chen Erjian · Web Technologies 2026</p>
 
@@ -20,5 +21,5 @@
      它只用于页面/文章的联络信息，不用于正文里碰巧出现的任何邮政地址。
      （浏览器默认把它渲染成斜体，nav.css §8 已去掉。） -->
 <address>
-    <a href="mailto:123456@example.com">123456@example.com</a>
+    <a href="https://github.com/matchman1/BiUH-web-tech" target="_blank" rel="noopener">github.com/matchman1/BiUH-web-tech</a>
 </address>

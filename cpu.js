@@ -13,8 +13,8 @@
    主要函数
      brandOf()       由型号名推断品牌（数据库没有品牌列）→ 筛选和表格首行都用它
      matches()       搜索与筛选的判定                    → 被 filtered() 调用
-     renderList()    画结果列表（每次 80 条）             → 写入 #cpu-list
-     renderCompare() 画对比表，数值列标出更高的一方       → 写入 #cpu-compare-body
+     renderList()    画结果列表（每次 80 条）             → 写入 #explorer-list
+     renderCompare() 画对比表，数值列标出更高的一方       → 写入 #explorer-compare-body
 
    状态只有一个 state 对象：query / brand / shown / picked。
    所有改动都是「改 state → 重新渲染」，没有零散的 DOM 操作。
@@ -38,7 +38,7 @@
         more: document.getElementById('cpu-more'),
         compareBody: document.getElementById('cpu-compare-body'),
         clear: document.getElementById('cpu-clear'),
-        brands: document.querySelectorAll('.cpu-brand')
+        brands: document.querySelectorAll('.explorer-brand')
     };
 
     /* 没有这个浏览器的页面直接退出 */
@@ -124,7 +124,7 @@
             : rows.length.toLocaleString() + ' of ' + DATA.length.toLocaleString();
 
         if (!rows.length) {
-            el.list.innerHTML = '<li class="cpu-empty">No processor matches that. ' +
+            el.list.innerHTML = '<li class="explorer-empty">No processor matches that. ' +
                                 'Try a shorter term, or clear the brand filter.</li>';
             el.more.hidden = true;
             return;
@@ -135,19 +135,19 @@
             var cpu = slice[i];
             var picked = state.picked.indexOf(cpu) !== -1;
 
-            html += '<li class="cpu-row">' +
-                '<button type="button" class="cpu-pick' + (picked ? ' is-picked' : '') + '"' +
+            html += '<li class="explorer-row">' +
+                '<button type="button" class="explorer-pick' + (picked ? ' is-picked' : '') + '"' +
                     ' data-index="' + DATA.indexOf(cpu) + '"' +
                     ' aria-pressed="' + picked + '">' +
-                    '<span class="cpu-row-main">' +
-                        '<span class="cpu-row-model">' + escapeHtml(cpu.m) + '</span>' +
-                        '<span class="cpu-row-meta">' +
+                    '<span class="explorer-row-main">' +
+                        '<span class="explorer-row-model">' + escapeHtml(cpu.m) + '</span>' +
+                        '<span class="explorer-row-meta">' +
                             escapeHtml(brandOf(cpu)) +
                             (cpu.s ? ' \u00b7 ' + escapeHtml(cpu.s) : '') +
                             (cpu.p ? ' \u00b7 ' + escapeHtml(cpu.p) : '') +
                         '</span>' +
                     '</span>' +
-                    '<span class="cpu-row-specs">' +
+                    '<span class="explorer-row-specs">' +
                         (cpu.c ? cpu.c + 'C' : '') +
                         (cpu.t ? '/' + cpu.t + 'T' : '') +
                         (cpu.b ? ' \u00b7 ' + cpu.b + ' GHz' : '') +
@@ -157,8 +157,13 @@
         }
 
         el.list.innerHTML = html;
-        el.more.hidden = rows.length <= state.shown;
-        el.more.textContent = 'Show ' + Math.min(PAGE, rows.length - state.shown) + ' more';
+        /* 还剩多少条没显示；到 0 就把按钮彻底藏起来，
+           否则会拼出「Show -26 more」这种东西 */
+        var remaining = rows.length - state.shown;
+        el.more.hidden = remaining <= 0;
+        if (remaining > 0) {
+            el.more.textContent = 'Show ' + Math.min(PAGE, remaining) + ' more';
+        }
     }
 
     function escapeHtml(value) {
@@ -180,18 +185,18 @@
 
         if (!picked.length) {
             el.compareBody.innerHTML =
-                '<p class="cpu-compare-empty">Pick a processor on the left to start. ' +
+                '<p class="explorer-compare-empty">Pick a processor on the left to start. ' +
                 'You can compare up to ' + MAX_COMPARE + ' at once.</p>';
             return;
         }
 
-        var html = '<div class="cpu-table-scroll"><table class="cpu-table"><thead><tr>' +
-                   '<th scope="col" class="cpu-table-corner">Spec</th>';
+        var html = '<div class="explorer-table-scroll"><table class="explorer-table"><thead><tr>' +
+                   '<th scope="col" class="explorer-table-corner">Spec</th>';
 
         for (var i = 0; i < picked.length; i++) {
             html += '<th scope="col">' +
-                        '<span class="cpu-table-model">' + escapeHtml(picked[i].m) + '</span>' +
-                        '<button type="button" class="cpu-table-remove" data-remove="' + i + '"' +
+                        '<span class="explorer-table-model">' + escapeHtml(picked[i].m) + '</span>' +
+                        '<button type="button" class="explorer-table-remove" data-remove="' + i + '"' +
                             ' aria-label="Remove ' + escapeHtml(picked[i].m) + '">\u00d7</button>' +
                     '</th>';
         }
@@ -244,14 +249,15 @@
     }
 
     el.more.addEventListener('click', function () {
-        state.shown += PAGE;
+        /* 不要越过总数：否则 state.shown 会一直涨，越点越离谱 */
+        state.shown = Math.min(state.shown + PAGE, filtered().length);
         renderList();
     });
 
     /* 整个列表只挂一个监听器：行会被反复重绘，
        逐个绑定等于每次都要重绑一遍 */
     el.list.addEventListener('click', function (event) {
-        var button = event.target.closest('.cpu-pick');
+        var button = event.target.closest('.explorer-pick');
         if (!button) return;
 
         var cpu = DATA[Number(button.getAttribute('data-index'))];

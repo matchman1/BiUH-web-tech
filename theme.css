@@ -201,162 +201,163 @@
        ---------------------------------------------------------------------- */
 
     /* body 底色与正文色 */
-    html:not([data-theme]) .cpu-page {
+    html:not([data-theme]) .cpu-page,
+    html:not([data-theme]) .gpu-page {
         background: #0e0e0e;
         color: #ededed;
     }
 
     /* 页眉的小标签与说明 */
-    html:not([data-theme]) .cpu-eyebrow {
+    html:not([data-theme]) .explorer-eyebrow {
         color: #6f6f6c;
     }
 
-    html:not([data-theme]) .cpu-sub {
+    html:not([data-theme]) .explorer-sub {
         color: #9a9a96;
     }
 
     /* 工具栏底部的分隔线 */
-    html:not([data-theme]) .cpu-toolbar {
+    html:not([data-theme]) .explorer-toolbar {
         border-bottom-color: #262626;
     }
 
     /* 搜索框：深底、深描边、亮字 */
-    html:not([data-theme]) .cpu-search {
+    html:not([data-theme]) .explorer-search {
         background: #161616;
         border-color: #3a3a3a;
         color: #ededed;
     }
 
-    html:not([data-theme]) .cpu-search::placeholder {
+    html:not([data-theme]) .explorer-search::placeholder {
         color: #6f6f6c;
     }
 
     /* 聚焦时描边变亮 + 一圈淡光晕（与浅色下同样的逻辑，方向相反） */
-    html:not([data-theme]) .cpu-search:focus {
+    html:not([data-theme]) .explorer-search:focus {
         border-color: #ededed;
         box-shadow: 0 0 0 3px rgba(237, 237, 237, 0.10);
     }
 
     /* 品牌筛选按钮：默认描边态 */
-    html:not([data-theme]) .cpu-brand {
+    html:not([data-theme]) .explorer-brand {
         color: #9a9a96;
         border-color: #3a3a3a;
     }
 
-    html:not([data-theme]) .cpu-brand:hover {
+    html:not([data-theme]) .explorer-brand:hover {
         color: #ededed;
         border-color: #6a6a66;
     }
 
-    html:not([data-theme]) .cpu-brand:focus-visible {
+    html:not([data-theme]) .explorer-brand:focus-visible {
         outline-color: #ededed;
     }
 
     /* 选中态整体反色：亮底黑字 */
-    html:not([data-theme]) .cpu-brand.is-active {
+    html:not([data-theme]) .explorer-brand.is-active {
         color: #0e0e0e;
         background: #ededed;
         border-color: #ededed;
     }
 
     /* 两个面板（Results / Compare）的标题行与标题 */
-    html:not([data-theme]) .cpu-panel-head {
+    html:not([data-theme]) .explorer-panel-head {
         border-bottom-color: #262626;
     }
 
-    html:not([data-theme]) .cpu-panel-title {
+    html:not([data-theme]) .explorer-panel-title {
         color: #9a9a96;
     }
 
     /* 结果条数文字：最弱的一档 */
-    html:not([data-theme]) .cpu-count {
+    html:not([data-theme]) .explorer-count {
         color: #6f6f6c;
     }
 
     /* 「Clear all」按钮 */
-    html:not([data-theme]) .cpu-clear {
+    html:not([data-theme]) .explorer-clear {
         color: #9a9a96;
         border-bottom-color: #3a3a3a;
     }
 
-    html:not([data-theme]) .cpu-clear:hover {
+    html:not([data-theme]) .explorer-clear:hover {
         color: #ededed;
         border-bottom-color: #ededed;
     }
 
     /* 结果行（由 cpu.js 生成） */
-    html:not([data-theme]) .cpu-pick {
+    html:not([data-theme]) .explorer-pick {
         border-bottom-color: #212121;
         color: #ededed;
     }
 
-    html:not([data-theme]) .cpu-pick:hover {
+    html:not([data-theme]) .explorer-pick:hover {
         background: #161616;
     }
 
     /* 已加入对比的行：底色加深 + 左侧 3px 亮条 */
-    html:not([data-theme]) .cpu-pick.is-picked {
+    html:not([data-theme]) .explorer-pick.is-picked {
         background: #1c1c1c;
         box-shadow: inset 3px 0 0 #ededed;
     }
 
-    html:not([data-theme]) .cpu-row-meta {
+    html:not([data-theme]) .explorer-row-meta {
         color: #6f6f6c;
     }
 
-    html:not([data-theme]) .cpu-row-specs {
+    html:not([data-theme]) .explorer-row-specs {
         color: #9a9a96;
     }
 
     /* 搜索无结果时的提示行 */
-    html:not([data-theme]) .cpu-empty {
+    html:not([data-theme]) .explorer-empty {
         color: #9a9a96;
     }
 
     /* 「Show N more」按钮 */
-    html:not([data-theme]) .cpu-more {
+    html:not([data-theme]) .explorer-more {
         color: #ededed;
         border-color: #3a3a3a;
     }
 
-    html:not([data-theme]) .cpu-more:hover {
+    html:not([data-theme]) .explorer-more:hover {
         background: #161616;
         border-color: #6a6a66;
     }
 
     /* 还没选 CPU 时的虚线空状态框 */
-    html:not([data-theme]) .cpu-compare-empty {
+    html:not([data-theme]) .explorer-compare-empty {
         color: #6f6f6c;
         border-color: #3a3a3a;
     }
 
     /* 对比表的分隔线、列头型号名、删除按钮 */
-    html:not([data-theme]) .cpu-table th,
-    html:not([data-theme]) .cpu-table td {
+    html:not([data-theme]) .explorer-table th,
+    html:not([data-theme]) .explorer-table td {
         border-bottom-color: #212121;
     }
 
-    html:not([data-theme]) .cpu-table-model {
+    html:not([data-theme]) .explorer-table-model {
         color: #ededed;
     }
 
-    html:not([data-theme]) .cpu-table-remove {
+    html:not([data-theme]) .explorer-table-remove {
         color: #6f6f6c;
     }
 
     /* 表格正文数值：比型号名弱一档 */
-    html:not([data-theme]) .cpu-table tbody td {
+    html:not([data-theme]) .explorer-table tbody td {
         color: #b8b8b4;
     }
 
     /* 数值更高的那一方：加亮 + 底色标记，和浅色下 is-best 的思路一致 */
-    html:not([data-theme]) .cpu-table tbody td.is-best {
+    html:not([data-theme]) .explorer-table tbody td.is-best {
         color: #ededed;
         background: #1c1c1c;
     }
 
     /* 页面底部说明 */
-    html:not([data-theme]) .cpu-footnote {
+    html:not([data-theme]) .explorer-footnote {
         color: #6f6f6c;
     }
 
@@ -567,144 +568,145 @@ html[data-theme="dark"] a.contact-value:hover {
    CPU 页 —— 对应 styles.css §3
    ---------------------------------------------------------------------- */
 
-html[data-theme="dark"] .cpu-page {
+html[data-theme="dark"] .cpu-page,
+html[data-theme="dark"] .gpu-page {
     background: #0e0e0e;
     color: #ededed;
 }
 
-html[data-theme="dark"] .cpu-eyebrow {
+html[data-theme="dark"] .explorer-eyebrow {
     color: #6f6f6c;
 }
 
-html[data-theme="dark"] .cpu-sub {
+html[data-theme="dark"] .explorer-sub {
     color: #9a9a96;
 }
 
-html[data-theme="dark"] .cpu-toolbar {
+html[data-theme="dark"] .explorer-toolbar {
     border-bottom-color: #262626;
 }
 
-html[data-theme="dark"] .cpu-search {
+html[data-theme="dark"] .explorer-search {
     background: #161616;
     border-color: #3a3a3a;
     color: #ededed;
 }
 
-html[data-theme="dark"] .cpu-search::placeholder {
+html[data-theme="dark"] .explorer-search::placeholder {
     color: #6f6f6c;
 }
 
-html[data-theme="dark"] .cpu-search:focus {
+html[data-theme="dark"] .explorer-search:focus {
     border-color: #ededed;
     box-shadow: 0 0 0 3px rgba(237, 237, 237, 0.10);
 }
 
-html[data-theme="dark"] .cpu-brand {
+html[data-theme="dark"] .explorer-brand {
     color: #9a9a96;
     border-color: #3a3a3a;
 }
 
-html[data-theme="dark"] .cpu-brand:hover {
+html[data-theme="dark"] .explorer-brand:hover {
     color: #ededed;
     border-color: #6a6a66;
 }
 
-html[data-theme="dark"] .cpu-brand:focus-visible {
+html[data-theme="dark"] .explorer-brand:focus-visible {
     outline-color: #ededed;
 }
 
-html[data-theme="dark"] .cpu-brand.is-active {
+html[data-theme="dark"] .explorer-brand.is-active {
     color: #0e0e0e;
     background: #ededed;
     border-color: #ededed;
 }
 
-html[data-theme="dark"] .cpu-panel-head {
+html[data-theme="dark"] .explorer-panel-head {
     border-bottom-color: #262626;
 }
 
-html[data-theme="dark"] .cpu-panel-title {
+html[data-theme="dark"] .explorer-panel-title {
     color: #9a9a96;
 }
 
-html[data-theme="dark"] .cpu-count {
+html[data-theme="dark"] .explorer-count {
     color: #6f6f6c;
 }
 
-html[data-theme="dark"] .cpu-clear {
+html[data-theme="dark"] .explorer-clear {
     color: #9a9a96;
     border-bottom-color: #3a3a3a;
 }
 
-html[data-theme="dark"] .cpu-clear:hover {
+html[data-theme="dark"] .explorer-clear:hover {
     color: #ededed;
     border-bottom-color: #ededed;
 }
 
-html[data-theme="dark"] .cpu-pick {
+html[data-theme="dark"] .explorer-pick {
     border-bottom-color: #212121;
     color: #ededed;
 }
 
-html[data-theme="dark"] .cpu-pick:hover {
+html[data-theme="dark"] .explorer-pick:hover {
     background: #161616;
 }
 
-html[data-theme="dark"] .cpu-pick.is-picked {
+html[data-theme="dark"] .explorer-pick.is-picked {
     background: #1c1c1c;
     box-shadow: inset 3px 0 0 #ededed;
 }
 
-html[data-theme="dark"] .cpu-row-meta {
+html[data-theme="dark"] .explorer-row-meta {
     color: #6f6f6c;
 }
 
-html[data-theme="dark"] .cpu-row-specs {
+html[data-theme="dark"] .explorer-row-specs {
     color: #9a9a96;
 }
 
-html[data-theme="dark"] .cpu-empty {
+html[data-theme="dark"] .explorer-empty {
     color: #9a9a96;
 }
 
-html[data-theme="dark"] .cpu-more {
+html[data-theme="dark"] .explorer-more {
     color: #ededed;
     border-color: #3a3a3a;
 }
 
-html[data-theme="dark"] .cpu-more:hover {
+html[data-theme="dark"] .explorer-more:hover {
     background: #161616;
     border-color: #6a6a66;
 }
 
-html[data-theme="dark"] .cpu-compare-empty {
+html[data-theme="dark"] .explorer-compare-empty {
     color: #6f6f6c;
     border-color: #3a3a3a;
 }
 
-html[data-theme="dark"] .cpu-table th,
-html[data-theme="dark"] .cpu-table td {
+html[data-theme="dark"] .explorer-table th,
+html[data-theme="dark"] .explorer-table td {
     border-bottom-color: #212121;
 }
 
-html[data-theme="dark"] .cpu-table-model {
+html[data-theme="dark"] .explorer-table-model {
     color: #ededed;
 }
 
-html[data-theme="dark"] .cpu-table-remove {
+html[data-theme="dark"] .explorer-table-remove {
     color: #6f6f6c;
 }
 
-html[data-theme="dark"] .cpu-table tbody td {
+html[data-theme="dark"] .explorer-table tbody td {
     color: #b8b8b4;
 }
 
-html[data-theme="dark"] .cpu-table tbody td.is-best {
+html[data-theme="dark"] .explorer-table tbody td.is-best {
     color: #ededed;
     background: #1c1c1c;
 }
 
-html[data-theme="dark"] .cpu-footnote {
+html[data-theme="dark"] .explorer-footnote {
     color: #6f6f6c;
 }
 

@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact</title>
 <!--
-  contact.html — 联系页（三行联系方式）
+  contact.html — 联系页（两行联系方式）
   ==========================================================================
 
   页面结构，以及每一块由哪段 CSS 负责
     #site-header   空占位，导航由 parts.js 注入      → nav.css §1–§7
     页眉           小标签 + 标题 + 一句说明          → styles.css §4-3
-    联系信息       标签 / 值两列的三行               → styles.css §4-4
+    联系信息       标签 / 值两列的两行               → styles.css §4-4
     页脚           返回首页的链接                     → styles.css §4-5
     #site-footer   空占位，页脚由 parts.js 注入      → nav.css §8
 
@@ -19,8 +19,9 @@
   因为导航在每个页面上都有，本页导航里的 Home 就是回去的路；
   页脚那条「← Back home」是给从站外直接点进本页的人多留一条退路。
 
-  ⚠ 下面三行联系方式目前是占位值（example.com / yourname / xxx），
-    交作业前必须换成真实信息 —— 项目书明确要求「无占位内容」。
+  只有两行联系方式：GitHub 指向仓库本身，Location 写 China, Hainan。
+  刻意没有写邮箱 —— 占位邮箱同样算「占位内容」，
+  与其留一个发不进去的地址，不如让访客直接去仓库提 issue。
 
   外部依赖：styles.css §4 · nav.css · theme.css · theme.js · parts.js
 -->
@@ -64,21 +65,18 @@
         </header>
 
         <!-- 联系信息：一行一个「标签 + 值」 → styles.css §4-4
-             用 <ul>/<li> 而不是 <dl>：这三行是并列的条目，不是词条释义。
-             值如果是链接就用 <a>（Email、GitHub），纯文字就用 <span>（Location），
-             因为 CSS 只给 a.contact-value 加悬停下划线，纯文字不该看起来像链接。 -->
+             用 <ul>/<li> 而不是 <dl>：这两行是并列的条目，不是词条释义。
+             值如果是链接就用 <a>（GitHub），纯文字就用 <span>（Location），
+             因为 CSS 只给 a.contact-value 加悬停下划线，纯文字不该看起来像链接。
+             原来还有一行 Email，交作业前按「宁可少一行，也不留占位」删掉了。 -->
         <ul class="contact-list">
             <li>
-                <span class="contact-key">Email</span>
-                <a class="contact-value" href="mailto:hello@example.com">hello@example.com</a>
-            </li>
-            <li>
                 <span class="contact-key">GitHub</span>
-                <a class="contact-value" href="https://github.com/" target="_blank" rel="noopener">github.com/yourname</a>
+                <a class="contact-value" href="https://github.com/matchman1/BiUH-web-tech" target="_blank" rel="noopener">github.com/matchman1/BiUH-web-tech</a>
             </li>
             <li>
                 <span class="contact-key">Location</span>
-                <span class="contact-value">xxx, xxx</span>
+                <span class="contact-value">China, Hainan</span>
             </li>
         </ul>
 

@@ -21,13 +21,13 @@
     #site-footer      空占位，页脚由 parts.js 注入      → nav.css §8
 
   下列 id / 类由 cpu.js 接管（改行为去 cpu.js，改外观去上面对应的 CSS 段）
-    #cpu-search         搜索框                → el.search
-    .cpu-brand ×3       品牌筛选按钮          → el.brands
-    #cpu-list           结果列表容器          → 里面的 <li> 由 renderList() 生成
-    #cpu-count          结果条数文字
-    #cpu-more           「Show N more」按钮，每次追加 80 条
-    #cpu-compare-body   对比表容器            → renderCompare() 写入
-    #cpu-clear          清空对比
+    #explorer-search         搜索框                → el.search
+    .explorer-brand ×3       品牌筛选按钮          → el.brands
+    #explorer-list           结果列表容器          → 里面的 <li> 由 renderList() 生成
+    #explorer-count          结果条数文字
+    #explorer-more           「Show N more」按钮，每次追加 80 条
+    #explorer-compare-body   对比表容器            → renderCompare() 写入
+    #explorer-clear          清空对比
 
   脚本顺序（都放在 body 末尾，顺序不能错）
     1 data/cpus.js   先把 3551 条数据挂到 window.CPUS
@@ -69,13 +69,13 @@
     <!-- 导航占位：parts.js 把 nav.html 的内容填进来 → nav.css §1–§7 -->
     <header id="site-header"></header>
 
-    <main class="cpu-wrap">
+    <main class="explorer-wrap">
 
         <!-- 页眉：小标签 + 标题 + 一句说明 → styles.css §3-3 -->
-        <header class="cpu-head">
-            <p class="cpu-eyebrow">Database</p>
+        <header class="explorer-head">
+            <p class="explorer-eyebrow">Database</p>
             <h1>CPU Explorer</h1>
-            <p class="cpu-sub">
+            <p class="explorer-sub">
                 Search 3,500+ processors by name, then put up to three side by side and
                 see how the specs actually differ.
             </p>
@@ -86,52 +86,52 @@
              label 的 for 指向 #cpu-search，点「Search」两个字也能聚焦输入框；
              aria-describedby 让读屏软件在输入时念出结果条数（#cpu-count）。
              三个品牌按钮用 <button> 而不是 <a>：它们不跳转，只切状态。 -->
-        <div class="cpu-toolbar">
-            <div class="cpu-search-wrap">
-                <label class="cpu-search-label" for="cpu-search">Search</label>
-                <input id="cpu-search" class="cpu-search" type="search" autocomplete="off"
+        <div class="explorer-toolbar">
+            <div class="explorer-search-wrap">
+                <label class="explorer-search-label" for="cpu-search">Search</label>
+                <input id="cpu-search" class="explorer-search" type="search" autocomplete="off"
                        placeholder="5800X3D, i9-12900K, Threadripper, Xeon…"
                        aria-describedby="cpu-count">
             </div>
 
-            <div class="cpu-brands" role="group" aria-label="Filter by brand">
-                <button type="button" class="cpu-brand is-active" data-brand="all">All</button>
-                <button type="button" class="cpu-brand" data-brand="Intel">Intel</button>
-                <button type="button" class="cpu-brand" data-brand="AMD">AMD</button>
+            <div class="explorer-brands" role="group" aria-label="Filter by brand">
+                <button type="button" class="explorer-brand is-active" data-brand="all">All</button>
+                <button type="button" class="explorer-brand" data-brand="Intel">Intel</button>
+                <button type="button" class="explorer-brand" data-brand="AMD">AMD</button>
             </div>
         </div>
 
-        <div class="cpu-board">
+        <div class="explorer-board">
 
             <!-- 左栏 Results → styles.css §3-5（容器与计数）
                  里面的 <li> 全部由 cpu.js 的 renderList() 生成 → styles.css §3-6 -->
-            <section class="cpu-results" aria-labelledby="cpu-results-title">
-                <div class="cpu-panel-head">
-                    <h2 id="cpu-results-title" class="cpu-panel-title">Results</h2>
-                    <p class="cpu-count" id="cpu-count">Loading…</p>
+            <section class="explorer-results" aria-labelledby="cpu-results-title">
+                <div class="explorer-panel-head">
+                    <h2 id="cpu-results-title" class="explorer-panel-title">Results</h2>
+                    <p class="explorer-count" id="cpu-count">Loading…</p>
                 </div>
 
-                <ul class="cpu-list" id="cpu-list"></ul>
+                <ul class="explorer-list" id="cpu-list"></ul>
 
-                <button type="button" class="cpu-more" id="cpu-more" hidden>Show more</button>
+                <button type="button" class="explorer-more" id="cpu-more" hidden>Show more</button>
             </section>
 
             <!-- 右栏 Compare → styles.css §3-5（容器的外框）
                  表格由 cpu.js 的 renderCompare() 写入 → styles.css §3-7
                  aria-live="polite"：选/删 CPU 后，读屏软件会念出这一块的变化 -->
-            <section class="cpu-compare" aria-labelledby="cpu-compare-title">
-                <div class="cpu-panel-head">
-                    <h2 id="cpu-compare-title" class="cpu-panel-title">Compare</h2>
-                    <button type="button" class="cpu-clear" id="cpu-clear" hidden>Clear all</button>
+            <section class="explorer-compare" aria-labelledby="cpu-compare-title">
+                <div class="explorer-panel-head">
+                    <h2 id="cpu-compare-title" class="explorer-panel-title">Compare</h2>
+                    <button type="button" class="explorer-clear" id="cpu-clear" hidden>Clear all</button>
                 </div>
 
-                <div id="cpu-compare-body" class="cpu-compare-body" aria-live="polite"></div>
+                <div id="cpu-compare-body" class="explorer-compare-body" aria-live="polite"></div>
             </section>
 
         </div>
 
         <!-- 页脚说明：数据来源与口径（缺值不猜、TDP 随主板变化）→ styles.css §3-8 -->
-        <p class="cpu-footnote">
+        <p class="explorer-footnote">
             Specs are drawn from a local database of 3,551 processors. Values a factory sheet
             left blank are shown as a dash rather than guessed at. Boost clocks and TDP vary by
             motherboard and cooling, so treat the numbers as a starting point, not a promise.
